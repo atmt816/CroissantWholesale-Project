@@ -1,3 +1,6 @@
+<!--reference used: https://jsfiddle.net/StartBootstrap/1nu8g6e5-->
+
+
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <style>body {
@@ -5,28 +8,37 @@
     background: linear-gradient(to right, #fefdf0, #efeedc);
   }
   
-  .card-img-left {
+  .card-img {
     width: 45%;
     /* Link to your background image using in the property below! */
     background: scroll center url('https://images.unsplash.com/photo-1530610476181-d83430b64dcd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=735&q=80');
     background-size: cover;
   }
-  
+
   .btn-login {
-    font-size: 0.9rem;
-    letter-spacing: 0.05rem;
+    font-size: 1rem;
+    letter-spacing: 0.09rem;
     padding: 0.75rem 1rem;
     background-color: #dd4345;
+  }
+  .btn-login:hover {
+    background-color: #c73336;
+  }
+  .card-container
+  {
+    margin-top: 5em auto;
+    margin-left: auto;
+    margin-right: auto;
   }
   
   </style>
 
 <body>
-    <div class="container my-auto">
+    <div class="container my-auto card-container">
       <div class="row">
         <div class="col-lg-10 col-xl-9 mx-auto">
-          <div class="card flex-row my-5 border-0 shadow rounded-3 overflow-hidden">
-            <div class="card-img-left d-none d-md-flex">
+          <div class="card flex-row border-0 shadow rounded-3 overflow-hidden">
+            <div class="card-img d-md-flex">
               <!-- Background image for card set in CSS! -->
             </div>
             <div class="card-body p-4 p-sm-5">
@@ -39,23 +51,19 @@
               <form>
                   
                 <div class="form-floating mb-3">
-                  <input type="text" class="form-control" id="floatingInputUsername" placeholder="myusername" required autofocus>
+                  <input type="text" class="form-control" id="floatingInput" placeholder="username" required autofocus padding-bottom:20px>
                   <label for="floatingInputUsername">Username</label>
                 </div>
   
-    
-  
-  
                 <div class="form-floating mb-3">
-                  <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+                  <input type="password" class="form-control" id="floatingInput" placeholder="Password">
                   <label for="floatingPassword">Password</label>
                 </div>
   
-  
                 <div class="d-grid mb-2">
-                  <button class="btn btn-lg btn-login fw-bold text-uppercase text-white" type="submit">Log In</button>
+                  <button class="btn btn-lg btn-login fw-bold text-uppercase text-white btn-hover" type="submit">Log In</button>
                 </div>
-  
+   
                 
   
                
