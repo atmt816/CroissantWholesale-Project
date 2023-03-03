@@ -8,12 +8,18 @@ const { response } = require('express');
 const req = require('express/lib/request');
 var selectedID = "";
 app.use(bodyParser.urlencoded());
-// set the view engine to ejs
-app.set('view engine', 'ejs');
 
+// set the view engine to ejs
+
+app.set('view engine', 'ejs');
 app.get('/', function (req, res) {
 
     res.render('pages/index');
+});
+
+app.get('/login', function (req, res) {
+
+    res.render('pages/login');
 });
 
 app.listen(5000);
