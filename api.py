@@ -124,4 +124,16 @@ def get_customers():
     return customers
 
 
+# inventory get method working now
+# no data in customers for now
+# adjust sql as needed - Misael
+@app.route('/inventory', methods=['GET'])
+def get_inventory():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cis4375db')
+    sql = "SELECT * FROM inventory"
+    inventory = execute_read_query(conn, sql)
+    return inventory
+
+
 app.run()
