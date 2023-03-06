@@ -28,6 +28,31 @@ def create_connection(host_name, user_name, user_password, db_name):
         print(f"The error '{e}' occured.")
     return connection
 
+# function that will be called in the main file to carry out the query in the app.route in which it is used in
+
+
+def execute_query(connection, query):
+    cursor = connection.cursor()
+    try:
+        cursor.execute(query)
+        connection.commit()
+        print("Query executed successfully")
+    except Error as e:
+        print(f"The error '{e}'")
+
+# i am planning to use this function with the app routes that pertain to the logs table
+
+
+def execute_read_query(connection, query):
+    cursor = connection.cursor(dictionary=True)
+    result = None
+    try:
+        cursor.execute(query)
+        result = cursor.fetchall()
+        return jsonify(result)
+    except Error as e:
+        print(f"The error '{e}' occured")
+
 
 # setting up the application
 app = flask.Flask(__name__)  # sets up the application
