@@ -8,6 +8,7 @@ const { response } = require('express');
 const req = require('express/lib/request');
 var selectedID = "";
 app.use(bodyParser.urlencoded());
+app.set('view engine', 'ejs');
 
 // set the view engine to ejs
 
@@ -21,6 +22,24 @@ app.get('/login', function (req, res) {
 
     res.render('pages/login');
 });
+
+
+app.get('/employees', function(req, res){
+    axios.get('http://127.0.0.1:5000/employees')
+    .then((response)=>{
+        var employee_data = response.data
+
+        res.render('pages/employees', 
+        {employee_data: employee_data[0] });
+    
+    });
+});
+
+// app.get('/employees', function (req, res) {
+
+//     res.render('pages/employees');
+// });
+
 
 app.listen(3000);
 console.log('3000 is the magic port');

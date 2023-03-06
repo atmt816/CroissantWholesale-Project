@@ -15,9 +15,31 @@
     <main class="container pt-5"> 
         <div class="p-5 mb-4 bg-white rounded-3 top-buffer">
             <h2 class="text-center">
-              Welcome home!
+              Employees
             </h2>
-            
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Start Date</th>
+                  <th scope="col">End Date</th>
+                  <th scope="col">Role</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                  <% employee_data.forEach(function(employee_data) { %>
+                    <tr><td><%= employee_data.emp_id%></td>
+                        <td><%= employee_data.last_name%>,&nbsp<%= employee_data.first_name%></td>
+                        <td><%= employee_data.start_date%></td>
+                        <td><%= employee_data.end_date%></td>
+                        <td><%= employee_data.emp_status%></td>
+                        <td><%= employee_data.role_name%></td>
+                    </tr>
+                    <% }); %>           
+              </tbody>
+            </table>
 
 
             <form class="row g-3">

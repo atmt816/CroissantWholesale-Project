@@ -4,9 +4,9 @@ import hashlib
 import datetime
 import time
 import flask  # , werkzeug
+from flask import request, jsonify
 from flask import jsonify, make_response
 from flask import request, make_response
-from flask import request, jsonify
 # from sql import create_connection
 # from sql import execute_read_query
 # from sql import execute_query
@@ -59,44 +59,25 @@ app = flask.Flask(__name__)  # sets up the application
 app.config["DEBUG"] = True  # allow to show error in browser
 
 
-@app.route('/employee', methods=['GET'])
-def employees():
-    # try:
-    #     token = current_tokens[curuser.get_current_user()]
-    # except:
-    #     return 'No Active User Detected'
-    # if float(token) > time.time():
-    sql = """
-        SELECT e.first_name, e.last_name, e.start_date, e.end_date, e.emp_status, r.role_name
-        FROM employees e
-        JOIN roles r
-        ON e.role_id = r.role_id;
-        """
-    results = execute_read_query(conn, sql)
-
-    sql = """
-        SELECT * FROM States
-        """
-    state_results = execute_read_query(conn, sql)
-    return jsonify(state_results, results)
 
 
 # employees get method working now
 # not returning data for now since roles table is empty
 # adjust sql as needed - Misael
 @app.route('/employees', methods=['GET'])
-def get_employees():
+def employee_info():
     conn = create_connection(
-        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cis4375db')
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     # sql = "SELECT * FROM employees"
     sql = """
-        SELECT e.first_name, e.last_name, e.start_date, e.end_date, e.emp_status, r.role_name
+        SELECT e.emp_id, e.first_name, e.last_name, e.start_date, e.end_date, e.emp_status, r.role_name
         FROM employees AS e
         JOIN roles AS r
         ON e.role_id = r.role_id;
         """
-    # sql = "SELECT * FROM states"
     employees = execute_read_query(conn, sql)
+
+
     return employees
 
 
@@ -105,9 +86,16 @@ def get_employees():
 @app.route('/employee_contact', methods=['GET'])
 def get_employee_contact():
     conn = create_connection(
-        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cis4375db')
-    sql = "SELECT * FROM employee_contact"
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = """SELECT e.first_name, e.last_name, ec.phone, ec.email, ec.street, ec.city, s.state_code_id, ec.zipcode
+            FROM employees e
+            JOIN employee_contact ec
+            ON e.emp_id = ec.emp_id
+            JOIN states s
+            ON ec.state_code_id = s.state_code_id;"""
     employee_contact = execute_read_query(conn, sql)
+
+    sql = """SELECT * FROM states"""
     return employee_contact
 
 
@@ -117,7 +105,7 @@ def get_employee_contact():
 @app.route('/customers', methods=['GET'])
 def get_customers():
     conn = create_connection(
-        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cis4375db')
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "SELECT * FROM customers"
     customers = execute_read_query(conn, sql)
     return customers
@@ -129,7 +117,7 @@ def get_customers():
 @app.route('/inventory', methods=['GET'])
 def get_inventory():
     conn = create_connection(
-        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cis4375db')
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "SELECT * FROM inventory"
     inventory = execute_read_query(conn, sql)
     return inventory
@@ -141,7 +129,7 @@ def get_inventory():
 @app.route('/invoices', methods=['GET'])
 def get_invoices():
     conn = create_connection(
-        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cis4375db')
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "SELECT * FROM inventory"
     invoices = execute_read_query(conn, sql)
     return invoices
@@ -152,7 +140,7 @@ def get_invoices():
 @app.route('/maintenance', methods=['GET'])
 def get_maintenance():
     conn = create_connection(
-        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cis4375db')
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "SELECT * FROM maintenance_logs"
     maintenance = execute_read_query(conn, sql)
     return maintenance
