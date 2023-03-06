@@ -80,10 +80,10 @@ def employees():
     state_results = execute_read_query(conn, sql)
     return jsonify(state_results, results)
 
+
 # employees get method working now
 # not returning data for now since roles table is empty
-
-
+# adjust sql as needed - Misael
 @app.route('/employees', methods=['GET'])
 def get_employees():
     conn = create_connection(
@@ -98,6 +98,30 @@ def get_employees():
     # sql = "SELECT * FROM states"
     employees = execute_read_query(conn, sql)
     return employees
+
+
+# employee_contact get method working now
+# no data in customers for now
+# adjust sql as needed - Misael
+@app.route('/employee_contact', methods=['GET'])
+def get_employee_contact():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cis4375db')
+    sql = "SELECT * FROM employee_contact"
+    employee_contact = execute_read_query(conn, sql)
+    return employee_contact
+
+
+# customers get method working now
+# no data in customers for now
+# adjust sql as needed - Misael
+@app.route('/customers', methods=['GET'])
+def get_customers():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cis4375db')
+    sql = "SELECT * FROM customers"
+    customers = execute_read_query(conn, sql)
+    return customers
 
 
 app.run()
