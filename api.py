@@ -58,4 +58,13 @@ app = flask.Flask(__name__)  # sets up the application
 app.config["DEBUG"] = True  # allow to show error in browser
 
 
+@app.route('/employees', methods=['GET'])
+def get_trip():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cis4375')
+    sql = "SELECT * FROM employees"
+    employees = execute_read_query(conn, sql)
+    return employees
+
+
 app.run()
