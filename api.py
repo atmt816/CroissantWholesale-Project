@@ -147,4 +147,15 @@ def get_invoices():
     return invoices
 
 
+# maintenance get method working now
+# adjust sql as needed - Misael
+@app.route('/maintenance', methods=['GET'])
+def get_maintenance():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cis4375db')
+    sql = "SELECT * FROM maintenance_logs"
+    maintenance = execute_read_query(conn, sql)
+    return maintenance
+
+
 app.run()
