@@ -101,7 +101,6 @@ def get_employees():
 
 
 # employee_contact get method working now
-# no data in customers for now
 # adjust sql as needed - Misael
 @app.route('/employee_contact', methods=['GET'])
 def get_employee_contact():
@@ -125,7 +124,7 @@ def get_customers():
 
 
 # inventory get method working now
-# no data in customers for now
+# no data in inventory for now
 # adjust sql as needed - Misael
 @app.route('/inventory', methods=['GET'])
 def get_inventory():
@@ -134,6 +133,18 @@ def get_inventory():
     sql = "SELECT * FROM inventory"
     inventory = execute_read_query(conn, sql)
     return inventory
+
+
+# invoices get method working now
+# no data in invoices for now
+# adjust sql as needed - Misael
+@app.route('/invoices', methods=['GET'])
+def get_invoices():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cis4375db')
+    sql = "SELECT * FROM inventory"
+    invoices = execute_read_query(conn, sql)
+    return invoices
 
 
 app.run()
