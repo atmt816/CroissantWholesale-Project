@@ -30,7 +30,7 @@ app.get('/employees', function(req, res){
         var employee_data = response.data
 
         res.render('pages/employees', 
-        {employee_data: employee_data[0] });
+        {employee_data: employee_data });
     
     });
 });
