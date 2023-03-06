@@ -12,27 +12,72 @@
         <%- include('../partials/header'); %> 
     </header>
 
-    <main class="jumbotron pt-5"> 
+    <main class="container pt-5"> 
         <div class="p-5 mb-4 bg-white rounded-3 top-buffer">
             <h2 class="text-center">
               Welcome home!
             </h2>
-            <form>
-                <div class="mb-3 w-25">
-                  <label for="exampleInputEmail1" class="form-label">Email address</label>
-                  <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                  <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
-                </div>
-                <div class="mb-3 w-25">
-                  <label for="exampleInputPassword1" class="form-label">Password</label>
-                  <input type="password" class="form-control" id="exampleInputPassword1">
-                </div>
-                <div class="mb-3 form-check">
-                  <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                  <label class="form-check-label" for="exampleCheck1">Check me out</label>
-                </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
-              </form>
+            <form class="row g-3">
+              <h4>Create New Employee Entry</h4>
+              <div class="col-md-6">   
+                <label for="firstname" class="form-label">First Name</label>
+                <input type="text" class="form-control" id="firstname" placeholder="Ex. John">
+              </div>
+              <div class="col-md-6">
+                <label for="lastname" class="form-label">Last Name</label>
+                <input type="text" class="form-control" id="lastname" placeholder="Ex. Doe">
+              </div>
+              <div class="col-md-6">   
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="firstname" placeholder="exmail@example.com">
+              </div>
+              <div class="col-md-6">
+                <label for="lastname" class="form-label">Phone</label>
+                <input type="phone" class="form-control" id="lastname" placeholder="000-000-0000">
+              </div>
+              <div class="col-12">
+                <label for="inputAddress" class="form-label">Address</label>
+                <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
+              </div>
+              
+              <div class="col-md-6">
+                <label for="inputCity" class="form-label">City</label>
+                <input type="text" class="form-control" id="inputCity">
+              </div>
+              <div class="col-md-4">
+                <label for="inputState" class="form-label">State</label>
+                <select id="inputState" class="form-select">
+                  <option selected>Select</option>
+                  <option>...</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <label for="inputZip" class="form-label">Zip</label>
+                <input type="text" class="form-control" id="inputZip">
+              </div>
+              <div class="col-md-6">   
+                <label for="inputState" class="form-label">Role</label>
+                <select id="inputState" class="form-select">
+                  <option selected>Select</option>
+                  <option>...</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="inputState" class="form-label">Status</label>
+                <select id="inputState" class="form-select">
+                  <option selected>Active</option>
+                  <option>Terminated</option>
+                </select>
+              </div>
+              <div class="col-12">
+                
+              </div>
+              <div class="col-12">
+                <button type="submit" class="btn btn-primary">Create New Employee</button>
+              </div>
+            </form>
+
+        
         </div>
         
         </main>
