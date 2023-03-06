@@ -22,5 +22,5 @@ app.get('/login', function (req, res) {
     res.render('pages/login');
 });
 
-app.listen(5000);
-console.log('5000 is the magic port');
+app.listen(3000);
+console.log('3000 is the magic port');
