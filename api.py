@@ -144,6 +144,15 @@ def get_maintenance():
     maintenance = execute_read_query(conn, sql)
     return maintenance
 
+
+@app.route('/states', methods=['GET'])
+def get_states():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT * FROM states"
+    states = execute_read_query(conn, sql)
+    return states
+
 ############################# CREATE - INSERT ###################################
 
 
