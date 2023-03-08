@@ -160,7 +160,7 @@ def add_employee():
     role_id = employee_data['role_id']
 
     conn = create_connection('cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "INSERT INTO employees(first_name, last_name, start_date, end_date, emp_status, role_id) VALUES ('%s', %s)" % (first_name, last_name, start_date, end_date, emp_status, role_id)
+    sql = "INSERT INTO employees(first_name, last_name, start_date, end_date, emp_status, role_id) VALUES ('%s', '%s', %s, %s, '%s', %s)" % (first_name, last_name, start_date, end_date, emp_status, role_id)
 
     add_employee = execute_query(conn, sql)
     return add_employee
