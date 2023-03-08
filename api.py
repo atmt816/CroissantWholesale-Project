@@ -162,7 +162,9 @@ def add_employee():
  # date format as yyyy-mm-dd(2022-03-04) or mm-dd-yyyy(03-04-2022)
     fmt_start_date = str(datetime.strptime(start_date, '%m-%d-%Y').date())
 
-    fmt_end_date = str(datetime.strptime(end_date, '%m-%d-%Y').date())
+    fmt_end_date = "null"
+    if end_date != "null" and end_date != "NULL":
+        fmt_end_date = str(datetime.strptime(end_date, '%m-%d-%Y').date())
 
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
