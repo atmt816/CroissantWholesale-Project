@@ -77,7 +77,6 @@ def employee_info():
         """
     employees = execute_read_query(conn, sql)
 
-
     return employees
 
 
@@ -147,11 +146,12 @@ def get_maintenance():
 
 ############################# CREATE - INSERT ###################################
 
+
 @app.route('/addemployee', methods=['GET', 'POST'])
 def add_employee():
-    #The user input is gathered in JSON format and stored into an empty variable
+    # The user input is gathered in JSON format and stored into an empty variable
     employee_data = request.get_json()
-    #The JSON object is then separated into variables so that they may be used in a sql query
+    # The JSON object is then separated into variables so that they may be used in a sql query
     first_name = employee_data['first_name']
     last_name = employee_data['last_name']
     start_date = employee_data['start_date']
@@ -159,10 +159,18 @@ def add_employee():
     emp_status = employee_data['emp_status']
     role_id = employee_data['role_id']
 
-    conn = create_connection('cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "INSERT INTO employees(first_name, last_name, start_date, end_date, emp_status, role_id) VALUES ('%s', '%s', %s, %s, '%s', %s)" % (first_name, last_name, start_date, end_date, emp_status, role_id)
+ # date format as yyyy-mm-dd(2022-03-04) or mm-dd-yyyy(03-04-2022)
+    fmt_start_date = str(datetime.strptime(start_date, '%m-%d-%Y').date())
 
-    add_employee = execute_query(conn, sql)
-    return add_employee
-    
+    fmt_end_date = str(datetime.strptime(end_date, '%m-%d-%Y').date())
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "INSERT INTO employees(first_name, last_name, start_date, end_date, emp_status, role_id) VALUES ('%s', '%s', '%s', '%s', '%s', %s)" % (
+        first_name, last_name, fmt_start_date, fmt_end_date, emp_status, role_id)
+
+    execute_query(conn, sql)
+    return 'Employee was added Successfully'
+
+
 app.run()
