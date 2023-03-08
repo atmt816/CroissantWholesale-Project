@@ -1,0 +1,25 @@
+{
+  "name": "cis4375_team09_project",
+  "version": "1.0.0",
+  "description": "Capstone Project ",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/misaelh2010/CIS4375_Team09_Project.git"
+  },
+  "author": "Team09",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/misaelh2010/CIS4375_Team09_Project/issues"
+  },
+  "homepage": "https://github.com/misaelh2010/CIS4375_Team09_Project#readme",
+  "dependencies": {
+    "axios": "^1.3.4",
+    "bootstrap": "^5.2.3",
+    "ejs": "^3.1.8",
+    "express": "^4.18.2"
+  }
+}
