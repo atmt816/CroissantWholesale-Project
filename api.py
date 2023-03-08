@@ -147,7 +147,7 @@ def get_maintenance():
 
 ############################# CREATE - INSERT ###################################
 
-@app.route('/addemployee', methods=['GET', 'POST'])
+@app.route('/addemployee', methods=['POST'])
 def add_employee():
     #The user input is gathered in JSON format and stored into an empty variable
     employee_data = request.get_json()
@@ -162,7 +162,7 @@ def add_employee():
     conn = create_connection('cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "INSERT INTO employees(first_name, last_name, start_date, end_date, emp_status, role_id) VALUES ('%s', '%s', %s, %s, '%s', %s)" % (first_name, last_name, start_date, end_date, emp_status, role_id)
 
-    add_employee = execute_query(conn, sql)
-    return add_employee
+    execute_query(conn, sql)
+    return "Employee Sucessfully Added!"
     
 app.run()
