@@ -59,7 +59,7 @@ app = flask.Flask(__name__)  # sets up the application
 app.config["DEBUG"] = True  # allow to show error in browser
 
 
-
+############################# READ - GET ###################################
 
 # employees get method working now
 # not returning data for now since roles table is empty
@@ -145,5 +145,24 @@ def get_maintenance():
     maintenance = execute_read_query(conn, sql)
     return maintenance
 
+############################# CREATE - INSERT ###################################
 
+@app.route('/addemployee', methods=['GET', 'POST'])
+def add_employee():
+    #The user input is gathered in JSON format and stored into an empty variable
+    employee_data = request.get_json()
+    #The JSON object is then separated into variables so that they may be used in a sql query
+    first_name = employee_data['first_name']
+    last_name = employee_data['last_name']
+    start_date = employee_data['start_date']
+    end_date = employee_data['end_date']
+    emp_status = employee_data['emp_status']
+    role_id = employee_data['role_id']
+
+    conn = create_connection('cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "INSERT INTO employees(first_name, last_name, start_date, end_date, emp_status, role_id) VALUES ('%s', %s)" % (first_name, last_name, start_date, end_date, emp_status, role_id)
+
+    add_employee = execute_query(conn, sql)
+    return add_employee
+    
 app.run()
