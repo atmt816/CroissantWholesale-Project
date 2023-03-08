@@ -147,7 +147,7 @@ def get_maintenance():
 ############################# CREATE - INSERT ###################################
 
 
-@app.route('/addemployee', methods=['GET', 'POST'])
+@app.route('/addemployee', methods=['POST'])
 def add_employee():
     # The user input is gathered in JSON format and stored into an empty variable
     employee_data = request.get_json()
