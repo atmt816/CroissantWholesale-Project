@@ -174,5 +174,21 @@ def add_employee():
     execute_query(conn, sql)
     return 'Employee was added Successfully'
 
+############################# DELETE #######################################
+
+@app.route('/deleteemployee', methods=['DELETE'])
+def delete_employee():
+    #The user inputs data in JSON format and it is stored into an empty variable
+    del_employee = request.get_json()
+    #The data is then separated into different variables in order to be used in the sql query
+    user_del_employee= del_employee['emp_id']
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "DELETE FROM employees WHERE emp_id = %s" % (user_del_employee)
+
+    execute_query(conn, sql)
+    return "Employee Successfully Deleted"
+
 
 app.run()
