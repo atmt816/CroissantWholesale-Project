@@ -68,7 +68,6 @@ app.config["DEBUG"] = True  # allow to show error in browser
 def employee_info():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    # sql = "SELECT * FROM employees"
     sql = """
         SELECT e.emp_id, e.first_name, e.last_name, e.start_date, e.end_date, e.emp_status, r.role_name
         FROM employees AS e
