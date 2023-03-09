@@ -205,6 +205,26 @@ def add_employee_contact():
     return 'Employee Contact was added Successfully'
 
 
+@app.route('/addcustomers', methods=['POST'])
+def add_customer():
+    # The user input is gathered in JSON format and stored into an empty variable
+    customer_data = request.get_json()
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    business_name = customer_data['business_name']
+    business_hrs = customer_data['business_hrs']
+    last_name = customer_data['last_name']
+    first_name = customer_data['first_name']
+    cust_acc_num = customer_data['cust_acc_num']
+    
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "INSERT INTO customers(business_name, business_hrs, last_name, first_name, cust_acc_num) VALUES ('%s', '%s', '%s', '%s', %s')" % (
+        business_name, business_hrs, last_name, first_name, cust_acc_num)
+
+    execute_query(conn, sql)
+    return 'Customer was added Successfully'
+
 ############################# DELETE #######################################
 
 
