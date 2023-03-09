@@ -449,6 +449,77 @@ def add_order():
     execute_query(conn, sql)
     return 'Order was added Successfully'
 
+# Fulfillment Report
+# Fulfillment check per line item. Report generates all orders within a timeframe that are scheduled for delivery.
+# User can then ensure all items have been made to fulfill these orders, or plan accordingly if more ingredients must be ordered. 
+
+#Daily
+@app.route('/dailyfulfillmentreport', methods=['GET'])
+def get_daily_ful_report():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT O.Order_ID, O.Date_Produced, O.Delivery_Date, P.Product_ID, Product_Name, LI.Quantity FROM products AS P INNER JOIN line_items AS LI ON P.Product_ID = LI.Product_ID INNER JOIN orders as O ON O.Order_ID = LI.Order_ID WHERE O.Delivery_Date = curdate() GROUP BY O.Order_ID, O.Date_Produced, O.Delivery_Date"
+    daily_ful_report = execute_read_query(conn, sql)
+    return daily_ful_report
+
+#Weekly
+@app.route('/weeklyfulfillmentreport', methods=['GET'])
+def get_weekly_ful_report():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT O.Order_ID, O.Date_Produced, O.Delivery_Date, P.Product_ID, Product_Name, LI.Quantity FROM products AS P INNER JOIN line_items AS LI ON P.Product_ID = LI.Product_ID INNER JOIN orders as O ON O.Order_ID = LI.Order_ID WHERE O.Delivery_Date BETWEEN curdate() AND curdate()+8 GROUP BY O.Order_ID, O.Date_Produced, O.Delivery_Date"
+    weekly_ful_report = execute_read_query(conn, sql)
+    return weekly_ful_report
+
+#Monthly
+@app.route('/monthlyfulfillmentreport', methods=['GET'])
+def get_monthly_ful_report():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT O.Order_ID, O.Date_Produced, O.Delivery_Date, P.Product_ID, Product_Name, LI.Quantity FROM products AS P INNER JOIN line_items AS LI ON P.Product_ID = LI.Product_ID INNER JOIN orders as O ON O.Order_ID = LI.Order_ID WHERE O.Delivery_Date BETWEEN curdate() AND curdate()+30 GROUP BY O.Order_ID, O.Date_Produced, O.Delivery_Date"
+    monthly_ful_report = execute_read_query(conn, sql)
+    return monthly_ful_report
+
+
+# Best Selling Items Report
+# This report generates a count for each specific line item's frequency across all orders.
+
+#Daily Best Sellers - Determine most popular items amongst all orders scheduled for delivery on current date.
+@app.route('/dailybestsellers', methods=['GET'])
+def get_daily_best_sell_report():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT P.Product_ID, P.Product_Name, LI.Item_ID, LI.Price_Per_Unit, O.Order_ID, LI.Quantity, COUNT(O.Order_ID) AS Order_Frequency FROM orders AS O INNER JOIN line_items AS LI ON LI.Order_ID = O.Order_ID INNER JOIN products as P ON P.Product_ID = LI.Product_ID WHERE O.Delivery_Date = curdate() GROUP BY P.Product_ID, P.Product_Name, LI.Item_ID, LI.Price_Per_Unit"
+    daily_best_sell_report = execute_read_query(conn, sql)
+    return daily_best_sell_report
+
+#Weekly Best Sellers - Determine most popular items amongst all orders scheduled for delivery within a week from the current date.
+@app.route('/weeklybestsellers', methods=['GET'])
+def get_weekly_best_sell_report():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT P.Product_ID, P.Product_Name, LI.Item_ID, LI.Price_Per_Unit, O.Order_ID, LI.Quantity, COUNT(O.Order_ID) AS Order_Frequency FROM orders AS O INNER JOIN line_items AS LI ON LI.Order_ID = O.Order_ID INNER JOIN products as P ON P.Product_ID = LI.Product_ID WHERE O.Delivery_Date BETWEEN curdate() AND curdate()+8 GROUP BY P.Product_ID, P.Product_Name, LI.Item_ID, LI.Price_Per_Unit"
+    weekly_best_sell_report = execute_read_query(conn, sql)
+    return weekly_best_sell_report
+
+#Monthly Best Sellers - Determine most popular items amongst all orders scheduled for delivery within a month from the current date.
+@app.route('/monthlybestsellers', methods=['GET'])
+def get_monthly_best_sell_report():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT P.Product_ID, P.Product_Name, LI.Item_ID, LI.Price_Per_Unit, O.Order_ID, LI.Quantity, COUNT(O.Order_ID) AS Order_Frequency FROM orders AS O INNER JOIN line_items AS LI ON LI.Order_ID = O.Order_ID INNER JOIN products as P ON P.Product_ID = LI.Product_ID WHERE O.Delivery_Date BETWEEN curdate() AND curdate()+30 GROUP BY P.Product_ID, P.Product_Name, LI.Item_ID, LI.Price_Per_Unit"
+    monthly_best_sell_report = execute_read_query(conn, sql)
+    return monthly_best_sell_report
+
+#Lifetime Best Sellers - Determine most popular items amongst all historical orders.
+@app.route('/lifetimebestsellers', methods=['GET'])
+def get_lifetime_best_sell_report():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT P.Product_ID, P.Product_Name, LI.Item_ID, LI.Price_Per_Unit, O.Order_ID, LI.Quantity, COUNT(O.Order_ID) AS Order_Frequency FROM orders AS O INNER JOIN line_items AS LI ON LI.Order_ID = O.Order_ID INNER JOIN products as P ON P.Product_ID = LI.Product_ID GROUP BY P.Product_ID, P.Product_Name, LI.Item_ID, LI.Price_Per_Unit"
+    lifetime_best_sell_report = execute_read_query(conn, sql)
+    return lifetime_best_sell_report
+
 ############################# INVOICES ######################################
 
 #Invoices Table CRUD
