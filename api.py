@@ -346,6 +346,70 @@ def get_inventory():
 
 ############################# MAINTENENCE ###################################
 
+# Garage Table CRUD
+
+@app.route('/garage', methods=['GET'])
+def get_garage():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT * FROM garage"
+    garage = execute_read_query(conn, sql)
+    return garage
+
+
+@app.route('/addgarage', methods=['POST'])
+def add_garage():
+    # The user input is gathered in JSON format and stored into an empty variable
+    garage_data = request.get_json()
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    garage_name = garage_data['garage_name']
+    phone_number = garage_data['phone_number']
+    street = garage_data['street']
+    city = garage_data['city']
+    state = garage_data['state_code_id']
+    zipcode = garage_data['zipcode']
+    
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "INSERT INTO garage(garage_name, phone_number, street, city, state, zipcode) VALUES ('%s', %s, '%s', '%s', '%s', %s)" % (
+        garage_name, phone_number, street, city, state, zipcode)
+
+    execute_query(conn, sql)
+    return 'Garage was added Successfully'
+
+
+
+# Vehicle Table CRUD
+
+@app.route('/vehicles', methods=['GET'])
+def get_vehicles():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT * FROM vehicles"
+    vehicles = execute_read_query(conn, sql)
+    return vehicles
+
+
+@app.route('/addvehicle', methods=['POST'])
+def add_vehicle():
+    # The user input is gathered in JSON format and stored into an empty variable
+    vehicle_data = request.get_json()
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    license_plate = vehicle_data['license_plate']
+    make = vehicle_data['make']
+    model = vehicle_data['model']
+    vin = vehicle_data['vin']
+   
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "INSERT INTO vehicles(license_plate, make, model, vin) VALUES ('%s', '%s', '%s', '%s')" % (
+        license_plate, make, model, vin)
+
+    execute_query(conn, sql)
+    return 'Vehicle was added Successfully'
+
+
+
 # maintenance get method working now
 # adjust sql as needed - Misael
 @app.route('/maintenance', methods=['GET'])
