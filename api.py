@@ -303,7 +303,7 @@ def get_vendor_contact():
             FROM vendors v
             JOIN vendor_contacts vc
             ON v.vendor_ct_id = vc.vendor_ct_id
-            JOIN states sON vc.state_code_id = s.state_code_id"""
+            JOIN states s ON vc.state_code_id = s.state_code_id"""
     vendor_contact = execute_read_query(conn, sql)
     return vendor_contact
 
@@ -519,6 +519,15 @@ def get_lifetime_best_sell_report():
     sql = "SELECT P.Product_ID, P.Product_Name, LI.Item_ID, LI.Price_Per_Unit, O.Order_ID, LI.Quantity, COUNT(O.Order_ID) AS Order_Frequency FROM orders AS O INNER JOIN line_items AS LI ON LI.Order_ID = O.Order_ID INNER JOIN products as P ON P.Product_ID = LI.Product_ID GROUP BY P.Product_ID, P.Product_Name, LI.Item_ID, LI.Price_Per_Unit"
     lifetime_best_sell_report = execute_read_query(conn, sql)
     return lifetime_best_sell_report
+
+#Orders-Invoice Report- View payment status of all orders with their corresponding invoice.
+@app.route('/paymentstatus', methods=['GET'])
+def get_payment_status_report():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT i.Customer_ID, o.Order_id, i.Invoice_Number, i.Invoice_date, i.Invoice_total, i.Payment_Status, i.Date_Paid FROM Invoices i JOIN Orders o ON i.Invoice_ID = o.Invoice_ID; "
+    payment_status_report = execute_read_query(conn, sql)
+    return payment_status_report
 
 ############################# INVOICES ######################################
 
