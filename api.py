@@ -47,15 +47,17 @@ def execute_query(connection, query):
 
 
 def execute_read_query(connection, query):
-    cursor = connection.cursor(dictionary=True)
-    result = None
+    cursor = connection.cursor()
+    result = []
     try:
         cursor.execute(query)
-        result = cursor.fetchall()
-        return jsonify(result)
+        table = cursor.fetchall()
+        columnNames = [column[0] for column in cursor.description]
+        for record in table:
+            result.append(dict(zip(columnNames, record )))
+        return result
     except Error as e:
-        print(f"The error '{e}' occured")
-
+        print(f"The error '{e}' occurred")
 
 # setting up the application
 app = flask.Flask(__name__)  # sets up the application
@@ -83,9 +85,10 @@ def employee_info():
     sql = """
         SELECT * FROM states;
         """ 
-    states = execute_read_query(conn, sql)
+    states= execute_read_query(conn, sql)
 
-    return employees
+    return jsonify(employees, states)
+
 
  
 
