@@ -529,6 +529,15 @@ def get_payment_status_report():
     payment_status_report = execute_read_query(conn, sql)
     return payment_status_report
 
+#Delivery Sheet Report - Generate a customer contact list for all deliveries scheduled on the current date.
+@app.route('/deliverysheet', methods=['GET'])
+def get_delivery_sheet():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT c.Customer_ID, c.Business_Name, c.First_Name, c.Last_Name, c.Customer_Account_Number, cc.Phone, cc.Street, cc.City, cc.Zipcode, o.Order_id, o.Delivery_date FROM Customers as c JOIN Customer_Contact AS cc ON c.Customer_ct_id = cc.Customer_ct_id JOIN Orders AS o ON cc.Order_Id = o. Orders_Id WHERE o.Delivery_Date = curdate();  "
+    delivery_sheet = execute_read_query(conn, sql)
+    return delivery_sheet
+
 ############################# INVOICES ######################################
 
 #Invoices Table CRUD
