@@ -374,6 +374,7 @@ def get_products():
     products = execute_read_query(conn, sql)
     return products
 
+@app.route('/addproduct', methods=['POST'])
 def add_product():
     # The user input is gathered in JSON format and stored into an empty variable
     product_data = request.get_json()
@@ -389,16 +390,100 @@ def add_product():
     return 'Product was added Successfully'
 
 
+############################# ORDERS ########################################
 
 #Line Items Table CRUD
 
-############################# ORDERS ########################################
+@app.route('/lineitems', methods=['GET'])
+def get_line_items():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT * FROM line_items"
+    line_items = execute_read_query(conn, sql)
+    return line_items
+
+@app.route('/addlineitem', methods=['POST'])
+def add_line_item():
+    # The user input is gathered in JSON format and stored into an empty variable
+    line_item_data = request.get_json()
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    order_id = line_item_data['order_id']
+    product_id = line_item_data['product_id']
+    quantity = line_item_data['quantity']
+    price_per_unit = line_item_data['price_per_unit']
+    total = line_item_data['total']
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "INSERT INTO line_items(order_id, product_id, quantity, price_per_unit, total) VALUES (%s, %s, %s, %s, %s)" % (
+        order_id, product_id, quantity, price_per_unit, total)
+
+    execute_query(conn, sql)
+    return 'Line Item was added Successfully'
+
 
 #Orders Table CRUD
+
+@app.route('/orders', methods=['GET'])
+def get_orders():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT * FROM orders"
+    orders = execute_read_query(conn, sql)
+    return orders
+
+@app.route('/addorder', methods=['POST'])
+def add_order():
+    # The user input is gathered in JSON format and stored into an empty variable
+    order_data = request.get_json()
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    invoice_id = order_data['invoice_id']
+    date_produced = order_data['date_produced']
+    delivery_date = order_data['delivery_date']
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "INSERT INTO orders(invoice_id, date_produced, delivery_date) VALUES (%s, %s, %s)" % (
+        invoice_id, date_produced, delivery_date)
+
+    execute_query(conn, sql)
+    return 'Order was added Successfully'
 
 ############################# INVOICES ######################################
 
 #Invoices Table CRUD
+
+@app.route('/invoices', methods=['GET'])
+def get_invoices():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT * FROM invoices"
+    invoices = execute_read_query(conn, sql)
+    return invoices
+
+
+@app.route('/addinvoice', methods=['POST'])
+def add_invoice():
+    # The user input is gathered in JSON format and stored into an empty variable
+    invoice_data = request.get_json()
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    vendor_id = invoice_data['vendor_id']
+    customer_id = invoice_data['customer_id']
+    invoice_number = invoice_data['invoice_number']
+    invoice_date = invoice_data['invoice_date']
+    invoice_total = invoice_data['invoice_total']
+    payment_status = invoice_data['payment_status']
+    date_paid = invoice_data['date_paid']
+    
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "INSERT INTO invoices(vendor_id, customer_id, invoice_number, invoice_date, invoice_total, payment_status, date_paid) VALUES (%s, %s, %s, %s, %s, '%s', %s)" % (
+        vendor_id, customer_id, invoice_number, invoice_date, invoice_total, payment_status, date_paid)
+
+    execute_query(conn, sql)
+    return 'Invoice was added Successfully'
+
 
 ############################# MAINTENENCE ###################################
 
