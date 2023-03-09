@@ -79,15 +79,8 @@ def employee_info():
         """
     employees = execute_read_query(conn, sql)
 
-    sql = """
-        SELECT * FROM states;
-        """ 
-    states= execute_read_query(conn, sql)
 
     return employees
-
-
- 
 
 
 # employee_contact get method working now

@@ -61,18 +61,15 @@
                 </div>
                 <div class="col-md-4">
                   <label for="inputState" class="form-label">State</label>
-                  <select id="inputState" class="form-select">
-                    <option selected>Select</option>
-                    <option>...</option>
-                  </select>
+                  
                 </div>
                 <div class="col-md-2">
                   <label for="inputZip" class="form-label">Zip</label>
                   <input type="text" class="form-control" id="inputZip">
                 </div>
                 <div class="col-md-6">
-                  <label for="inputState" class="form-label">Role</label>
-                  <select id="inputState" class="form-select">
+                  <label for="inputRole" class="form-label">Role</label>
+                  <select id="inputRole" class="form-select">
                     <option selected>Select</option>
                     <option>...</option>
                   </select>
@@ -116,10 +113,10 @@
           <% employee_data.forEach(function(employee_data) { %>
             <tr>
               <td>
-                <a style="text-decoration:none" href="/empinfo"><%= employee_data.emp_id%></a>
+                <a style="text-decoration:none" href="/empinfo/"><%= employee_data.emp_id%></a>
               </td>
               <td>
-                <a style="text-decoration:none" href="/empinfo"><%= employee_data.last_name%>,&nbsp<%= employee_data.first_name%></a>
+                <a style="text-decoration:none" href="/empinfo/<%=employee_data.emp_id%>"><%= employee_data.last_name%>,&nbsp<%= employee_data.first_name%></a>
               </td>
               <td>
                 <%= employee_data.start_date%>
