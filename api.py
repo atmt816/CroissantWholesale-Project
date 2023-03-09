@@ -86,8 +86,8 @@ def get_employee_contact():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = """SELECT e.first_name, e.last_name, ec.phone, ec.email, ec.street, ec.city, s.state_code_id, ec.zipcode
-            FROM employees e
-            JOIN employee_contact ec
+           FROM employees e
+           JOIN employee_contact ec
             ON e.emp_id = ec.emp_id
             JOIN states s
             ON ec.state_code_id = s.state_code_id;"""
@@ -198,7 +198,7 @@ def add_employee_contact():
 
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "INSERT INTO employee_contact(phone, email, street, city, state, zipcode, emp_id ) VALUES (%s, '%s', '%s', '%s', %s, %s, %s)" % (
+    sql = "INSERT INTO employee_contact(phone, email, street, city, state, zipcode, emp_id ) VALUES (%s, '%s', '%s', '%s', '%s', %s, %s)" % (
         phone, email, street, city, state, zipcode, emp_id)
 
     execute_query(conn, sql)
