@@ -5,6 +5,9 @@ import datetime
 import time
 import flask  # , werkzeug
 from flask import request, jsonify
+import datetime
+import time 
+from flask import jsonify
 from flask import jsonify, make_response
 from flask import request, make_response
 # from sql import create_connection
@@ -77,26 +80,34 @@ def employee_info():
         """
     employees = execute_read_query(conn, sql)
 
+    sql = """
+        SELECT * FROM states;
+        """ 
+    states = execute_read_query(conn, sql)
 
     return employees
+
+ 
 
 
 # employee_contact get method working now
 # adjust sql as needed - Misael
-@app.route('/employee_contact', methods=['GET'])
+@app.route('/employee_info', methods=['GET'])
 def get_employee_contact():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = """SELECT e.first_name, e.last_name, ec.phone, ec.email, ec.street, ec.city, s.state_code_id, ec.zipcode
+    sql = """SELECT e.emp_id, e.first_name, e.last_name, e.start_date, e.end_date, e.emp_status, r.role_name, ec.phone, ec.email, ec.street, ec.city, s.state_code_id, ec.zipcode
             FROM employees e
             JOIN employee_contact ec
             ON e.emp_id = ec.emp_id
+            JOIN roles AS r
+			ON e.role_id = r.role_id
             JOIN states s
             ON ec.state_code_id = s.state_code_id;"""
-    employee_contact = execute_read_query(conn, sql)
+    employee_info = execute_read_query(conn, sql)
 
-    sql = """SELECT * FROM states"""
-    return employee_contact
+    # sql = """SELECT * FROM states"""
+    return employee_info
 
 
 # customers get method working now
