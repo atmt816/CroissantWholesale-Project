@@ -89,7 +89,6 @@ def employee_info():
         ON e.role_id = r.role_id;
         """
     employees = execute_read_query(conn, sql)
-
     return employees
 
 @app.route('/addemployee', methods=['POST'])
@@ -137,6 +136,7 @@ def get_employee_contact():
     employee_contact = execute_read_query(conn, sql)
 
     sql = """SELECT * FROM states"""
+
     return employee_contact
 
 
@@ -160,6 +160,36 @@ def add_employee_contact():
 
     execute_query(conn, sql)
     return 'Employee Contact was added Successfully'
+
+############################# ROLES #######################################
+
+# Roles Table CRUD
+
+@app.route('/roles', methods=['GET'])
+def get_roles():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT * FROM roles"
+    roles = execute_read_query(conn, sql)
+    return roles
+
+
+@app.route('/addrole', methods=['POST'])
+def add_role():
+    # The user input is gathered in JSON format and stored into an empty variable
+    role_data = request.get_json()
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    role_name = role_data['Role_Name']
+    role_description = role_data['Role_Description']
+    
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "INSERT INTO roles(role_name, role_description) VALUES ('%s', '%s')" % (
+        role_name, role_description)
+
+    execute_query(conn, sql)
+    return 'Role was added Successfully'
 
 
 ############################# CUSTOMERS ###################################
