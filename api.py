@@ -449,6 +449,37 @@ def add_order():
     execute_query(conn, sql)
     return 'Order was added Successfully'
 
+# Fulfillment Report
+# Fulfillment check per line item. Report generates all orders within a timeframe that are scheduled for delivery.
+# User can then ensure all items have been made to fulfill these orders, or plan accordingly if more ingredients must be ordered. 
+
+#Daily
+@app.route('/dailyfulfillmentreport', methods=['GET'])
+def get_daily_ful_report():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT O.Order_ID, O.Date_Produced, O.Delivery_Date, P.Product_ID, Product_Name, LI.Quantity FROM products AS P INNER JOIN line_items AS LI ON P.Product_ID = LI.Product_ID INNER JOIN orders as O ON O.Order_ID = LI.Order_ID WHERE O.Delivery_Date = curdate() GROUP BY O.Order_ID, O.Date_Produced, O.Delivery_Date"
+    daily_ful_report = execute_read_query(conn, sql)
+    return daily_ful_report
+
+#Weekly
+@app.route('/weeklyfulfillmentreport', methods=['GET'])
+def get_weekly_ful_report():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT O.Order_ID, O.Date_Produced, O.Delivery_Date, P.Product_ID, Product_Name, LI.Quantity FROM products AS P INNER JOIN line_items AS LI ON P.Product_ID = LI.Product_ID INNER JOIN orders as O ON O.Order_ID = LI.Order_ID WHERE O.Delivery_Date BETWEEN curdate() AND curdate()+8 GROUP BY O.Order_ID, O.Date_Produced, O.Delivery_Date"
+    weekly_ful_report = execute_read_query(conn, sql)
+    return weekly_ful_report
+
+#Monthly
+@app.route('/monthlyfulfillmentreport', methods=['GET'])
+def get_monthly_ful_report():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT O.Order_ID, O.Date_Produced, O.Delivery_Date, P.Product_ID, Product_Name, LI.Quantity FROM products AS P INNER JOIN line_items AS LI ON P.Product_ID = LI.Product_ID INNER JOIN orders as O ON O.Order_ID = LI.Order_ID WHERE O.Delivery_Date BETWEEN curdate() AND curdate()+30 GROUP BY O.Order_ID, O.Date_Produced, O.Delivery_Date"
+    monthly_ful_report = execute_read_query(conn, sql)
+    return monthly_ful_report
+
 ############################# INVOICES ######################################
 
 #Invoices Table CRUD
