@@ -409,6 +409,8 @@ def add_vehicle():
     return 'Vehicle was added Successfully'
 
 
+#Maintenance_Logs Table CRUD
+
 
 # maintenance get method working now
 # adjust sql as needed - Misael
@@ -419,5 +421,24 @@ def get_maintenance():
     sql = "SELECT * FROM maintenance_logs"
     maintenance = execute_read_query(conn, sql)
     return maintenance
+
+@app.route('/addmaintenancelog', methods=['POST'])
+def add_maintenance_log():
+    # The user input is gathered in JSON format and stored into an empty variable
+    log_data = request.get_json()
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    garage_id = log_data['garage_id']
+    vehicle_id = log_data['vehicle_id']
+    date = log_data['date']
+    status = log_data['status']
+    note = log_data['note']
+   
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "INSERT INTO maintenance_logs(garage_id, vehicle_id, date, status, note) VALUES (%s, %s, %s, '%s', '%s')" % (
+        garage_id, vehicle_id, date, status, note)
+
+    execute_query(conn, sql)
+    return 'Maintenance Log was added Successfully'
 
 app.run()
