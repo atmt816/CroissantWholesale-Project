@@ -61,6 +61,8 @@ app.config["DEBUG"] = True  # allow to show error in browser
 
 ############################# STATES ###################################
 
+#States Table CRUD
+
 @app.route('/states', methods=['GET'])
 def get_states():
     conn = create_connection(
@@ -71,7 +73,7 @@ def get_states():
 
 ############################# EMPLOYEES ###################################
 
-#Employees CRUD
+#Employees Table CRUD
 
 # employees get method working now
 # not returning data for now since roles table is empty
@@ -162,7 +164,7 @@ def add_employee_contact():
 
 ############################# CUSTOMERS ###################################
 
-#Customers CRUD
+#Customers Table CRUD
 
 # customers get method working now
 # no data in customers for now
@@ -195,7 +197,18 @@ def add_customer():
     execute_query(conn, sql)
     return 'Customer was added Successfully'
 
-#Customer Contact CRUD
+#Customer Contact Table CRUD
+
+@app.route('/customer_contact', methods=['GET'])
+def get_customer_contact():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = """SELECT c.Customer_ID, c.Business_Name, c.First_Name, c.Last_Name, cc.Phone, cc.Email, cc.Street, cc.City cc.Zipcode 
+                FROM Customers c 
+                JOIN Customer_Contact cc ON c.Customer_ct_id = cc.Customer_ct_id        
+                JOIN States s ON cc.state_code_id = s.State_Code_ID;_ct_id;"""
+    customer_contact = execute_read_query(conn, sql)
+    return customer_contact
 
 
 @app.route('/addcustomercontact', methods=['POST'])
