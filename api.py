@@ -330,6 +330,8 @@ def add_vendor_contact():
 
 ############################# INVENTORY ###################################
 
+# Inventory Table CRUD
+
 # inventory get method working now
 # no data in inventory for now
 # adjust sql as needed - Misael
@@ -341,8 +343,62 @@ def get_inventory():
     inventory = execute_read_query(conn, sql)
     return inventory
 
-############################# INVOICES ###################################
+@app.route('/addinventory', methods=['POST'])
+def add_inventory():
+    # The user input is gathered in JSON format and stored into an empty variable
+    inventory_data = request.get_json()
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    vendor_id = inventory_data['vendor_id']
+    item_name = inventory_data['item_name']
+    item_amount = inventory_data['item_amount']
+    unit_cost = inventory_data['unit_cost']
+    total_inv_cost = inventory_data['total_inv_cost']
+    date_bought = inventory_data['date_bought']
+    
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "INSERT INTO inventory(vendor_id, item_name, item_amount, unit_cost, total_inv_cost, date_bought) VALUES (%s, '%s', %s, %s, %s, %s)" % (
+        vendor_id, item_name, item_amount, unit_cost, total_inv_cost, date_bought)
 
+    execute_query(conn, sql)
+    return 'Inventory was added Successfully'
+
+
+#Products Table CRUD 
+
+@app.route('/products', methods=['GET'])
+def get_products():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT * FROM products"
+    products = execute_read_query(conn, sql)
+    return products
+
+def add_product():
+    # The user input is gathered in JSON format and stored into an empty variable
+    product_data = request.get_json()
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    product_name = product_data['product_name']
+    
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "INSERT INTO products(product_name) VALUES ('%s')" % (
+        product_name)
+
+    execute_query(conn, sql)
+    return 'Product was added Successfully'
+
+
+
+#Line Items Table CRUD
+
+############################# ORDERS ########################################
+
+#Orders Table CRUD
+
+############################# INVOICES ######################################
+
+#Invoices Table CRUD
 
 ############################# MAINTENENCE ###################################
 
