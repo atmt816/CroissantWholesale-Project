@@ -234,6 +234,33 @@ def add_customer_contact():
 
 ############################# VENDORS ###################################
 
+#Vendors Table CRUD
+
+@app.route('/vendors', methods=['GET'])
+def get_vendors():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT * FROM vendors"
+    vendors = execute_read_query(conn, sql)
+    return vendors
+
+@app.route('/addvendor', methods=['POST'])
+def add_vendor():
+    # The user input is gathered in JSON format and stored into an empty variable
+    vendor_data = request.get_json()
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    vendor_name = vendor_data['vendor_name']
+    vendor_hrs = vendor_data['vendor_hrs']
+    vendor_account_number = vendor_data['vendor_account_number']
+    vendor_ct_id = vendor_data['vendor_ct_id']
+    
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "INSERT INTO vendors(vendor_name, vendor_hrs, vendor_account_number, vendor_ct_id) VALUES ('%s', '%s', %s, %s)" % (
+        vendor_name, vendor_hrs, vendor_account_number, vendor_ct_id)
+
+    execute_query(conn, sql)
+    return 'Vendor was added Successfully'
 
 ############################# INVENTORY ###################################
 
