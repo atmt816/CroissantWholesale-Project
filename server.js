@@ -30,19 +30,11 @@ app.get('/employees', function(req, res){
         console.log(response.data)
         var employee_data = response.data
 
-<<<<<<< Updated upstream
-        res.render('pages/employees', 
-        { employee_data: employee_data
-        //   states: employee_data[1]  
-          });
-    });
-=======
         res.render('pages/employees', 
         { employee_data: employee_data[0],
-             states: employee_data[1]  
+          states: employee_data[1]  
           });
     });
->>>>>>> Stashed changes
 });
 
 app.get('/empinfo', function (req, res) {
