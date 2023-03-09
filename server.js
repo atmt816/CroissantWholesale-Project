@@ -35,10 +35,10 @@ app.get('/employees', function(req, res){
     });
 });
 
-// app.get('/employees', function (req, res) {
+app.get('/empinfo', function (req, res) {
 
-//     res.render('pages/employees');
-// });
+    res.render('pages/empinfo');
+});
 
 
 app.listen(3000);

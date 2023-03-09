@@ -116,13 +116,13 @@
           <% employee_data.forEach(function(employee_data) { %>
             <tr>
               <td>
-                <%= employee_data.emp_id%>
+                <a style="text-decoration:none" href="/empinfo"><%= employee_data.emp_id%></a>
               </td>
               <td>
-                <%= employee_data.last_name%>,&nbsp<%= employee_data.first_name%>
+                <a style="text-decoration:none" href="/empinfo"><%= employee_data.last_name%>,&nbsp<%= employee_data.first_name%></a>
               </td>
               <td>
-                <%= employee_data.start_date.split('00:00:00 GMT')[0]%>
+                <%= employee_data.start_date%>
               </td>
               <td>
                 <%= employee_data.end_date%>
