@@ -59,7 +59,19 @@ app = flask.Flask(__name__)  # sets up the application
 app.config["DEBUG"] = True  # allow to show error in browser
 
 
-############################# READ - GET ###################################
+############################# STATES ###################################
+
+@app.route('/states', methods=['GET'])
+def get_states():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT * FROM states"
+    states = execute_read_query(conn, sql)
+    return states
+
+############################# EMPLOYEES ###################################
+
+#Employees CRUD
 
 # employees get method working now
 # not returning data for now since roles table is empty
@@ -77,83 +89,6 @@ def employee_info():
     employees = execute_read_query(conn, sql)
 
     return employees
-
-
-# employee_contact get method working now
-# adjust sql as needed - Misael
-@app.route('/employee_contact', methods=['GET'])
-def get_employee_contact():
-    conn = create_connection(
-        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = """SELECT e.first_name, e.last_name, ec.phone, ec.email, ec.street, ec.city, s.state_code_id, ec.zipcode
-           FROM employees e
-           JOIN employee_contact ec
-            ON e.emp_id = ec.emp_id
-            JOIN states s
-            ON ec.state_code_id = s.state_code_id;"""
-    employee_contact = execute_read_query(conn, sql)
-
-    sql = """SELECT * FROM states"""
-    return employee_contact
-
-
-# customers get method working now
-# no data in customers for now
-# adjust sql as needed - Misael
-@app.route('/customers', methods=['GET'])
-def get_customers():
-    conn = create_connection(
-        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "SELECT * FROM customers"
-    customers = execute_read_query(conn, sql)
-    return customers
-
-
-# inventory get method working now
-# no data in inventory for now
-# adjust sql as needed - Misael
-@app.route('/inventory', methods=['GET'])
-def get_inventory():
-    conn = create_connection(
-        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "SELECT * FROM inventory"
-    inventory = execute_read_query(conn, sql)
-    return inventory
-
-
-# invoices get method working now
-# no data in invoices for now
-# adjust sql as needed - Misael
-@app.route('/invoices', methods=['GET'])
-def get_invoices():
-    conn = create_connection(
-        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "SELECT * FROM inventory"
-    invoices = execute_read_query(conn, sql)
-    return invoices
-
-
-# maintenance get method working now
-# adjust sql as needed - Misael
-@app.route('/maintenance', methods=['GET'])
-def get_maintenance():
-    conn = create_connection(
-        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "SELECT * FROM maintenance_logs"
-    maintenance = execute_read_query(conn, sql)
-    return maintenance
-
-
-@app.route('/states', methods=['GET'])
-def get_states():
-    conn = create_connection(
-        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "SELECT * FROM states"
-    states = execute_read_query(conn, sql)
-    return states
-
-############################# CREATE - INSERT ###################################
-
 
 @app.route('/addemployee', methods=['POST'])
 def add_employee():
@@ -183,6 +118,26 @@ def add_employee():
     return 'Employee was added Successfully'
 
 
+#Employee Contact CRUD
+
+# employee_contact get method working now
+# adjust sql as needed - Misael
+@app.route('/employee_contact', methods=['GET'])
+def get_employee_contact():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = """SELECT e.first_name, e.last_name, ec.phone, ec.email, ec.street, ec.city, s.state_code_id, ec.zipcode
+           FROM employees e
+           JOIN employee_contact ec
+            ON e.emp_id = ec.emp_id
+            JOIN states s
+            ON ec.state_code_id = s.state_code_id;"""
+    employee_contact = execute_read_query(conn, sql)
+
+    sql = """SELECT * FROM states"""
+    return employee_contact
+
+
 @app.route('/addemployeecontact', methods=['POST'])
 def add_employee_contact():
     # The user input is gathered in JSON format and stored into an empty variable
@@ -205,6 +160,21 @@ def add_employee_contact():
     return 'Employee Contact was added Successfully'
 
 
+############################# CUSTOMERS ###################################
+
+#Customers CRUD
+
+# customers get method working now
+# no data in customers for now
+# adjust sql as needed - Misael
+@app.route('/customers', methods=['GET'])
+def get_customers():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT * FROM customers"
+    customers = execute_read_query(conn, sql)
+    return customers
+
 @app.route('/addcustomers', methods=['POST'])
 def add_customer():
     # The user input is gathered in JSON format and stored into an empty variable
@@ -224,6 +194,8 @@ def add_customer():
 
     execute_query(conn, sql)
     return 'Customer was added Successfully'
+
+#Customer Contact CRUD
 
 
 @app.route('/addcustomercontact', methods=['POST'])
@@ -247,10 +219,35 @@ def add_customer_contact():
     execute_query(conn, sql)
     return 'Customer Contact was added Successfully'
 
-############################# DELETE #######################################
+############################# VENDORS ###################################
 
 
+############################# INVENTORY ###################################
+
+# inventory get method working now
+# no data in inventory for now
+# adjust sql as needed - Misael
+@app.route('/inventory', methods=['GET'])
+def get_inventory():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT * FROM inventory"
+    inventory = execute_read_query(conn, sql)
+    return inventory
+
+############################# INVOICES ###################################
 
 
+############################# MAINTENENCE ###################################
+
+# maintenance get method working now
+# adjust sql as needed - Misael
+@app.route('/maintenance', methods=['GET'])
+def get_maintenance():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT * FROM maintenance_logs"
+    maintenance = execute_read_query(conn, sql)
+    return maintenance
 
 app.run()
