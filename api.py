@@ -226,7 +226,7 @@ def add_customer_contact():
 
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "INSERT INTO employee_contact(phone, email, street, city, state_code_id, Zipcode, customer_id ) VALUES (%s, '%s', '%s', '%s', '%s', %s, %s)" % (
+    sql = "INSERT INTO customer_contact(phone, email, street, city, state_code_id, Zipcode, customer_id ) VALUES (%s, '%s', '%s', '%s', '%s', %s, %s)" % (
         phone, email, street, city, state, zipcode, customer_id)
 
     execute_query(conn, sql)
@@ -261,6 +261,42 @@ def add_vendor():
 
     execute_query(conn, sql)
     return 'Vendor was added Successfully'
+
+
+#Vendor Contact Table
+
+@app.route('/vendor_contact', methods=['GET'])
+def get_vendor_contact():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = """SELECT v.vendor_name, v.vendor_hrs, vc.phone, vc.email, vc.street, vc.city, vc.zipcode, s.state_code_id
+            FROM vendors v
+            JOIN vendor_contacts vc
+            ON v.vendor_ct_id = vc.vendor_ct_id
+            JOIN states sON vc.state_code_id = s.state_code_id"""
+    vendor_contact = execute_read_query(conn, sql)
+    return vendor_contact
+
+
+@app.route('/addvendorcontact', methods=['POST'])
+def add_vendor_contact():
+    # The user input is gathered in JSON format and stored into an empty variable
+    vendor_contact_data = request.get_json()
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    phone = vendor_contact_data['phone']
+    email = vendor_contact_data['email']
+    street = vendor_contact_data['street']
+    city = vendor_contact_data['city']
+    state = vendor_contact_data['state_code_id']
+    zipcode = vendor_contact_data['zipcode']
+    
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "INSERT INTO vendor_contacts(phone, email, street, city, state_code_id, zipcode) VALUES (%s, '%s', '%s', '%s', '%s', %s)" % (
+        phone, email, street, city, state, zipcode)
+
+    execute_query(conn, sql)
+    return 'Vendor Contact was added Successfully'
 
 ############################# INVENTORY ###################################
 
