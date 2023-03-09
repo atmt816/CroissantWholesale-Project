@@ -183,6 +183,31 @@ def add_employee():
     return 'Employee was added Successfully'
 
 
+@app.route('/addemployeecontact', methods=['POST'])
+def add_employee_contact():
+    # The user input is gathered in JSON format and stored into an empty variable
+    employee_contact_data = request.get_json()
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    phone = employee_contact_data['phone']
+    email = employee_contact_data['email']
+    street = employee_contact_data['street']
+    city = employee_contact_data['city']
+    state = employee_contact_data['state_code_id']
+    zipcode = employee_contact_data['zipcode']
+    emp_id = employee_contact_data['emp_id']
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "INSERT INTO employee_contact(phone, email, street, city, state_code_id, zipcode, emp_id ) VALUES (%s, '%s', '%s', '%s', '%s', %s, %s)" % (
+        phone, email, street, city, state, zipcode, emp_id)
+
+    execute_query(conn, sql)
+    return 'Employee Contact was added Successfully'
+
+
+############################# DELETE #######################################
+
+
 
 
 
