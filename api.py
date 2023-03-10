@@ -328,6 +328,17 @@ def add_vendor_contact():
     execute_query(conn, sql)
     return 'Vendor Contact was added Successfully'
 
+#Vendor Inventory Report - report generates a list of all inventory items, grouped by the vendor id the items are procured from.
+
+@app.route('/vendorinventoryreport', methods=['GET'])
+def get_vendor_inv_sheet():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT v.Vendor_ID, ii.Inventory_id, v.Vendor_Name, ii.Item_Name, ii.Item_Amount, ii.Unit_Cost ii.Total_Inv_Cost, ii.Last_Updated FROM Vendors AS v JOIN Inventory AS ii ON v.Vendor_ID = ii.Vendor_ID GROUP BY v.Vendor_ID;"
+    vendor_inv_sheet = execute_read_query(conn, sql)
+    return vendor_inv_sheet
+
+
 ############################# INVENTORY ###################################
 
 # Inventory Table CRUD
