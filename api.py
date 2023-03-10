@@ -131,7 +131,7 @@ def add_employee():
 def update_employee():
     # The user input is gathered in JSON format and stored into an empty variable
     employee_data = request.get_json()
-    # we will be using employee_id to reference the entry to update
+    # we will be using emp_id to reference the entry to update
     emp_id = employee_data['emp_id']
     # The JSON object is then separated into variables so that they may be used in a sql query
     first_name = employee_data['first_name']
@@ -212,7 +212,7 @@ def add_employee_contact():
 def update_employee_contact():
     # The user input is gathered in JSON format and stored into an empty variable
     employee_contact_data = request.get_json()
-    # we will be using employee_id to reference the entry to update
+    # we will be using emp_id to reference the entry to update
     emp_id = employee_contact_data['emp_id']
     # The JSON object is then separated into variables so that they may be used in a sql query
     phone = employee_contact_data['phone']
@@ -273,7 +273,7 @@ def add_role():
 def update_role():
     # The user input is gathered in JSON format and stored into an empty variable
     role_data = request.get_json()
-    # we will be using employee_id to reference the entry to update
+    # we will be using Role_ID to reference the entry to update
     Role_ID = role_data['Role_ID']
     # The JSON object is then separated into variables so that they may be used in a sql query
     Role_Name = role_data['Role_Name']
@@ -334,7 +334,7 @@ def add_customer():
 def update_customer():
     # The user input is gathered in JSON format and stored into an empty variable
     customer_data = request.get_json()
-    # we will be using employee_id to reference the entry to update
+    # we will be using customer_id to reference the entry to update
     customer_id = customer_data['customer_id']
     # The JSON object is then separated into variables so that they may be used in a sql query
     business_name = customer_data['business_name']
@@ -400,7 +400,7 @@ def add_customer_contact():
 def update_customer_contact():
     # The user input is gathered in JSON format and stored into an empty variable
     customer_contact_data = request.get_json()
-    # we will be using employee_id to reference the entry to update
+    # we will be using customer_id to reference the entry to update
     customer_id = customer_contact_data['customer_id']
     # The JSON object is then separated into variables so that they may be used in a sql query
     Phone = customer_contact_data['Phone']
@@ -460,7 +460,7 @@ def add_vendor():
 def update_vendor():
     # The user input is gathered in JSON format and stored into an empty variable
     vendor_data = request.get_json()
-    # we will be using employee_id to reference the entry to update
+    # we will be using vendor_id to reference the entry to update
     vendor_id = vendor_data['vendor_id']
     # The JSON object is then separated into variables so that they may be used in a sql query
     vendor_name = vendor_data['vendor_name']
@@ -524,7 +524,7 @@ def add_vendor_contact():
 def update_vendor_contact():
     # The user input is gathered in JSON format and stored into an empty variable
     vendor_contact_data = request.get_json()
-    # we will be using employee_id to reference the entry to update
+    # we will be using vendor_ct_id to reference the entry to update
     vendor_ct_id = vendor_contact_data['vendor_ct_id']
     # The JSON object is then separated into variables so that they may be used in a sql query
     phone = vendor_contact_data['phone']
@@ -590,7 +590,7 @@ def add_inventory():
 def update_inventory():
     # The user input is gathered in JSON format and stored into an empty variable
     inventory_contact_data = request.get_json()
-    # we will be using employee_id to reference the entry to update
+    # we will be using inventory_id to reference the entry to update
     inventory_id = inventory_contact_data['inventory_id']
     # The JSON object is then separated into variables so that they may be used in a sql query
     vendor_id = inventory_contact_data['vendor_id']
@@ -650,7 +650,7 @@ def add_product():
 def update_product():
     # The user input is gathered in JSON format and stored into an empty variable
     products_data = request.get_json()
-    # we will be using employee_id to reference the entry to update
+    # we will be using product_id to reference the entry to update
     product_id = products_data['product_id']
     # The JSON object is then separated into variables so that they may be used in a sql query
     product_name = products_data['product_name']
@@ -705,7 +705,7 @@ def add_line_item():
 def update_line_item():
     # The user input is gathered in JSON format and stored into an empty variable
     line_item_data = request.get_json()
-    # we will be using employee_id to reference the entry to update
+    # we will be using item_id to reference the entry to update
     item_id = line_item_data['item_id']
     # The JSON object is then separated into variables so that they may be used in a sql query
     order_id = line_item_data['order_id']
@@ -762,7 +762,7 @@ def add_order():
 def update_order():
     # The user input is gathered in JSON format and stored into an empty variable
     order_data = request.get_json()
-    # we will be using employee_id to reference the entry to update
+    # we will be using order_id to reference the entry to update
     order_id = order_data['order_id']
     # The JSON object is then separated into variables so that they may be used in a sql query
     invoice_id = order_data['invoice_id']
@@ -828,7 +828,7 @@ def add_invoice():
 def update_invoices():
     # The user input is gathered in JSON format and stored into an empty variable
     invoice_data = request.get_json()
-    # we will be using employee_id to reference the entry to update
+    # we will be using invoice_id to reference the entry to update
     invoice_id = invoice_data['invoice_id']
     # The JSON object is then separated into variables so that they may be used in a sql query
     vendor_id = invoice_data['vendor_id']
@@ -892,14 +892,13 @@ def add_garage():
     execute_query(conn, sql)
     return 'Garage was added Successfully'
 
+
 # PUT method for garage
-
-
 @app.route('/update_garage', methods=['PUT'])
 def update_garage():
     # The user input is gathered in JSON format and stored into an empty variable
     garage_data = request.get_json()
-    # we will be using employee_id to reference the entry to update
+    # we will be using garage_id to reference the entry to update
     garage_id = garage_data['garage_id']
     # The JSON object is then separated into variables so that they may be used in a sql query
     garage_name = garage_data['garage_name']
@@ -950,6 +949,31 @@ def add_vehicle():
 
     execute_query(conn, sql)
     return 'Vehicle was added Successfully'
+
+
+# PUT method for vehicles
+@app.route('/update_vehicle', methods=['PUT'])
+def update_vehicle():
+    # The user input is gathered in JSON format and stored into an empty variable
+    vehicle_data = request.get_json()
+    # we will be using vehicle_id to reference the entry to update
+    vehicle_id = vehicle_data['vehicle_id']
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    license_plate = vehicle_data['license_plate']
+    make = vehicle_data['make']
+    model = vehicle_data['model']
+    vin = vehicle_data['vin']
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    cursor = conn.cursor()
+    sql = "UPDATE vehicles SET license_plate = %s, make = %s, model = %s, vin = %s WHERE vehicle_id = %s"
+    val = (license_plate, make, model, vin, vehicle_id)
+
+    cursor.execute(sql, val)
+    conn.commit()
+    return 'Vehicle was updated successfully'
 
 
 # Maintenance_Logs Table CRUD
