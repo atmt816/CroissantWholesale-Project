@@ -823,6 +823,42 @@ def add_invoice():
     return 'Invoice was added Successfully'
 
 
+# PUT method for invoices
+@app.route('/update_invoices', methods=['PUT'])
+def update_invoices():
+    # The user input is gathered in JSON format and stored into an empty variable
+    invoice_data = request.get_json()
+    # we will be using employee_id to reference the entry to update
+    invoice_id = invoice_data['invoice_id']
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    vendor_id = invoice_data['vendor_id']
+    customer_id = invoice_data['customer_id']
+    invoice_number = invoice_data['invoice_number']
+    invoice_date = invoice_data['invoice_date']
+    invoice_total = invoice_data['invoice_total']
+    payment_status = invoice_data['payment_status']
+    date_paid = invoice_data['date_paid']
+
+    # date format as yyyy-mm-dd(2022-03-04) or mm-dd-yyyy(03-04-2022)
+    fmt_invoice_date = str(datetime.strptime(
+        invoice_date, '%m-%d-%Y').date())
+    # date format as yyyy-mm-dd(2022-03-04) or mm-dd-yyyy(03-04-2022)
+    fmt_date_paid = str(datetime.strptime(
+        date_paid, '%m-%d-%Y').date())
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    cursor = conn.cursor()
+    sql = "UPDATE invoices SET vendor_id = %s, customer_id = %s, invoice_number = %s, invoice_date = %s, invoice_total = %s, payment_status = %s, date_paid = %s WHERE invoice_id = %s"
+    val = (vendor_id, customer_id, invoice_number, fmt_invoice_date,
+           invoice_total, payment_status, fmt_date_paid, invoice_id)
+
+    cursor.execute(sql, val)
+    conn.commit()
+    return 'Invoice was updated successfully'
+
+
 ############################# MAINTENENCE ###################################
 
 # Garage Table CRUD
