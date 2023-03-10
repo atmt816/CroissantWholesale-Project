@@ -159,6 +159,9 @@ def update_employee():
     cursor.execute(sql, val)
     conn.commit()
     return 'Employee was updated successfully'
+
+############################# EMPLOYEES CONTACT ###################################
+
 # Employee Contact CRUD
 
 # employee_contact get method working now
@@ -228,7 +231,7 @@ def update_employee_contact():
 
     cursor.execute(sql, val)
     conn.commit()
-    return 'Employee_contact was updated successfully'
+    return 'Employee Contact was updated successfully'
 
 
 ############################# ROLES #######################################
@@ -243,6 +246,9 @@ def get_roles():
     sql = "SELECT * FROM roles"
     roles = execute_read_query(conn, sql)
     return roles
+
+# sql script used to create roles table is missing auto_increment for Role_ID********
+# either have to redo table or add in Role_ID to the insert below ******
 
 
 @app.route('/addrole', methods=['POST'])
@@ -262,13 +268,38 @@ def add_role():
     return 'Role was added Successfully'
 
 
-############################# CUSTOMERS ###################################
+# PUT method for roles
+@app.route('/update_role', methods=['PUT'])
+def update_role():
+    # The user input is gathered in JSON format and stored into an empty variable
+    role_data = request.get_json()
+    # we will be using employee_id to reference the entry to update
+    Role_ID = role_data['Role_ID']
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    Role_Name = role_data['Role_Name']
+    Role_Description = role_data['Role_Description']
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    cursor = conn.cursor()
+    sql = "UPDATE roles SET Role_Name = %s, Role_Description = %s WHERE Role_ID = %s"
+    val = (Role_Name, Role_Description, Role_ID)
+
+    cursor.execute(sql, val)
+    conn.commit()
+    return 'Role was updated successfully'
+
+
+##################################### CUSTOMERS ###################################
 
 # Customers Table CRUD
 
 # customers get method working now
 # no data in customers for now
 # adjust sql as needed - Misael
+
+
 @app.route('/customers', methods=['GET'])
 def get_customers():
     conn = create_connection(
