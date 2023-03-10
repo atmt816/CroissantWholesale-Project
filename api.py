@@ -682,4 +682,32 @@ def add_maintenance_log():
     execute_query(conn, sql)
     return 'Maintenance Log was added Successfully'
 
+
+#Maintenance Log by Vehicle - Generates a report for all maintenance logs under a specified vehicle id.
+
+@app.route('/vehiclemaintenancelog', methods=['GET'])
+def get_vehicle_main_log():
+    selected_vehicle_id = request.get_json()
+    vehicle_id = selected_vehicle_id['vehicle_id']
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT g.garage_name AS 'Garage Name', logs.date AS 'Date', logs.status AS 'Status', logs.note AS 'note' FROM maintenance_logs AS logs INNER JOIN vehicles AS v ON logs.vehicle_id = v.vehicle_id INNER JOIN garage AS g ON logs.garage_id = g.garage_id WHERE v.vehicle_id = %s ORDER BY date DESC;  " % (
+    vehicle_id)
+    vehicle_main_log = execute_read_query(conn, sql)
+    return vehicle_main_log
+
+
+#Maintenance Log by Garage - Generates a report for all maintenance logs under a specified garage id.
+
+@app.route('/garagemaintenancelog', methods=['GET'])
+def get_garagemain_log():
+    selected_garage_id = request.get_json()
+    garage_id = selected_garage_id['garage_id']
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT v.license_plate AS 'License Plate', logs.date AS 'Date', logs.status AS 'Status', logs.note AS 'note' FROM maintenance_logs AS logs INNER JOIN vehicles AS v ON logs.vehicle_id = v.vehicle_id INNER JOIN garage AS g ON logs.garage_id = g.garage_id WHERE g.garage_id = %s ORDER BY date DESC" % (
+    garage_id)
+    garage_main_log = execute_read_query(conn, sql)
+    return garage_main_log
+
 app.run()
