@@ -518,6 +518,34 @@ def add_vendor_contact():
     execute_query(conn, sql)
     return 'Vendor Contact was added Successfully'
 
+
+# PUT method for vendors contact
+@app.route('/update_vendor_contact', methods=['PUT'])
+def update_vendor_contact():
+    # The user input is gathered in JSON format and stored into an empty variable
+    vendor_contact_data = request.get_json()
+    # we will be using employee_id to reference the entry to update
+    vendor_ct_id = vendor_contact_data['vendor_ct_id']
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    phone = vendor_contact_data['phone']
+    email = vendor_contact_data['email']
+    street = vendor_contact_data['street']
+    city = vendor_contact_data['city']
+    state_code_id = vendor_contact_data['state_code_id']
+    zipcode = vendor_contact_data['zipcode']
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    cursor = conn.cursor()
+    sql = "UPDATE vendor_contacts SET phone = %s, email = %s, street = %s, city = %s, state_code_id = %s, zipcode = %s WHERE vendor_ct_id = %s"
+    val = (phone, email, street, city, state_code_id, zipcode, vendor_ct_id)
+
+    cursor.execute(sql, val)
+    conn.commit()
+    return 'Vendor Contact was updated successfully'
+
+
 ############################# INVENTORY ###################################
 
 # Inventory Table CRUD
