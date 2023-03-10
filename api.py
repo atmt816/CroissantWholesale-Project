@@ -395,6 +395,33 @@ def add_customer_contact():
     return 'Customer Contact was added Successfully'
 
 
+# PUT method for customer contact
+@app.route('/update_customer_contact', methods=['PUT'])
+def update_customer_contact():
+    # The user input is gathered in JSON format and stored into an empty variable
+    customer_contact_data = request.get_json()
+    # we will be using employee_id to reference the entry to update
+    customer_id = customer_contact_data['customer_id']
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    Phone = customer_contact_data['Phone']
+    Email = customer_contact_data['Email']
+    Street = customer_contact_data['Street']
+    City = customer_contact_data['City']
+    state_code_id = customer_contact_data['state_code_id']
+    Zipcode = customer_contact_data['Zipcode']
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    cursor = conn.cursor()
+    sql = "UPDATE customer_contact SET Phone = %s, Email = %s, Street = %s, City = %s, state_code_id = %s, Zipcode = %s WHERE customer_id = %s"
+    val = (Phone, Email, Street, City, state_code_id, Zipcode, customer_id)
+
+    cursor.execute(sql, val)
+    conn.commit()
+    return 'Customer contact was updated successfully'
+
+
 ############################# VENDORS ###################################
 
 # Vendors Table CRUD
