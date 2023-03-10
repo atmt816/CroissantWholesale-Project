@@ -203,6 +203,34 @@ def add_employee_contact():
     execute_query(conn, sql)
     return 'Employee Contact was added Successfully'
 
+
+# PUT method for employees_contact
+@app.route('/update_employee_contact', methods=['PUT'])
+def update_employee_contact():
+    # The user input is gathered in JSON format and stored into an empty variable
+    employee_contact_data = request.get_json()
+    # we will be using employee_id to reference the entry to update
+    emp_id = employee_contact_data['emp_id']
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    phone = employee_contact_data['phone']
+    email = employee_contact_data['email']
+    street = employee_contact_data['street']
+    city = employee_contact_data['city']
+    state_code_id = employee_contact_data['state_code_id']
+    zipcode = employee_contact_data['zipcode']
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    cursor = conn.cursor()
+    sql = "UPDATE employee_contact SET phone = %s, email = %s, street = %s, city = %s, state_code_id = %s, zipcode = %s WHERE emp_id = %s"
+    val = (phone, email, street, city, state_code_id, zipcode, emp_id)
+
+    cursor.execute(sql, val)
+    conn.commit()
+    return 'Employee_contact was updated successfully'
+
+
 ############################# ROLES #######################################
 
 # Roles Table CRUD
