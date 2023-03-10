@@ -892,6 +892,35 @@ def add_garage():
     execute_query(conn, sql)
     return 'Garage was added Successfully'
 
+# PUT method for garage
+
+
+@app.route('/update_garage', methods=['PUT'])
+def update_garage():
+    # The user input is gathered in JSON format and stored into an empty variable
+    garage_data = request.get_json()
+    # we will be using employee_id to reference the entry to update
+    garage_id = garage_data['garage_id']
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    garage_name = garage_data['garage_name']
+    phone_number = garage_data['phone_number']
+    street = garage_data['street']
+    city = garage_data['city']
+    state_code_id = garage_data['state_code_id']
+    zipcode = garage_data['zipcode']
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    cursor = conn.cursor()
+    sql = "UPDATE garage SET garage_name = %s, phone_number = %s, street = %s, city = %s, state_code_id = %s, zipcode = %s WHERE garage_id = %s"
+    val = (garage_name, phone_number, street,
+           city, state_code_id, zipcode, garage_id)
+
+    cursor.execute(sql, val)
+    conn.commit()
+    return 'Garage was updated successfully'
+
 
 # Vehicle Table CRUD
 
