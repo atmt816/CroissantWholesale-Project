@@ -61,7 +61,7 @@ app.config["DEBUG"] = True  # allow to show error in browser
 
 ############################# STATES ###################################
 
-#States Table CRUD
+# States Table CRUD
 
 @app.route('/states', methods=['GET'])
 def get_states():
@@ -73,11 +73,15 @@ def get_states():
 
 ############################# EMPLOYEES ###################################
 
-#Employees Table CRUD
+# Employees Table CRUD
 
 # employees get method working now
 # not returning data for now since roles table is empty
 # adjust sql as needed - Misael
+
+# GET method for employees
+
+
 @app.route('/employees', methods=['GET'])
 def employee_info():
     conn = create_connection(
@@ -90,6 +94,9 @@ def employee_info():
         """
     employees = execute_read_query(conn, sql)
     return employees
+
+# POST method for employees
+
 
 @app.route('/addemployee', methods=['POST'])
 def add_employee():
@@ -119,10 +126,48 @@ def add_employee():
     return 'Employee was added Successfully'
 
 
-#Employee Contact CRUD
+# PUT method for employees
+@app.route('/update_employee', methods=['PUT'])
+def update_employee():
+    # The user input is gathered in JSON format and stored into an empty variable
+    employee_data = request.get_json()
+    # we will be using emp_id to reference the entry to update
+    emp_id = employee_data['emp_id']
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    first_name = employee_data['first_name']
+    last_name = employee_data['last_name']
+    start_date = employee_data['start_date']
+    end_date = employee_data['end_date']
+    emp_status = employee_data['emp_status']
+    role_id = employee_data['role_id']
+
+ # date format as yyyy-mm-dd(2022-03-04) or mm-dd-yyyy(03-04-2022)
+    fmt_start_date = str(datetime.strptime(start_date, '%m-%d-%Y').date())
+
+    fmt_end_date = "null"
+    if end_date != "null" and end_date != "NULL":
+        fmt_end_date = str(datetime.strptime(end_date, '%m-%d-%Y').date())
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    cursor = conn.cursor()
+    sql = "UPDATE employees SET first_name = %s, last_name = %s, start_date = %s, end_date = %s, emp_status = %s, role_id = %s WHERE emp_id = %s"
+    val = (first_name, last_name,
+           fmt_start_date, fmt_end_date, emp_status, role_id, emp_id)
+
+    cursor.execute(sql, val)
+    conn.commit()
+    return 'Employee was updated successfully'
+
+############################# EMPLOYEES CONTACT ###################################
+
+# Employee Contact CRUD
 
 # employee_contact get method working now
 # adjust sql as needed - Misael
+
+
 @app.route('/employee_contact', methods=['GET'])
 def get_employee_contact():
     conn = create_connection(
@@ -161,9 +206,38 @@ def add_employee_contact():
     execute_query(conn, sql)
     return 'Employee Contact was added Successfully'
 
+
+# PUT method for employees_contact
+@app.route('/update_employee_contact', methods=['PUT'])
+def update_employee_contact():
+    # The user input is gathered in JSON format and stored into an empty variable
+    employee_contact_data = request.get_json()
+    # we will be using emp_id to reference the entry to update
+    emp_id = employee_contact_data['emp_id']
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    phone = employee_contact_data['phone']
+    email = employee_contact_data['email']
+    street = employee_contact_data['street']
+    city = employee_contact_data['city']
+    state_code_id = employee_contact_data['state_code_id']
+    zipcode = employee_contact_data['zipcode']
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    cursor = conn.cursor()
+    sql = "UPDATE employee_contact SET phone = %s, email = %s, street = %s, city = %s, state_code_id = %s, zipcode = %s WHERE emp_id = %s"
+    val = (phone, email, street, city, state_code_id, zipcode, emp_id)
+
+    cursor.execute(sql, val)
+    conn.commit()
+    return 'Employee Contact was updated successfully'
+
+
 ############################# ROLES #######################################
 
 # Roles Table CRUD
+
 
 @app.route('/roles', methods=['GET'])
 def get_roles():
@@ -173,6 +247,9 @@ def get_roles():
     roles = execute_read_query(conn, sql)
     return roles
 
+# sql script used to create roles table is missing auto_increment for Role_ID********
+# either have to redo table or add in Role_ID to the insert below ******
+
 
 @app.route('/addrole', methods=['POST'])
 def add_role():
@@ -181,7 +258,6 @@ def add_role():
     # The JSON object is then separated into variables so that they may be used in a sql query
     role_name = role_data['Role_Name']
     role_description = role_data['Role_Description']
-    
 
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
@@ -192,13 +268,38 @@ def add_role():
     return 'Role was added Successfully'
 
 
-############################# CUSTOMERS ###################################
+# PUT method for roles
+@app.route('/update_role', methods=['PUT'])
+def update_role():
+    # The user input is gathered in JSON format and stored into an empty variable
+    role_data = request.get_json()
+    # we will be using Role_ID to reference the entry to update
+    Role_ID = role_data['Role_ID']
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    Role_Name = role_data['Role_Name']
+    Role_Description = role_data['Role_Description']
 
-#Customers Table CRUD
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    cursor = conn.cursor()
+    sql = "UPDATE roles SET Role_Name = %s, Role_Description = %s WHERE Role_ID = %s"
+    val = (Role_Name, Role_Description, Role_ID)
+
+    cursor.execute(sql, val)
+    conn.commit()
+    return 'Role was updated successfully'
+
+
+##################################### CUSTOMERS ###################################
+
+# Customers Table CRUD
 
 # customers get method working now
 # no data in customers for now
 # adjust sql as needed - Misael
+
+
 @app.route('/customers', methods=['GET'])
 def get_customers():
     conn = create_connection(
@@ -206,6 +307,7 @@ def get_customers():
     sql = "SELECT * FROM customers"
     customers = execute_read_query(conn, sql)
     return customers
+
 
 @app.route('/addcustomers', methods=['POST'])
 def add_customer():
@@ -217,7 +319,6 @@ def add_customer():
     last_name = customer_data['last_name']
     first_name = customer_data['first_name']
     cust_acc_num = customer_data['cust_acc_num']
-    
 
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
@@ -227,7 +328,38 @@ def add_customer():
     execute_query(conn, sql)
     return 'Customer was added Successfully'
 
-#Customer Contact Table CRUD
+
+# PUT method for customers
+@app.route('/update_customer', methods=['PUT'])
+def update_customer():
+    # The user input is gathered in JSON format and stored into an empty variable
+    customer_data = request.get_json()
+    # we will be using customer_id to reference the entry to update
+    customer_id = customer_data['customer_id']
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    business_name = customer_data['business_name']
+    business_hrs = customer_data['business_hrs']
+    last_name = customer_data['last_name']
+    first_name = customer_data['first_name']
+    cust_acc_num = customer_data['cust_acc_num']
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    cursor = conn.cursor()
+    sql = "UPDATE customers SET business_name = %s, business_hrs = %s, last_name = %s, first_name = %s, cust_acc_num = %s WHERE customer_id = %s"
+    val = (business_name, business_hrs, last_name,
+           first_name, cust_acc_num, customer_id)
+
+    cursor.execute(sql, val)
+    conn.commit()
+    return 'Customer was updated successfully'
+
+
+##################################### CUSTOMERS CONTACTS ###################################
+
+# Customer Contact Table CRUD
+
 
 @app.route('/customer_contact', methods=['GET'])
 def get_customer_contact():
@@ -262,9 +394,38 @@ def add_customer_contact():
     execute_query(conn, sql)
     return 'Customer Contact was added Successfully'
 
+
+# PUT method for customer contact
+@app.route('/update_customer_contact', methods=['PUT'])
+def update_customer_contact():
+    # The user input is gathered in JSON format and stored into an empty variable
+    customer_contact_data = request.get_json()
+    # we will be using customer_id to reference the entry to update
+    customer_id = customer_contact_data['customer_id']
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    Phone = customer_contact_data['Phone']
+    Email = customer_contact_data['Email']
+    Street = customer_contact_data['Street']
+    City = customer_contact_data['City']
+    state_code_id = customer_contact_data['state_code_id']
+    Zipcode = customer_contact_data['Zipcode']
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    cursor = conn.cursor()
+    sql = "UPDATE customer_contact SET Phone = %s, Email = %s, Street = %s, City = %s, state_code_id = %s, Zipcode = %s WHERE customer_id = %s"
+    val = (Phone, Email, Street, City, state_code_id, Zipcode, customer_id)
+
+    cursor.execute(sql, val)
+    conn.commit()
+    return 'Customer contact was updated successfully'
+
+
 ############################# VENDORS ###################################
 
-#Vendors Table CRUD
+# Vendors Table CRUD
+
 
 @app.route('/vendors', methods=['GET'])
 def get_vendors():
@@ -273,6 +434,7 @@ def get_vendors():
     sql = "SELECT * FROM vendors"
     vendors = execute_read_query(conn, sql)
     return vendors
+
 
 @app.route('/addvendor', methods=['POST'])
 def add_vendor():
@@ -283,7 +445,7 @@ def add_vendor():
     vendor_hrs = vendor_data['vendor_hrs']
     vendor_account_number = vendor_data['vendor_account_number']
     vendor_ct_id = vendor_data['vendor_ct_id']
-    
+
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "INSERT INTO vendors(vendor_name, vendor_hrs, vendor_account_number, vendor_ct_id) VALUES ('%s', '%s', %s, %s)" % (
@@ -293,7 +455,35 @@ def add_vendor():
     return 'Vendor was added Successfully'
 
 
-#Vendor Contact Table
+# PUT method for vendors
+@app.route('/update_vendor', methods=['PUT'])
+def update_vendor():
+    # The user input is gathered in JSON format and stored into an empty variable
+    vendor_data = request.get_json()
+    # we will be using vendor_id to reference the entry to update
+    vendor_id = vendor_data['vendor_id']
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    vendor_name = vendor_data['vendor_name']
+    vendor_hrs = vendor_data['vendor_hrs']
+    vendor_account_number = vendor_data['vendor_account_number']
+    vendor_ct_id = vendor_data['vendor_ct_id']
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    cursor = conn.cursor()
+    sql = "UPDATE vendors SET vendor_name = %s, vendor_hrs = %s, vendor_account_number = %s, vendor_ct_id = %s WHERE vendor_id = %s"
+    val = (vendor_name, vendor_hrs,
+           vendor_account_number, vendor_ct_id, vendor_id)
+
+    cursor.execute(sql, val)
+    conn.commit()
+    return 'Vendor was updated successfully'
+
+############################# VENDORS CONTACT ###################################
+
+# Vendor Contact Table
+
 
 @app.route('/vendor_contact', methods=['GET'])
 def get_vendor_contact():
@@ -319,7 +509,7 @@ def add_vendor_contact():
     city = vendor_contact_data['city']
     state = vendor_contact_data['state_code_id']
     zipcode = vendor_contact_data['zipcode']
-    
+
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "INSERT INTO vendor_contacts(phone, email, street, city, state_code_id, zipcode) VALUES (%s, '%s', '%s', '%s', '%s', %s)" % (
@@ -338,6 +528,32 @@ def get_vendor_inv_sheet():
     vendor_inv_sheet = execute_read_query(conn, sql)
     return vendor_inv_sheet
 
+# PUT method for vendors contact
+@app.route('/update_vendor_contact', methods=['PUT'])
+def update_vendor_contact():
+    # The user input is gathered in JSON format and stored into an empty variable
+    vendor_contact_data = request.get_json()
+    # we will be using vendor_ct_id to reference the entry to update
+    vendor_ct_id = vendor_contact_data['vendor_ct_id']
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    phone = vendor_contact_data['phone']
+    email = vendor_contact_data['email']
+    street = vendor_contact_data['street']
+    city = vendor_contact_data['city']
+    state_code_id = vendor_contact_data['state_code_id']
+    zipcode = vendor_contact_data['zipcode']
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    cursor = conn.cursor()
+    sql = "UPDATE vendor_contacts SET phone = %s, email = %s, street = %s, city = %s, state_code_id = %s, zipcode = %s WHERE vendor_ct_id = %s"
+    val = (phone, email, street, city, state_code_id, zipcode, vendor_ct_id)
+
+    cursor.execute(sql, val)
+    conn.commit()
+    return 'Vendor Contact was updated successfully'
+
 
 ############################# INVENTORY ###################################
 
@@ -346,6 +562,8 @@ def get_vendor_inv_sheet():
 # inventory get method working now
 # no data in inventory for now
 # adjust sql as needed - Misael
+
+
 @app.route('/inventory', methods=['GET'])
 def get_inventory():
     conn = create_connection(
@@ -353,6 +571,7 @@ def get_inventory():
     sql = "SELECT * FROM inventory"
     inventory = execute_read_query(conn, sql)
     return inventory
+
 
 @app.route('/addinventory', methods=['POST'])
 def add_inventory():
@@ -365,7 +584,7 @@ def add_inventory():
     unit_cost = inventory_data['unit_cost']
     total_inv_cost = inventory_data['total_inv_cost']
     date_bought = inventory_data['date_bought']
-    
+
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "INSERT INTO inventory(vendor_id, item_name, item_amount, unit_cost, total_inv_cost, date_bought) VALUES (%s, '%s', %s, %s, %s, %s)" % (
@@ -375,7 +594,40 @@ def add_inventory():
     return 'Inventory was added Successfully'
 
 
-#Products Table CRUD 
+# PUT method for inventory
+@app.route('/update_inventory', methods=['PUT'])
+def update_inventory():
+    # The user input is gathered in JSON format and stored into an empty variable
+    inventory_contact_data = request.get_json()
+    # we will be using inventory_id to reference the entry to update
+    inventory_id = inventory_contact_data['inventory_id']
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    vendor_id = inventory_contact_data['vendor_id']
+    item_name = inventory_contact_data['item_name']
+    item_amount = inventory_contact_data['item_amount']
+    unit_cost = inventory_contact_data['unit_cost']
+    total_inv_cost = inventory_contact_data['total_inv_cost']
+    date_bought = inventory_contact_data['date_bought']
+
+    # date format as yyyy-mm-dd(2022-03-04) or mm-dd-yyyy(03-04-2022)
+    fmt_date_bought = str(datetime.strptime(date_bought, '%m-%d-%Y').date())
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    cursor = conn.cursor()
+    sql = "UPDATE inventory SET vendor_id = %s, item_name = %s, item_amount = %s, unit_cost = %s, total_inv_cost = %s, date_bought = %s WHERE inventory_id = %s"
+    val = (vendor_id, item_name, item_amount, unit_cost,
+           total_inv_cost, fmt_date_bought, inventory_id)
+
+    cursor.execute(sql, val)
+    conn.commit()
+    return 'Inventory was updated successfully'
+
+
+############################# PRODUCTS ###################################
+
+# Products Table CRUD
 
 @app.route('/products', methods=['GET'])
 def get_products():
@@ -385,13 +637,14 @@ def get_products():
     products = execute_read_query(conn, sql)
     return products
 
+
 @app.route('/addproduct', methods=['POST'])
 def add_product():
     # The user input is gathered in JSON format and stored into an empty variable
     product_data = request.get_json()
     # The JSON object is then separated into variables so that they may be used in a sql query
     product_name = product_data['product_name']
-    
+
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "INSERT INTO products(product_name) VALUES ('%s')" % (
@@ -401,9 +654,31 @@ def add_product():
     return 'Product was added Successfully'
 
 
-############################# ORDERS ########################################
+# PUT method for products
+@app.route('/update_product', methods=['PUT'])
+def update_product():
+    # The user input is gathered in JSON format and stored into an empty variable
+    products_data = request.get_json()
+    # we will be using product_id to reference the entry to update
+    product_id = products_data['product_id']
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    product_name = products_data['product_name']
 
-#Line Items Table CRUD
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    cursor = conn.cursor()
+    sql = "UPDATE products SET product_name = %s WHERE product_id = %s"
+    val = (product_name, product_id)
+
+    cursor.execute(sql, val)
+    conn.commit()
+    return 'Product was updated successfully'
+
+
+############################# LINE ITEMS ########################################
+
+# Line Items Table CRUD
 
 @app.route('/lineitems', methods=['GET'])
 def get_line_items():
@@ -412,6 +687,7 @@ def get_line_items():
     sql = "SELECT * FROM line_items"
     line_items = execute_read_query(conn, sql)
     return line_items
+
 
 @app.route('/addlineitem', methods=['POST'])
 def add_line_item():
@@ -433,7 +709,35 @@ def add_line_item():
     return 'Line Item was added Successfully'
 
 
-#Orders Table CRUD
+# PUT method for products
+@app.route('/update_line_item', methods=['PUT'])
+def update_line_item():
+    # The user input is gathered in JSON format and stored into an empty variable
+    line_item_data = request.get_json()
+    # we will be using item_id to reference the entry to update
+    item_id = line_item_data['item_id']
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    order_id = line_item_data['order_id']
+    product_id = line_item_data['product_id']
+    quantity = line_item_data['quantity']
+    price_per_unit = line_item_data['price_per_unit']
+    total = line_item_data['total']
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    cursor = conn.cursor()
+    sql = "UPDATE line_items SET order_id = %s, product_id = %s, quantity = %s, price_per_unit = %s, total = %s WHERE item_id = %s"
+    val = (order_id, product_id, quantity, price_per_unit, total, item_id)
+
+    cursor.execute(sql, val)
+    conn.commit()
+    return 'Line Item was updated successfully'
+
+
+############################# ORDERS ########################################
+
+# Orders Table CRUD
 
 @app.route('/orders', methods=['GET'])
 def get_orders():
@@ -442,6 +746,7 @@ def get_orders():
     sql = "SELECT * FROM orders"
     orders = execute_read_query(conn, sql)
     return orders
+
 
 @app.route('/addorder', methods=['POST'])
 def add_order():
@@ -549,9 +854,40 @@ def get_delivery_sheet():
     delivery_sheet = execute_read_query(conn, sql)
     return delivery_sheet
 
+# PUT method for orders
+@app.route('/update_order', methods=['PUT'])
+def update_order():
+    # The user input is gathered in JSON format and stored into an empty variable
+    order_data = request.get_json()
+    # we will be using order_id to reference the entry to update
+    order_id = order_data['order_id']
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    invoice_id = order_data['invoice_id']
+    date_produced = order_data['date_produced']
+    delivery_date = order_data['delivery_date']
+
+    # date format as yyyy-mm-dd(2022-03-04) or mm-dd-yyyy(03-04-2022)
+    fmt_date_produced = str(datetime.strptime(
+        date_produced, '%m-%d-%Y').date())
+    # date format as yyyy-mm-dd(2022-03-04) or mm-dd-yyyy(03-04-2022)
+    fmt_delivery_date = str(datetime.strptime(
+        delivery_date, '%m-%d-%Y').date())
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    cursor = conn.cursor()
+    sql = "UPDATE orders SET invoice_id = %s, date_produced = %s, delivery_date = %s WHERE order_id = %s"
+    val = (invoice_id, fmt_date_produced, fmt_delivery_date, order_id)
+
+    cursor.execute(sql, val)
+    conn.commit()
+    return 'Order was updated successfully'
+
 ############################# INVOICES ######################################
 
-#Invoices Table CRUD
+# Invoices Table CRUD
+
 
 @app.route('/invoices', methods=['GET'])
 def get_invoices():
@@ -574,7 +910,6 @@ def add_invoice():
     invoice_total = invoice_data['invoice_total']
     payment_status = invoice_data['payment_status']
     date_paid = invoice_data['date_paid']
-    
 
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
@@ -583,6 +918,42 @@ def add_invoice():
 
     execute_query(conn, sql)
     return 'Invoice was added Successfully'
+
+
+# PUT method for invoices
+@app.route('/update_invoices', methods=['PUT'])
+def update_invoices():
+    # The user input is gathered in JSON format and stored into an empty variable
+    invoice_data = request.get_json()
+    # we will be using invoice_id to reference the entry to update
+    invoice_id = invoice_data['invoice_id']
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    vendor_id = invoice_data['vendor_id']
+    customer_id = invoice_data['customer_id']
+    invoice_number = invoice_data['invoice_number']
+    invoice_date = invoice_data['invoice_date']
+    invoice_total = invoice_data['invoice_total']
+    payment_status = invoice_data['payment_status']
+    date_paid = invoice_data['date_paid']
+
+    # date format as yyyy-mm-dd(2022-03-04) or mm-dd-yyyy(03-04-2022)
+    fmt_invoice_date = str(datetime.strptime(
+        invoice_date, '%m-%d-%Y').date())
+    # date format as yyyy-mm-dd(2022-03-04) or mm-dd-yyyy(03-04-2022)
+    fmt_date_paid = str(datetime.strptime(
+        date_paid, '%m-%d-%Y').date())
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    cursor = conn.cursor()
+    sql = "UPDATE invoices SET vendor_id = %s, customer_id = %s, invoice_number = %s, invoice_date = %s, invoice_total = %s, payment_status = %s, date_paid = %s WHERE invoice_id = %s"
+    val = (vendor_id, customer_id, invoice_number, fmt_invoice_date,
+           invoice_total, payment_status, fmt_date_paid, invoice_id)
+
+    cursor.execute(sql, val)
+    conn.commit()
+    return 'Invoice was updated successfully'
 
 
 ############################# MAINTENENCE ###################################
@@ -609,7 +980,7 @@ def add_garage():
     city = garage_data['city']
     state = garage_data['state_code_id']
     zipcode = garage_data['zipcode']
-    
+
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "INSERT INTO garage(garage_name, phone_number, street, city, state, zipcode) VALUES ('%s', %s, '%s', '%s', '%s', %s)" % (
@@ -618,6 +989,33 @@ def add_garage():
     execute_query(conn, sql)
     return 'Garage was added Successfully'
 
+
+# PUT method for garage
+@app.route('/update_garage', methods=['PUT'])
+def update_garage():
+    # The user input is gathered in JSON format and stored into an empty variable
+    garage_data = request.get_json()
+    # we will be using garage_id to reference the entry to update
+    garage_id = garage_data['garage_id']
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    garage_name = garage_data['garage_name']
+    phone_number = garage_data['phone_number']
+    street = garage_data['street']
+    city = garage_data['city']
+    state_code_id = garage_data['state_code_id']
+    zipcode = garage_data['zipcode']
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    cursor = conn.cursor()
+    sql = "UPDATE garage SET garage_name = %s, phone_number = %s, street = %s, city = %s, state_code_id = %s, zipcode = %s WHERE garage_id = %s"
+    val = (garage_name, phone_number, street,
+           city, state_code_id, zipcode, garage_id)
+
+    cursor.execute(sql, val)
+    conn.commit()
+    return 'Garage was updated successfully'
 
 
 # Vehicle Table CRUD
@@ -640,7 +1038,7 @@ def add_vehicle():
     make = vehicle_data['make']
     model = vehicle_data['model']
     vin = vehicle_data['vin']
-   
+
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "INSERT INTO vehicles(license_plate, make, model, vin) VALUES ('%s', '%s', '%s', '%s')" % (
@@ -650,7 +1048,32 @@ def add_vehicle():
     return 'Vehicle was added Successfully'
 
 
-#Maintenance_Logs Table CRUD
+# PUT method for vehicles
+@app.route('/update_vehicle', methods=['PUT'])
+def update_vehicle():
+    # The user input is gathered in JSON format and stored into an empty variable
+    vehicle_data = request.get_json()
+    # we will be using vehicle_id to reference the entry to update
+    vehicle_id = vehicle_data['vehicle_id']
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    license_plate = vehicle_data['license_plate']
+    make = vehicle_data['make']
+    model = vehicle_data['model']
+    vin = vehicle_data['vin']
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    cursor = conn.cursor()
+    sql = "UPDATE vehicles SET license_plate = %s, make = %s, model = %s, vin = %s WHERE vehicle_id = %s"
+    val = (license_plate, make, model, vin, vehicle_id)
+
+    cursor.execute(sql, val)
+    conn.commit()
+    return 'Vehicle was updated successfully'
+
+
+# Maintenance_Logs Table CRUD
 
 
 # maintenance get method working now
@@ -663,6 +1086,7 @@ def get_maintenance():
     maintenance = execute_read_query(conn, sql)
     return maintenance
 
+
 @app.route('/addmaintenancelog', methods=['POST'])
 def add_maintenance_log():
     # The user input is gathered in JSON format and stored into an empty variable
@@ -673,7 +1097,7 @@ def add_maintenance_log():
     date = log_data['date']
     status = log_data['status']
     note = log_data['note']
-   
+
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "INSERT INTO maintenance_logs(garage_id, vehicle_id, date, status, note) VALUES (%s, %s, %s, '%s', '%s')" % (
@@ -709,5 +1133,35 @@ def get_garagemain_log():
     garage_id)
     garage_main_log = execute_read_query(conn, sql)
     return garage_main_log
+
+
+# PUT method for maintenance_logs
+@app.route('/update_maitenance_log', methods=['PUT'])
+def update_maintenance_log():
+    # The user input is gathered in JSON format and stored into an empty variable
+    maintenance_data = request.get_json()
+    # we will be using log_id to reference the entry to update
+    log_id = maintenance_data['log_id']
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    garage_id = maintenance_data['garage_id']
+    vehicle_id = maintenance_data['vehicle_id']
+    date = maintenance_data['date']
+    status = maintenance_data['status']
+    note = maintenance_data['note']
+
+    # date format as yyyy-mm-dd(2022-03-04) or mm-dd-yyyy(03-04-2022)
+    fmt_date = str(datetime.strptime(date, '%m-%d-%Y').date())
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    cursor = conn.cursor()
+    sql = "UPDATE maintenance_logs SET garage_id = %s, vehicle_id = %s, date = %s, status = %s, note = %s WHERE log_id = %s"
+    val = (garage_id, vehicle_id, fmt_date, status, note, log_id)
+
+    cursor.execute(sql, val)
+    conn.commit()
+    return 'Maintenance Log was updated successfully'
+
 
 app.run()
