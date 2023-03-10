@@ -756,6 +756,37 @@ def add_order():
     execute_query(conn, sql)
     return 'Order was added Successfully'
 
+
+# PUT method for orders
+@app.route('/update_order', methods=['PUT'])
+def update_order():
+    # The user input is gathered in JSON format and stored into an empty variable
+    order_data = request.get_json()
+    # we will be using employee_id to reference the entry to update
+    order_id = order_data['order_id']
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    invoice_id = order_data['invoice_id']
+    date_produced = order_data['date_produced']
+    delivery_date = order_data['delivery_date']
+
+    # date format as yyyy-mm-dd(2022-03-04) or mm-dd-yyyy(03-04-2022)
+    fmt_date_produced = str(datetime.strptime(
+        date_produced, '%m-%d-%Y').date())
+    # date format as yyyy-mm-dd(2022-03-04) or mm-dd-yyyy(03-04-2022)
+    fmt_delivery_date = str(datetime.strptime(
+        delivery_date, '%m-%d-%Y').date())
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    cursor = conn.cursor()
+    sql = "UPDATE orders SET invoice_id = %s, date_produced = %s, delivery_date = %s WHERE order_id = %s"
+    val = (invoice_id, fmt_date_produced, fmt_delivery_date, order_id)
+
+    cursor.execute(sql, val)
+    conn.commit()
+    return 'Order was updated successfully'
+
 ############################# INVOICES ######################################
 
 # Invoices Table CRUD
