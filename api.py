@@ -616,6 +616,8 @@ def update_inventory():
     return 'Inventory was updated successfully'
 
 
+############################# PRODUCTS ###################################
+
 # Products Table CRUD
 
 @app.route('/products', methods=['GET'])
@@ -641,6 +643,28 @@ def add_product():
 
     execute_query(conn, sql)
     return 'Product was added Successfully'
+
+
+# PUT method for products
+@app.route('/update_product', methods=['PUT'])
+def update_product():
+    # The user input is gathered in JSON format and stored into an empty variable
+    products_data = request.get_json()
+    # we will be using employee_id to reference the entry to update
+    product_id = products_data['product_id']
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    product_name = products_data['product_name']
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    cursor = conn.cursor()
+    sql = "UPDATE products SET product_name = %s WHERE product_id = %s"
+    val = (product_name, product_id)
+
+    cursor.execute(sql, val)
+    conn.commit()
+    return 'Product was updated successfully'
 
 
 ############################# ORDERS ########################################
