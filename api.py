@@ -61,7 +61,7 @@ app.config["DEBUG"] = True  # allow to show error in browser
 
 ############################# STATES ###################################
 
-#States Table CRUD
+# States Table CRUD
 
 @app.route('/states', methods=['GET'])
 def get_states():
@@ -73,11 +73,15 @@ def get_states():
 
 ############################# EMPLOYEES ###################################
 
-#Employees Table CRUD
+# Employees Table CRUD
 
 # employees get method working now
 # not returning data for now since roles table is empty
 # adjust sql as needed - Misael
+
+# GET method for employees
+
+
 @app.route('/employees', methods=['GET'])
 def employee_info():
     conn = create_connection(
@@ -90,6 +94,9 @@ def employee_info():
         """
     employees = execute_read_query(conn, sql)
     return employees
+
+# POST method for employees
+
 
 @app.route('/addemployee', methods=['POST'])
 def add_employee():
@@ -119,10 +126,45 @@ def add_employee():
     return 'Employee was added Successfully'
 
 
-#Employee Contact CRUD
+# PUT method for employees
+@app.route('/update_employee', methods=['PUT'])
+def update_employee():
+    # The user input is gathered in JSON format and stored into an empty variable
+    employee_data = request.get_json()
+    # we will be using employee_id to reference the entry to update
+    emp_id = employee_data['emp_id']
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    first_name = employee_data['first_name']
+    last_name = employee_data['last_name']
+    start_date = employee_data['start_date']
+    end_date = employee_data['end_date']
+    emp_status = employee_data['emp_status']
+    role_id = employee_data['role_id']
+
+ # date format as yyyy-mm-dd(2022-03-04) or mm-dd-yyyy(03-04-2022)
+    fmt_start_date = str(datetime.strptime(start_date, '%m-%d-%Y').date())
+
+    fmt_end_date = "null"
+    if end_date != "null" and end_date != "NULL":
+        fmt_end_date = str(datetime.strptime(end_date, '%m-%d-%Y').date())
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    cursor = conn.cursor()
+    sql = "UPDATE employees SET first_name = %s, last_name = %s, start_date = %s, end_date = %s, emp_status = %s, role_id = %s WHERE emp_id = %s"
+    val = (first_name, last_name,
+           fmt_start_date, fmt_end_date, emp_status, role_id, emp_id)
+
+    cursor.execute(sql, val)
+    conn.commit()
+    return 'Employee was updated successfully'
+# Employee Contact CRUD
 
 # employee_contact get method working now
 # adjust sql as needed - Misael
+
+
 @app.route('/employee_contact', methods=['GET'])
 def get_employee_contact():
     conn = create_connection(
@@ -165,6 +207,7 @@ def add_employee_contact():
 
 # Roles Table CRUD
 
+
 @app.route('/roles', methods=['GET'])
 def get_roles():
     conn = create_connection(
@@ -181,7 +224,6 @@ def add_role():
     # The JSON object is then separated into variables so that they may be used in a sql query
     role_name = role_data['Role_Name']
     role_description = role_data['Role_Description']
-    
 
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
@@ -194,7 +236,7 @@ def add_role():
 
 ############################# CUSTOMERS ###################################
 
-#Customers Table CRUD
+# Customers Table CRUD
 
 # customers get method working now
 # no data in customers for now
@@ -207,6 +249,7 @@ def get_customers():
     customers = execute_read_query(conn, sql)
     return customers
 
+
 @app.route('/addcustomers', methods=['POST'])
 def add_customer():
     # The user input is gathered in JSON format and stored into an empty variable
@@ -217,7 +260,6 @@ def add_customer():
     last_name = customer_data['last_name']
     first_name = customer_data['first_name']
     cust_acc_num = customer_data['cust_acc_num']
-    
 
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
@@ -227,7 +269,8 @@ def add_customer():
     execute_query(conn, sql)
     return 'Customer was added Successfully'
 
-#Customer Contact Table CRUD
+# Customer Contact Table CRUD
+
 
 @app.route('/customer_contact', methods=['GET'])
 def get_customer_contact():
@@ -264,7 +307,8 @@ def add_customer_contact():
 
 ############################# VENDORS ###################################
 
-#Vendors Table CRUD
+# Vendors Table CRUD
+
 
 @app.route('/vendors', methods=['GET'])
 def get_vendors():
@@ -273,6 +317,7 @@ def get_vendors():
     sql = "SELECT * FROM vendors"
     vendors = execute_read_query(conn, sql)
     return vendors
+
 
 @app.route('/addvendor', methods=['POST'])
 def add_vendor():
@@ -283,7 +328,7 @@ def add_vendor():
     vendor_hrs = vendor_data['vendor_hrs']
     vendor_account_number = vendor_data['vendor_account_number']
     vendor_ct_id = vendor_data['vendor_ct_id']
-    
+
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "INSERT INTO vendors(vendor_name, vendor_hrs, vendor_account_number, vendor_ct_id) VALUES ('%s', '%s', %s, %s)" % (
@@ -293,7 +338,7 @@ def add_vendor():
     return 'Vendor was added Successfully'
 
 
-#Vendor Contact Table
+# Vendor Contact Table
 
 @app.route('/vendor_contact', methods=['GET'])
 def get_vendor_contact():
@@ -319,7 +364,7 @@ def add_vendor_contact():
     city = vendor_contact_data['city']
     state = vendor_contact_data['state_code_id']
     zipcode = vendor_contact_data['zipcode']
-    
+
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "INSERT INTO vendor_contacts(phone, email, street, city, state_code_id, zipcode) VALUES (%s, '%s', '%s', '%s', '%s', %s)" % (
@@ -335,6 +380,8 @@ def add_vendor_contact():
 # inventory get method working now
 # no data in inventory for now
 # adjust sql as needed - Misael
+
+
 @app.route('/inventory', methods=['GET'])
 def get_inventory():
     conn = create_connection(
@@ -342,6 +389,7 @@ def get_inventory():
     sql = "SELECT * FROM inventory"
     inventory = execute_read_query(conn, sql)
     return inventory
+
 
 @app.route('/addinventory', methods=['POST'])
 def add_inventory():
@@ -354,7 +402,7 @@ def add_inventory():
     unit_cost = inventory_data['unit_cost']
     total_inv_cost = inventory_data['total_inv_cost']
     date_bought = inventory_data['date_bought']
-    
+
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "INSERT INTO inventory(vendor_id, item_name, item_amount, unit_cost, total_inv_cost, date_bought) VALUES (%s, '%s', %s, %s, %s, %s)" % (
@@ -364,7 +412,7 @@ def add_inventory():
     return 'Inventory was added Successfully'
 
 
-#Products Table CRUD 
+# Products Table CRUD
 
 @app.route('/products', methods=['GET'])
 def get_products():
@@ -374,13 +422,14 @@ def get_products():
     products = execute_read_query(conn, sql)
     return products
 
+
 @app.route('/addproduct', methods=['POST'])
 def add_product():
     # The user input is gathered in JSON format and stored into an empty variable
     product_data = request.get_json()
     # The JSON object is then separated into variables so that they may be used in a sql query
     product_name = product_data['product_name']
-    
+
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "INSERT INTO products(product_name) VALUES ('%s')" % (
@@ -392,7 +441,7 @@ def add_product():
 
 ############################# ORDERS ########################################
 
-#Line Items Table CRUD
+# Line Items Table CRUD
 
 @app.route('/lineitems', methods=['GET'])
 def get_line_items():
@@ -401,6 +450,7 @@ def get_line_items():
     sql = "SELECT * FROM line_items"
     line_items = execute_read_query(conn, sql)
     return line_items
+
 
 @app.route('/addlineitem', methods=['POST'])
 def add_line_item():
@@ -422,7 +472,7 @@ def add_line_item():
     return 'Line Item was added Successfully'
 
 
-#Orders Table CRUD
+# Orders Table CRUD
 
 @app.route('/orders', methods=['GET'])
 def get_orders():
@@ -431,6 +481,7 @@ def get_orders():
     sql = "SELECT * FROM orders"
     orders = execute_read_query(conn, sql)
     return orders
+
 
 @app.route('/addorder', methods=['POST'])
 def add_order():
@@ -451,7 +502,8 @@ def add_order():
 
 ############################# INVOICES ######################################
 
-#Invoices Table CRUD
+# Invoices Table CRUD
+
 
 @app.route('/invoices', methods=['GET'])
 def get_invoices():
@@ -474,7 +526,6 @@ def add_invoice():
     invoice_total = invoice_data['invoice_total']
     payment_status = invoice_data['payment_status']
     date_paid = invoice_data['date_paid']
-    
 
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
@@ -509,7 +560,7 @@ def add_garage():
     city = garage_data['city']
     state = garage_data['state_code_id']
     zipcode = garage_data['zipcode']
-    
+
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "INSERT INTO garage(garage_name, phone_number, street, city, state, zipcode) VALUES ('%s', %s, '%s', '%s', '%s', %s)" % (
@@ -517,7 +568,6 @@ def add_garage():
 
     execute_query(conn, sql)
     return 'Garage was added Successfully'
-
 
 
 # Vehicle Table CRUD
@@ -540,7 +590,7 @@ def add_vehicle():
     make = vehicle_data['make']
     model = vehicle_data['model']
     vin = vehicle_data['vin']
-   
+
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "INSERT INTO vehicles(license_plate, make, model, vin) VALUES ('%s', '%s', '%s', '%s')" % (
@@ -550,7 +600,7 @@ def add_vehicle():
     return 'Vehicle was added Successfully'
 
 
-#Maintenance_Logs Table CRUD
+# Maintenance_Logs Table CRUD
 
 
 # maintenance get method working now
@@ -563,6 +613,7 @@ def get_maintenance():
     maintenance = execute_read_query(conn, sql)
     return maintenance
 
+
 @app.route('/addmaintenancelog', methods=['POST'])
 def add_maintenance_log():
     # The user input is gathered in JSON format and stored into an empty variable
@@ -573,7 +624,7 @@ def add_maintenance_log():
     date = log_data['date']
     status = log_data['status']
     note = log_data['note']
-   
+
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "INSERT INTO maintenance_logs(garage_id, vehicle_id, date, status, note) VALUES (%s, %s, %s, '%s', '%s')" % (
@@ -581,5 +632,6 @@ def add_maintenance_log():
 
     execute_query(conn, sql)
     return 'Maintenance Log was added Successfully'
+
 
 app.run()
