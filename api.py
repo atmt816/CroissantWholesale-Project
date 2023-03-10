@@ -585,6 +585,37 @@ def add_inventory():
     return 'Inventory was added Successfully'
 
 
+# PUT method for inventory
+@app.route('/update_inventory', methods=['PUT'])
+def update_inventory():
+    # The user input is gathered in JSON format and stored into an empty variable
+    inventory_contact_data = request.get_json()
+    # we will be using employee_id to reference the entry to update
+    inventory_id = inventory_contact_data['inventory_id']
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    vendor_id = inventory_contact_data['vendor_id']
+    item_name = inventory_contact_data['item_name']
+    item_amount = inventory_contact_data['item_amount']
+    unit_cost = inventory_contact_data['unit_cost']
+    total_inv_cost = inventory_contact_data['total_inv_cost']
+    date_bought = inventory_contact_data['date_bought']
+
+    # date format as yyyy-mm-dd(2022-03-04) or mm-dd-yyyy(03-04-2022)
+    fmt_date_bought = str(datetime.strptime(date_bought, '%m-%d-%Y').date())
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    cursor = conn.cursor()
+    sql = "UPDATE inventory SET vendor_id = %s, item_name = %s, item_amount = %s, unit_cost = %s, total_inv_cost = %s, date_bought = %s WHERE inventory_id = %s"
+    val = (vendor_id, item_name, item_amount, unit_cost,
+           total_inv_cost, fmt_date_bought, inventory_id)
+
+    cursor.execute(sql, val)
+    conn.commit()
+    return 'Inventory was updated successfully'
+
+
 # Products Table CRUD
 
 @app.route('/products', methods=['GET'])
