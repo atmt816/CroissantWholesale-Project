@@ -1010,4 +1010,33 @@ def add_maintenance_log():
     return 'Maintenance Log was added Successfully'
 
 
+# PUT method for maintenance_logs
+@app.route('/update_maitenance_log', methods=['PUT'])
+def update_maintenance_log():
+    # The user input is gathered in JSON format and stored into an empty variable
+    maintenance_data = request.get_json()
+    # we will be using log_id to reference the entry to update
+    log_id = maintenance_data['log_id']
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    garage_id = maintenance_data['garage_id']
+    vehicle_id = maintenance_data['vehicle_id']
+    date = maintenance_data['date']
+    status = maintenance_data['status']
+    note = maintenance_data['note']
+
+    # date format as yyyy-mm-dd(2022-03-04) or mm-dd-yyyy(03-04-2022)
+    fmt_date = str(datetime.strptime(date, '%m-%d-%Y').date())
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    cursor = conn.cursor()
+    sql = "UPDATE maintenance_logs SET garage_id = %s, vehicle_id = %s, date = %s, status = %s, note = %s WHERE log_id = %s"
+    val = (garage_id, vehicle_id, fmt_date, status, note, log_id)
+
+    cursor.execute(sql, val)
+    conn.commit()
+    return 'Maintenance Log was updated successfully'
+
+
 app.run()
