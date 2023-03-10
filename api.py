@@ -455,7 +455,35 @@ def add_vendor():
     return 'Vendor was added Successfully'
 
 
+# PUT method for vendors
+@app.route('/update_vendor', methods=['PUT'])
+def update_vendor():
+    # The user input is gathered in JSON format and stored into an empty variable
+    vendor_data = request.get_json()
+    # we will be using employee_id to reference the entry to update
+    vendor_id = vendor_data['vendor_id']
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    vendor_name = vendor_data['vendor_name']
+    vendor_hrs = vendor_data['vendor_hrs']
+    vendor_account_number = vendor_data['vendor_account_number']
+    vendor_ct_id = vendor_data['vendor_ct_id']
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    cursor = conn.cursor()
+    sql = "UPDATE vendors SET vendor_name = %s, vendor_hrs = %s, vendor_account_number = %s, vendor_ct_id = %s WHERE vendor_id = %s"
+    val = (vendor_name, vendor_hrs,
+           vendor_account_number, vendor_ct_id, vendor_id)
+
+    cursor.execute(sql, val)
+    conn.commit()
+    return 'Vendor was updated successfully'
+
+############################# VENDORS CONTACT ###################################
+
 # Vendor Contact Table
+
 
 @app.route('/vendor_contact', methods=['GET'])
 def get_vendor_contact():
