@@ -303,7 +303,7 @@ def get_vendor_contact():
             FROM vendors v
             JOIN vendor_contacts vc
             ON v.vendor_ct_id = vc.vendor_ct_id
-            JOIN states sON vc.state_code_id = s.state_code_id"""
+            JOIN states s ON vc.state_code_id = s.state_code_id"""
     vendor_contact = execute_read_query(conn, sql)
     return vendor_contact
 
@@ -327,6 +327,17 @@ def add_vendor_contact():
 
     execute_query(conn, sql)
     return 'Vendor Contact was added Successfully'
+
+#Vendor Inventory Report - report generates a list of all inventory items, grouped by the vendor id the items are procured from.
+
+@app.route('/vendorinventoryreport', methods=['GET'])
+def get_vendor_inv_sheet():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT v.Vendor_ID, ii.Inventory_id, v.Vendor_Name, ii.Item_Name, ii.Item_Amount, ii.Unit_Cost ii.Total_Inv_Cost, ii.Last_Updated FROM Vendors AS v JOIN Inventory AS ii ON v.Vendor_ID = ii.Vendor_ID GROUP BY v.Vendor_ID;"
+    vendor_inv_sheet = execute_read_query(conn, sql)
+    return vendor_inv_sheet
+
 
 ############################# INVENTORY ###################################
 
@@ -520,6 +531,24 @@ def get_lifetime_best_sell_report():
     lifetime_best_sell_report = execute_read_query(conn, sql)
     return lifetime_best_sell_report
 
+#Orders-Invoice Report- View payment status of all orders with their corresponding invoice.
+@app.route('/paymentstatus', methods=['GET'])
+def get_payment_status_report():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT i.Customer_ID, o.Order_id, i.Invoice_Number, i.Invoice_date, i.Invoice_total, i.Payment_Status, i.Date_Paid FROM Invoices i JOIN Orders o ON i.Invoice_ID = o.Invoice_ID; "
+    payment_status_report = execute_read_query(conn, sql)
+    return payment_status_report
+
+#Delivery Sheet Report - Generate a customer contact list for all deliveries scheduled on the current date.
+@app.route('/deliverysheet', methods=['GET'])
+def get_delivery_sheet():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT c.Customer_ID, c.Business_Name, c.First_Name, c.Last_Name, c.Customer_Account_Number, cc.Phone, cc.Street, cc.City, cc.Zipcode, o.Order_id, o.Delivery_date FROM Customers as c JOIN Customer_Contact AS cc ON c.Customer_ct_id = cc.Customer_ct_id JOIN Orders AS o ON cc.Order_Id = o. Orders_Id WHERE o.Delivery_Date = curdate();  "
+    delivery_sheet = execute_read_query(conn, sql)
+    return delivery_sheet
+
 ############################# INVOICES ######################################
 
 #Invoices Table CRUD
@@ -630,7 +659,7 @@ def add_vehicle():
 def get_maintenance():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "SELECT * FROM maintenance_logs"
+    sql = "SELECT v.license_plate AS 'License Plate', g.garage_name AS 'Garage Name',logs.date AS 'Date', logs.status AS 'Status', logs.note AS 'note' FROM maintenance_logs AS logs INNER JOIN vehicles AS v ON logs.vehicle_id = v.vehicle_id INNER JOIN garage AS g ON logs.garage_id = g.garage_id ORDER BY date DESC;"
     maintenance = execute_read_query(conn, sql)
     return maintenance
 
@@ -652,5 +681,33 @@ def add_maintenance_log():
 
     execute_query(conn, sql)
     return 'Maintenance Log was added Successfully'
+
+
+#Maintenance Log by Vehicle - Generates a report for all maintenance logs under a specified vehicle id.
+
+@app.route('/vehiclemaintenancelog', methods=['GET'])
+def get_vehicle_main_log():
+    selected_vehicle_id = request.get_json()
+    vehicle_id = selected_vehicle_id['vehicle_id']
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT g.garage_name AS 'Garage Name', logs.date AS 'Date', logs.status AS 'Status', logs.note AS 'note' FROM maintenance_logs AS logs INNER JOIN vehicles AS v ON logs.vehicle_id = v.vehicle_id INNER JOIN garage AS g ON logs.garage_id = g.garage_id WHERE v.vehicle_id = %s ORDER BY date DESC;  " % (
+    vehicle_id)
+    vehicle_main_log = execute_read_query(conn, sql)
+    return vehicle_main_log
+
+
+#Maintenance Log by Garage - Generates a report for all maintenance logs under a specified garage id.
+
+@app.route('/garagemaintenancelog', methods=['GET'])
+def get_garagemain_log():
+    selected_garage_id = request.get_json()
+    garage_id = selected_garage_id['garage_id']
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT v.license_plate AS 'License Plate', logs.date AS 'Date', logs.status AS 'Status', logs.note AS 'note' FROM maintenance_logs AS logs INNER JOIN vehicles AS v ON logs.vehicle_id = v.vehicle_id INNER JOIN garage AS g ON logs.garage_id = g.garage_id WHERE g.garage_id = %s ORDER BY date DESC" % (
+    garage_id)
+    garage_main_log = execute_read_query(conn, sql)
+    return garage_main_log
 
 app.run()
