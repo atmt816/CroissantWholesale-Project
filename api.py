@@ -667,7 +667,7 @@ def update_product():
     return 'Product was updated successfully'
 
 
-############################# ORDERS ########################################
+############################# LINE ITEMS ########################################
 
 # Line Items Table CRUD
 
@@ -699,6 +699,34 @@ def add_line_item():
     execute_query(conn, sql)
     return 'Line Item was added Successfully'
 
+
+# PUT method for products
+@app.route('/update_line_item', methods=['PUT'])
+def update_line_item():
+    # The user input is gathered in JSON format and stored into an empty variable
+    line_item_data = request.get_json()
+    # we will be using employee_id to reference the entry to update
+    item_id = line_item_data['item_id']
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    order_id = line_item_data['order_id']
+    product_id = line_item_data['product_id']
+    quantity = line_item_data['quantity']
+    price_per_unit = line_item_data['price_per_unit']
+    total = line_item_data['total']
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    cursor = conn.cursor()
+    sql = "UPDATE line_items SET order_id = %s, product_id = %s, quantity = %s, price_per_unit = %s, total = %s WHERE item_id = %s"
+    val = (order_id, product_id, quantity, price_per_unit, total, item_id)
+
+    cursor.execute(sql, val)
+    conn.commit()
+    return 'Line Item was updated successfully'
+
+
+############################# ORDERS ########################################
 
 # Orders Table CRUD
 
