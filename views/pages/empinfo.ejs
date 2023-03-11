@@ -1,0 +1,93 @@
+<head>
+    <%- include('../partials/head'); %>
+</head>
+
+
+<style>
+    .top-buffer { margin-top: 60px;}
+</style>
+
+<body class="container">
+    <header>
+        <%- include('../partials/header'); %> 
+    </header>
+    
+    <main class="container pt-5"> 
+        <div class="p-5 mb-4 bg-white rounded-3 top-buffer">
+            <h2 class="text-center">
+              Employee Information
+            </h2>
+            <a href="/employees" class="link-primary pb-4">Go Back</a>
+            <h5 class= "pb-1">General Information</h5>
+            <div class="container pt-2">
+              <div class="row">
+                <div class="col-sm">
+                  Employee ID
+                </div>
+                <div class="col-sm">
+                  Employee Name
+                </div>
+                <div class="col-sm">
+                  Employee Status
+                </div>
+              </div>
+            </div>
+            <div class="container pt-5">
+              <div class="row">
+                <div class="col-sm">
+                  Role
+                </div>
+                <div class="col-sm">
+                  Start Date
+                </div>
+                <div class="col-sm">
+                  End Date
+                </div>
+              </div>
+            </div>
+            
+            <hr class="hr hr-blurry" />
+            <h5>Contact Information</h5>
+            <div class="container pt-2">
+              <div class="row">
+                <div class="col-sm">
+                  Phone Number
+                </div>
+                <div class="col-sm">
+                  Email
+                </div>
+                <div class="col-sm">
+                  Address
+                </div>
+              </div>
+            </div>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+              Launch demo modal
+            </button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+              Launch demo modal
+            </button>
+            
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    ...
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+        </div>
+        
+        </main>
+</body>
