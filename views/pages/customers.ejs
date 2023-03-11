@@ -17,10 +17,10 @@
   <main class="container pt-5">
     <div class="p-5 mb-4 bg-white rounded-3 top-buffer">
       <h2 class="text-center pb-2">
-        Employees
+        Customers
       </h2>
       <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-        Create New Employee
+        Create New Customer
       </button>
 
       <!-- Modal -->
@@ -28,12 +28,24 @@
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
             <div class="modal-header">
-              <h4 class="modal-title" id="exampleModalLabel">Create New Employee Entry</h4>
+              <h4 class="modal-title" id="exampleModalLabel">Create New Customer</h4>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
               <form class="row g-3">
-                
+
+                <div class="col-md-6">
+                    <label for="firstname" class="form-label">Business Name</label>
+                    <input type="text" class="form-control" id="firstname" placeholder="Ex. Local Donut Shop">
+                  </div>
+                  <div class="col-md-6">
+                    <label for="lastname" class="form-label">Business Hours</label>
+                    <input type="text" class="form-control" id="lastname" placeholder="Ex. Mon-Sat 10-4PM, Sun 11-2PM">
+                  </div>  
+                  <div class="col-md-6">
+                    <label for="inputRole" class="form-label">Customer Account Number</label>                  
+                    <input type="text" class="form-control" id="inputAccNum">  
+                  </div>
                 <div class="col-md-6">
                   <label for="firstname" class="form-label">First Name</label>
                   <input type="text" class="form-control" id="firstname" placeholder="Ex. John">
@@ -61,37 +73,20 @@
                 </div>
                 <div class="col-md-4">
                   <label for="inputState" class="form-label">State</label>
-                  <select class="form-select" name="states" id="state">
-                    <% states.forEach(function(states) { %>              
-                    <option value=<%=states.state_code_id %>><%=states.state %></option>
-                    <% }); %>
-                </select>
+                  
                 </div>
                 <div class="col-md-2">
                   <label for="inputZip" class="form-label">Zip</label>
                   <input type="text" class="form-control" id="inputZip">
                 </div>
-                <div class="col-md-6">
-                  <label for="inputRole" class="form-label">Role</label>                  
-                    <select class="form-select" name="roles" id="roles">
-                      <% roles.forEach(function(roles) { %>              
-                      <option value=<%=roles.Role_ID %>><%=roles.Role_Name %></option>
-                      <% }); %>                 
-                  </select>
-                </div>
-                <div class="col-md-6">
-                  <label for="inputstatus" class="form-label">Status</label>
-                  <select id="inputstatus" class="form-select">
-                    <option selected>Active</option>
-                    <option>Terminated</option>
-                  </select>
-                </div>
+                
+               
                 
                 
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Create New Employee</button>
+              <button type="button" class="btn btn-primary">Create New Customer</button>
               </form>
             </div>
           </div>
@@ -102,37 +97,31 @@
         <thead>
           <tr>
             <th scope="col">ID</th>
-            <th scope="col">Name</th>
-            <th scope="col">Start Date</th>
-            <th scope="col">End Date</th>
-            <th scope="col">Status</th>
-            <th scope="col">Role</th>
+            <th scope="col">Business Name</th>
+            <th scope="col">Business Hours</th>
+            <th scope="col">Main Contact</th>
+            <th scope="col">Account Number</th>
             
           </tr>
         </thead>
         <tbody>
-          <% employee_data.forEach(function(employee_data) { %>
+          <% customer_data.forEach(function(customer_data) { %>
             <tr>
               <td>
-                <a style="text-decoration:none" href="/empinfo/"><%= employee_data.emp_id%></a>
+                <a style="text-decoration:none" href="/custinfo"><%= customer_data.customer_id%></a>
               </td>
               <td>
-                <a style="text-decoration:none" href="/empinfo/"><%= employee_data.last_name%>,&nbsp<%= employee_data.first_name%></a>
+                <a style="text-decoration:none" href="/custinfo"><%= customer_data.business_name%></a>
               </td>
               <td>
-                <%= employee_data.start_date%>
+                <%= customer_data.business_hrs%>
               </td>
               <td>
-                <%= employee_data.end_date%>
+                <%= customer_data.last_name%>,&nbsp<%= customer_data.first_name%>
               </td>
               <td>
-                <%= employee_data.emp_status%>
+                <%= customer_data.cust_acc_num%>
               </td>
-              <td>
-                <%= employee_data.role_name%>
-              </td>
-              
-
 
             </tr>
             <% }); %>

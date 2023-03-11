@@ -24,6 +24,8 @@ app.get('/login', function (req, res) {
 });
 
 
+// EMPLOYEE PAGE 
+
 app.get('/employees', function(req, res){
     axios.get('http://127.0.0.1:5000/employees')
     .then((response, states)=>{
@@ -32,7 +34,8 @@ app.get('/employees', function(req, res){
 
         res.render('pages/employees', 
         { employee_data: employee_data[0],
-          states: employee_data[1]  
+          states: employee_data[1],
+          roles: employee_data[2]   
           });
     });
 });
@@ -41,6 +44,24 @@ app.get('/empinfo', function (req, res) {
     res.render('pages/empinfo');
 });
 
+// CUSTOMER PAGE
+
+
+app.get('/customers', function(req, res){
+    axios.get('http://127.0.0.1:5000/customers')
+    .then((response, states)=>{
+        console.log(response.data)
+        var customer_data = response.data
+
+        res.render('pages/customers', 
+        { customer_data : customer_data   
+          });
+    });
+});
+
+app.get('/custinfo', function (req, res) {
+    res.render('pages/custinfo');
+});
 
 app.listen(3000);
 console.log('3000 is the magic port');
