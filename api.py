@@ -47,8 +47,8 @@ def execute_query(connection, query):
 
 
 def execute_read_query(connection, query):
-    cursor = connection.cursor()
-    result = []
+    cursor = connection.cursor(dictionary=True)
+    result = None
     try:
         cursor.execute(query)
         result = cursor.fetchall()
@@ -83,17 +83,19 @@ def employee_info():
     sql = """
         SELECT * FROM states;
         """ 
-    states= execute_read_query(conn, sql)
+    states = execute_read_query(conn, sql)
 
-    return jsonify(employees, states)
+    sql = """
+        SELECT * FROM roles;
+        """ 
+    roles = execute_read_query(conn, sql)
 
-
- 
+    return jsonify(employees, states, roles)
 
 
 # employee_contact get method working now
 # adjust sql as needed - Misael
-@app.route('/employee_info', methods=['GET'])
+@app.route('/emp_info', methods=['GET'])
 def get_employee_contact():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
@@ -107,8 +109,58 @@ def get_employee_contact():
             ON ec.state_code_id = s.state_code_id;"""
     employee_info = execute_read_query(conn, sql)
 
+    sql = """
+        SELECT * FROM states;
+        """ 
+    states = execute_read_query(conn, sql)
+
+    sql = """
+        SELECT * FROM roles;
+        """ 
+    roles = execute_read_query(conn, sql)
+
     # sql = """SELECT * FROM states"""
-    return employee_info
+    return jsonify(employee_info, states, roles)
+
+
+
+@app.route('/employees/add', methods = ['POST'])
+def add_employee():
+    conn = create_connection(
+    'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    request_data = request.get_json()
+    first_name = request_data['first_name']
+    last_name= request_data['last_name']  
+    start_date = request_data['start_date']
+    end_date = request_data['end_date']
+    emp_status = request_data['emp_status']
+    role_id = request_data['role_id']     
+    phone = request_data['phone']    
+    email = request_data['email']
+    street = request_data['street']
+    city = request_data['city']   
+    state_code_id = request_data['state_code_id']     
+    zipcode = request_data['zipcode']  
+    
+    sql = """
+    INSERT INTO employees (first_name, last_name, start_date, end_date, emp_status, role_id) 
+    VALUES ('%s', '%s', '%s', '%s', '%s', %s);
+    """ %(first_name, last_name, start_date, end_date, emp_status, role_id)
+    execute_query(conn, sql)
+    # gets the customer id from the above execution
+    sql = 'SELECT * FROM employees WHERE emp_id= LAST_INSERT_ID()' 
+    emp_id = execute_read_query(conn, sql)
+    emp_id = emp_id[0]['emp_id']
+    # Stores Customer Contacts Information 
+    sql = """
+    INSERT INTO customer_contacts (emp_id, phone, email, street, city, state_code_id, zipcode) 
+    VALUES (%s, %s, '%s', '%s','%s', '%s', %s)
+    """%(emp_id, phone, email, street, city, state_code_id, zipcode)
+    execute_query(conn, sql)
+    return "Employee has been added"
+
+
+
 
 
 # customers get method working now
