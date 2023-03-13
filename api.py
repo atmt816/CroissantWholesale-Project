@@ -917,18 +917,18 @@ def add_invoice():
     # The user input is gathered in JSON format and stored into an empty variable
     invoice_data = request.get_json()
     # The JSON object is then separated into variables so that they may be used in a sql query
-    vendor_id = invoice_data['vendor_id']
     customer_id = invoice_data['customer_id']
     invoice_number = invoice_data['invoice_number']
     invoice_date = invoice_data['invoice_date']
     invoice_total = invoice_data['invoice_total']
     payment_status = invoice_data['payment_status']
     date_paid = invoice_data['date_paid']
+    order_id = order_id['order_id']
 
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "INSERT INTO invoices(vendor_id, customer_id, invoice_number, invoice_date, invoice_total, payment_status, date_paid) VALUES (%s, %s, %s, %s, %s, '%s', %s)" % (
-        vendor_id, customer_id, invoice_number, invoice_date, invoice_total, payment_status, date_paid)
+    sql = "INSERT INTO invoices(customer_id, customer_id, invoice_number, invoice_date, invoice_total, payment_status, date_paid, order_id) VALUES (%s, %s, %s, %s, %s, '%s', %s, %s)" % (
+        customer_id, customer_id, invoice_number, invoice_date, invoice_total, payment_status, date_paid, order_id)
 
     execute_query(conn, sql)
     return 'Invoice was added Successfully'
