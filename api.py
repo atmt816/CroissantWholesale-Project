@@ -89,7 +89,7 @@ def get_states():
 
 
 @app.route('/employees', methods=['GET'])
-def employee_info():
+def employees():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = """
@@ -199,6 +199,31 @@ def get_employee_contact():
 
     return employee_contact
 
+@app.route('/employees/', methods=['GET'])
+def employee_info(emp_id):
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = """
+        SELECT e.emp_id, e.first_name, e.last_name, e.start_date, e.end_date, e.emp_status, r.role_name
+        FROM employees AS e
+        JOIN roles AS r
+        ON e.role_id = r.role_id
+        WHERE e.emp_id = '%s';
+        """ % (emp_id)
+    employees = execute_read_query(conn, sql)
+    
+    sql = """
+        SELECT * FROM states;
+        """ 
+    states = execute_read_query(conn, sql)
+
+    sql = """
+        SELECT * FROM roles;
+        """ 
+    roles = execute_read_query(conn, sql)
+
+    return jsonify(employees, states, roles)
 
 @app.route('/addemployeecontact', methods=['POST'])
 def add_employee_contact():
