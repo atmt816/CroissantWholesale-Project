@@ -5,6 +5,9 @@ import datetime
 import time
 import flask  # , werkzeug
 from flask import request, jsonify
+import datetime
+import time
+from flask import jsonify
 from flask import jsonify, make_response
 from flask import request, make_response
 # from sql import create_connection
@@ -44,14 +47,17 @@ def execute_query(connection, query):
 
 
 def execute_read_query(connection, query):
-    cursor = connection.cursor(dictionary=True)
-    result = None
+    cursor = connection.cursor()
+    result = []
     try:
         cursor.execute(query)
-        result = cursor.fetchall()
-        return jsonify(result)
+        table = cursor.fetchall()
+        columnNames = [column[0] for column in cursor.description]
+        for record in table:
+            result.append(dict(zip(columnNames, record)))
+        return result
     except Error as e:
-        print(f"The error '{e}' occured")
+        print(f"The error '{e}' occurred")
 
 
 # setting up the application
@@ -107,7 +113,14 @@ def employee_info(emp_id):
         WHERE e.emp_id = '%s';
         """ % (emp_id)
     employees = execute_read_query(conn, sql)
-    return employees
+
+    sql = """
+        SELECT * FROM states;
+        """
+    states = execute_read_query(conn, sql)
+
+    return jsonify(employees, states)
+
 
 # POST method for employees
 
@@ -190,9 +203,11 @@ def get_employee_contact():
            FROM employees e
            JOIN employee_contact ec
             ON e.emp_id = ec.emp_id
+            JOIN roles AS r
+			ON e.role_id = r.role_id
             JOIN states s
             ON ec.state_code_id = s.state_code_id;"""
-    employee_contact = execute_read_query(conn, sql)
+    employee_info = execute_read_query(conn, sql)
 
     sql = """SELECT * FROM states"""
 
@@ -532,7 +547,8 @@ def add_vendor_contact():
     execute_query(conn, sql)
     return 'Vendor Contact was added Successfully'
 
-#Vendor Inventory Report - report generates a list of all inventory items, grouped by the vendor id the items are procured from.
+# Vendor Inventory Report - report generates a list of all inventory items, grouped by the vendor id the items are procured from.
+
 
 @app.route('/vendorinventoryreport', methods=['GET'])
 def get_vendor_inv_sheet():
@@ -543,6 +559,8 @@ def get_vendor_inv_sheet():
     return vendor_inv_sheet
 
 # PUT method for vendors contact
+
+
 @app.route('/update_vendor_contact', methods=['PUT'])
 def update_vendor_contact():
     # The user input is gathered in JSON format and stored into an empty variable
@@ -781,9 +799,11 @@ def add_order():
 
 # Fulfillment Report
 # Fulfillment check per line item. Report generates all orders within a timeframe that are scheduled for delivery.
-# User can then ensure all items have been made to fulfill these orders, or plan accordingly if more ingredients must be ordered. 
+# User can then ensure all items have been made to fulfill these orders, or plan accordingly if more ingredients must be ordered.
 
-#Daily
+# Daily
+
+
 @app.route('/dailyfulfillmentreport', methods=['GET'])
 def get_daily_ful_report():
     conn = create_connection(
@@ -792,7 +812,9 @@ def get_daily_ful_report():
     daily_ful_report = execute_read_query(conn, sql)
     return daily_ful_report
 
-#Weekly
+# Weekly
+
+
 @app.route('/weeklyfulfillmentreport', methods=['GET'])
 def get_weekly_ful_report():
     conn = create_connection(
@@ -801,7 +823,9 @@ def get_weekly_ful_report():
     weekly_ful_report = execute_read_query(conn, sql)
     return weekly_ful_report
 
-#Monthly
+# Monthly
+
+
 @app.route('/monthlyfulfillmentreport', methods=['GET'])
 def get_monthly_ful_report():
     conn = create_connection(
@@ -814,7 +838,7 @@ def get_monthly_ful_report():
 # Best Selling Items Report
 # This report generates a count for each specific line item's frequency across all orders.
 
-#Daily Best Sellers - Determine most popular items amongst all orders scheduled for delivery on current date.
+# Daily Best Sellers - Determine most popular items amongst all orders scheduled for delivery on current date.
 @app.route('/dailybestsellers', methods=['GET'])
 def get_daily_best_sell_report():
     conn = create_connection(
@@ -823,7 +847,9 @@ def get_daily_best_sell_report():
     daily_best_sell_report = execute_read_query(conn, sql)
     return daily_best_sell_report
 
-#Weekly Best Sellers - Determine most popular items amongst all orders scheduled for delivery within a week from the current date.
+# Weekly Best Sellers - Determine most popular items amongst all orders scheduled for delivery within a week from the current date.
+
+
 @app.route('/weeklybestsellers', methods=['GET'])
 def get_weekly_best_sell_report():
     conn = create_connection(
@@ -832,7 +858,9 @@ def get_weekly_best_sell_report():
     weekly_best_sell_report = execute_read_query(conn, sql)
     return weekly_best_sell_report
 
-#Monthly Best Sellers - Determine most popular items amongst all orders scheduled for delivery within a month from the current date.
+# Monthly Best Sellers - Determine most popular items amongst all orders scheduled for delivery within a month from the current date.
+
+
 @app.route('/monthlybestsellers', methods=['GET'])
 def get_monthly_best_sell_report():
     conn = create_connection(
@@ -841,7 +869,9 @@ def get_monthly_best_sell_report():
     monthly_best_sell_report = execute_read_query(conn, sql)
     return monthly_best_sell_report
 
-#Lifetime Best Sellers - Determine most popular items amongst all historical orders.
+# Lifetime Best Sellers - Determine most popular items amongst all historical orders.
+
+
 @app.route('/lifetimebestsellers', methods=['GET'])
 def get_lifetime_best_sell_report():
     conn = create_connection(
@@ -850,7 +880,9 @@ def get_lifetime_best_sell_report():
     lifetime_best_sell_report = execute_read_query(conn, sql)
     return lifetime_best_sell_report
 
-#Orders-Invoice Report- View payment status of all orders with their corresponding invoice.
+# Orders-Invoice Report- View payment status of all orders with their corresponding invoice.
+
+
 @app.route('/paymentstatus', methods=['GET'])
 def get_payment_status_report():
     conn = create_connection(
@@ -859,7 +891,9 @@ def get_payment_status_report():
     payment_status_report = execute_read_query(conn, sql)
     return payment_status_report
 
-#Delivery Sheet Report - Generate a customer contact list for all deliveries scheduled on the current date.
+# Delivery Sheet Report - Generate a customer contact list for all deliveries scheduled on the current date.
+
+
 @app.route('/deliverysheet', methods=['GET'])
 def get_delivery_sheet():
     conn = create_connection(
@@ -869,6 +903,8 @@ def get_delivery_sheet():
     return delivery_sheet
 
 # PUT method for orders
+
+
 @app.route('/update_order', methods=['PUT'])
 def update_order():
     # The user input is gathered in JSON format and stored into an empty variable
@@ -1121,7 +1157,7 @@ def add_maintenance_log():
     return 'Maintenance Log was added Successfully'
 
 
-#Maintenance Log by Vehicle - Generates a report for all maintenance logs under a specified vehicle id.
+# Maintenance Log by Vehicle - Generates a report for all maintenance logs under a specified vehicle id.
 
 @app.route('/vehiclemaintenancelog', methods=['GET'])
 def get_vehicle_main_log():
@@ -1130,12 +1166,12 @@ def get_vehicle_main_log():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "SELECT g.garage_name AS 'Garage Name', logs.date AS 'Date', logs.status AS 'Status', logs.note AS 'note' FROM maintenance_logs AS logs INNER JOIN vehicles AS v ON logs.vehicle_id = v.vehicle_id INNER JOIN garage AS g ON logs.garage_id = g.garage_id WHERE v.vehicle_id = %s ORDER BY date DESC;  " % (
-    vehicle_id)
+        vehicle_id)
     vehicle_main_log = execute_read_query(conn, sql)
     return vehicle_main_log
 
 
-#Maintenance Log by Garage - Generates a report for all maintenance logs under a specified garage id.
+# Maintenance Log by Garage - Generates a report for all maintenance logs under a specified garage id.
 
 @app.route('/garagemaintenancelog', methods=['GET'])
 def get_garagemain_log():
@@ -1144,7 +1180,7 @@ def get_garagemain_log():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "SELECT v.license_plate AS 'License Plate', logs.date AS 'Date', logs.status AS 'Status', logs.note AS 'note' FROM maintenance_logs AS logs INNER JOIN vehicles AS v ON logs.vehicle_id = v.vehicle_id INNER JOIN garage AS g ON logs.garage_id = g.garage_id WHERE g.garage_id = %s ORDER BY date DESC" % (
-    garage_id)
+        garage_id)
     garage_main_log = execute_read_query(conn, sql)
     return garage_main_log
 
