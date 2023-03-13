@@ -36,11 +36,6 @@ app.get('/employees', function (req, res) {
         });
 });
 
-<<<<<<< Updated upstream
-app.get('/empinfo', function (req, res) {
-    axios.get('http://127.0.0.1:5000/employee_info')
-    res.render('pages/empinfo');
-=======
 
 app.get('/empinfo', function(req, res){
     axios.get('http://127.0.0.1:5000/emp_info/', {params: {
@@ -56,7 +51,6 @@ app.get('/empinfo', function(req, res){
           roles: employee_data[2]
           });
     });
->>>>>>> Stashed changes
 });
 
 
