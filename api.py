@@ -95,7 +95,7 @@ def employee_info():
 
 # employee_contact get method working now
 # adjust sql as needed - Misael
-@app.route('/employee_info', methods=['GET'])
+@app.route('/emp_info', methods=['GET'])
 def get_employee_contact():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
