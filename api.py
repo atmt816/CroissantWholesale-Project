@@ -80,18 +80,32 @@ def get_states():
 # adjust sql as needed - Misael
 
 # GET method for employees
-
-
 @app.route('/employees', methods=['GET'])
-def employee_info():
+def employee():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = """
         SELECT e.emp_id, e.first_name, e.last_name, e.start_date, e.end_date, e.emp_status, r.role_name
         FROM employees AS e
         JOIN roles AS r
-        ON e.role_id = r.role_id;
-        """
+        ON e.role_id = r.role_id
+        """ 
+    employees = execute_read_query(conn, sql)
+    return employees
+
+
+@app.route('/employees/<emp_id>', methods=['GET'])
+def employee_info(emp_id):
+    emp_id = request.view_args['emp_id']
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = """
+        SELECT e.emp_id, e.first_name, e.last_name, e.start_date, e.end_date, e.emp_status, r.role_name
+        FROM employees AS e
+        JOIN roles AS r
+        ON e.role_id = r.role_id
+        WHERE e.emp_id = '%s';
+        """ % (emp_id)
     employees = execute_read_query(conn, sql)
     return employees
 
