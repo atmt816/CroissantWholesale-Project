@@ -211,7 +211,7 @@ def get_employee_contact():
 
     sql = """SELECT * FROM states"""
 
-    return employee_contact
+    return employee_info
 
 
 @app.route('/addemployeecontact', methods=['POST'])
