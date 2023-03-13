@@ -7,12 +7,10 @@ const axios = require('axios');
 const { response } = require('express');
 const req = require('express/lib/request');
 var selectedID = "";
-app.use(bodyParser.urlencoded());
-app.set('view engine', 'ejs');
-
+//app.use(bodyParser.urlencoded());
 // set the view engine to ejs
-
 app.set('view engine', 'ejs');
+
 app.get('/', function (req, res) {
 
     res.render('pages/index');
