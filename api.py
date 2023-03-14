@@ -121,9 +121,8 @@ def employee_info():
 
 #     # sql = """SELECT * FROM states"""
 #     return jsonify(employee_info, states, roles)
-@app.route('/empinfo', methods=['GET'])
+@app.route('/empinfo/<emp_id>', methods=['GET'])
 def get_employee_info(emp_id):
-    emp_id = request.args.get('id')
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = """
@@ -137,8 +136,14 @@ def get_employee_info(emp_id):
             ON ec.state_code_id = s.state_code_id
         WHERE e.emp_id = '%s';
         """ % (emp_id)
+    # print(sql)
+    sql = """
+         SELECT * FROM states;
+        """ 
+    states = execute_read_query(conn, sql)
+
     employees = execute_read_query(conn, sql)
-    return jsonify(employees)
+    return jsonify(employees, states)
 
 
 @app.route('/employees/add', methods = ['POST'])

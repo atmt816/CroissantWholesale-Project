@@ -29,7 +29,7 @@ app.get('/login', function (req, res) {
 app.get('/employees', function(req, res){
     axios.get('http://127.0.0.1:5000/employees')
     .then((response, states)=>{
-        console.log(response.data)
+        // console.log(response.data)
         var employee_data = response.data
 
         res.render('pages/employees', 
@@ -40,13 +40,20 @@ app.get('/employees', function(req, res){
     });
 });
 
+
 app.get('/empinfo/:id', function (req, res) {
-    const emp_id = req.query.id;
-    axios.get('http://127.0.0.1:5000/empinfo',
-    )
+    const emp_id = req.params.id;
+   
+    axios.get('http://127.0.0.1:5000/empinfo/'+ emp_id
+    ).then((response, states)=>{
+        var employee_data = response.data
+        
+        res.render('pages/empinfo', 
+        {employee_data: employee_data[0],
+         states: employee_data[1]});
+    });
   
-    res.render('pages/empinfo', 
-    {employee_data: employee_data, emp_id: emp_id });
+    
 });
 
 // CUSTOMER PAGE
