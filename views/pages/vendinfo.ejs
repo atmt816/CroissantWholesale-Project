@@ -15,35 +15,22 @@
     <main class="container pt-5"> 
         <div class="p-5 mb-4 bg-white rounded-3 top-buffer">
             <h2 class="text-center">
-              Employee Information
+              Customer Information
             </h2>
-            <a href="/employees" class="link-primary pb-4">Go Back</a>
+            <a href="/customers" class="link-primary pb-4">Go Back</a>
             <h5 class= "pb-1 pt-2">General Information</h5>
             <div class="container pt-2">
               <div class="row">
                 <div class="col-sm">
-                  Employee ID
+                  Vendor ID
                 </div>
                 <div class="col-sm">
-                  Employee Name
-                </div>
-                <div class="col-sm">
-                  Employee Status
+                  Vendor Name
                 </div>
               </div>
             </div>
             <div class="container pt-5">
-              <div class="row">
-                <div class="col-sm">
-                  Role
-                </div>
-                <div class="col-sm">
-                  Start Date
-                </div>
-                <div class="col-sm">
-                  End Date
-                </div>
-              </div>
+            
             </div>
             
             <hr class="hr hr-blurry" />
@@ -57,7 +44,7 @@
                   Email
                 </div>
                 <div class="col-sm pb-5">
-                  Address
+                  Vendor Address
                 </div>
               </div>
             </div>
@@ -71,20 +58,21 @@
               <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h4 class="modal-title" id="exampleModalLabel">Edit Employee Information</h4>
+                    <h4 class="modal-title" id="exampleModalLabel">Edit Vendor Information</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
                     <form class="row g-3">
-                      <hidden name="approveId" value=''>
+                      
                       <div class="col-md-6">
-                        <label for="firstname" class="form-label">First Name</label>
+                        <label for="firstname" class="form-label">Vendor Name</label>
                         <input type="text" class="form-control" id="firstname" placeholder="Ex. John">
                       </div>
                       <div class="col-md-6">
-                        <label for="lastname" class="form-label">Last Name</label>
-                        <input type="text" class="form-control" id="lastname" placeholder="Ex. Doe">
+                        <label for="firstname" class="form-label">Vendor Hours</label>
+                        <input type="text" class="form-control" id="firstname" placeholder="Ex. John">
                       </div>
+                      
                       <div class="col-md-6">
                         <label for="email" class="form-label">Email</label>
                         <input type="email" class="form-control" id="firstname" placeholder="exmail@example.com">
@@ -94,7 +82,7 @@
                         <input type="phone" class="form-control" id="lastname" placeholder="000-000-0000">
                       </div>
                       <div class="col-12">
-                        <label for="inputAddress" class="form-label">Address</label>
+                        <label for="inputAddress" class="form-label">Vendor Address</label>
                         <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
                       </div>
       
@@ -110,23 +98,13 @@
                         <label for="inputZip" class="form-label">Zip</label>
                         <input type="text" class="form-control" id="inputZip">
                       </div>
-                      <div class="col-md-6">
-                        <label for="inputRole" class="form-label">Role</label>                  
-                          
-                      </div>
-                      <div class="col-md-6">
-                        <label for="inputstatus" class="form-label">Status</label>
-                        <select id="inputstatus" class="form-select">
-                          <option selected>Active</option>
-                          <option>Terminated</option>
-                        </select>
-                      </div>
+                      
                       
                       
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Create New Employee</button>
+                    <button type="button" class="btn btn-primary">Update Vendor</button>
                     </form>
 
         </div>

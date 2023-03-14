@@ -40,8 +40,13 @@ app.get('/employees', function(req, res){
     });
 });
 
-app.get('/empinfo', function (req, res) {
-    res.render('pages/empinfo');
+app.get('/empinfo/:id', function (req, res) {
+    const emp_id = req.query.id;
+    axios.get('http://127.0.0.1:5000/empinfo',
+    )
+  
+    res.render('pages/empinfo', 
+    {employee_data: employee_data, emp_id: emp_id });
 });
 
 // CUSTOMER PAGE

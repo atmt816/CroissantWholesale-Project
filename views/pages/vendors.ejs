@@ -1,0 +1,129 @@
+<head>
+    <%- include('../partials/head'); %>
+  </head>
+  
+  
+  <style>
+    .top-buffer {
+      margin-top: 60px;
+    }
+  </style>
+  
+  <body class="container">
+    <header>
+      <%- include('../partials/header'); %>
+    </header>
+  
+    <main class="container pt-5">
+      <div class="p-5 mb-4 bg-white rounded-3 top-buffer">
+        <h2 class="text-center pb-2">
+          Vendors
+        </h2>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          Create New Vendor
+        </button>
+  
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel">Create New Vendor</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form class="row g-3">
+  
+                  <div class="col-md-6">
+                      <label for="firstname" class="form-label">Vendor Name</label>
+                      <input type="text" class="form-control" id="firstname" placeholder="Ex. Local Donut Shop">
+                    </div>
+                    <div class="col-md-6">
+                      <label for="lastname" class="form-label">Vendor Hours</label>
+                      <input type="text" class="form-control" id="lastname" placeholder="Ex. Mon-Sat 10-4PM, Sun 11-2PM">
+                    </div>  
+                    <div class="col-md-6">
+                      <label for="inputRole" class="form-label">Vendor Account Number</label>                  
+                      <input type="text" class="form-control" id="inputAccNum">  
+                    </div>
+                 
+                  <div class="col-md-6">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="firstname" placeholder="exmail@example.com">
+                  </div>
+                  <div class="col-md-6">
+                    <label for="lastname" class="form-label">Phone</label>
+                    <input type="phone" class="form-control" id="lastname" placeholder="000-000-0000">
+                  </div>
+                  <div class="col-12">
+                    <label for="inputAddress" class="form-label">Address</label>
+                    <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
+                  </div>
+  
+                  <div class="col-md-6">
+                    <label for="inputCity" class="form-label">City</label>
+                    <input type="text" class="form-control" id="inputCity">
+                  </div>
+                  <div class="col-md-4">
+                    <label for="inputState" class="form-label">State</label>
+                    
+                  </div>
+                  <div class="col-md-2">
+                    <label for="inputZip" class="form-label">Zip</label>
+                    <input type="text" class="form-control" id="inputZip">
+                  </div>
+                  
+                 
+                  
+                  
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Create New Vendor</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Vendor Name</th>
+              <th scope="col">Vendor Hours</th>
+              <th scope="col">Account Number</th>
+              
+            </tr>
+          </thead>
+          <tbody>
+            <% vendor_data.forEach(function(vendor_data) { %>
+              <tr>
+                <td>
+                  <a style="text-decoration:none" href="/vendinfo"></a>
+                </td>
+                <td>
+                  <a style="text-decoration:none" href="/vendinfo"></a>
+                </td>
+                <td>
+                  
+                </td>
+                <td>
+                  
+                </td>
+                <td>
+                  
+                </td>
+  
+              </tr>
+              <% }); %>
+  
+          </tbody>
+        </table>
+  
+  
+  
+      </div>
+  
+    </main>
+  </body>
