@@ -97,7 +97,18 @@ def employee():
         ON e.role_id = r.role_id
         """ 
     employees = execute_read_query(conn, sql)
-    return employees
+
+    sql = """
+        SELECT * FROM states;
+        """
+    states = execute_read_query(conn, sql)
+
+    sql = """
+        SELECT * FROM roles;
+        """
+    roles = execute_read_query(conn, sql)
+
+    return jsonify(employees, states, roles)
 
 
 @app.route('/employees/<emp_id>', methods=['GET'])
@@ -119,7 +130,12 @@ def employee_info(emp_id):
         """
     states = execute_read_query(conn, sql)
 
-    return jsonify(employees, states)
+    sql = """
+        SELECT * FROM roles;
+        """
+    roles = execute_read_query(conn, sql)
+
+    return jsonify(employees, states, roles)
 
 
 # POST method for employees
@@ -335,8 +351,8 @@ def get_customers():
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "SELECT * FROM customers"
     customers = execute_read_query(conn, sql)
-    return customers
 
+    return jsonify(customers)
 
 @app.route('/addcustomers', methods=['POST'])
 def add_customer():
