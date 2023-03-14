@@ -225,9 +225,17 @@ def get_employee_contact():
             ON ec.state_code_id = s.state_code_id;"""
     employee_info = execute_read_query(conn, sql)
 
-    sql = """SELECT * FROM states"""
+    sql = """
+        SELECT * FROM states;
+        """
+    states = execute_read_query(conn, sql)
 
-    return employee_info
+    sql = """
+        SELECT * FROM roles;
+        """
+    roles = execute_read_query(conn, sql)
+
+    return jsonify(employee_info, states, roles)
 
 
 @app.route('/addemployeecontact', methods=['POST'])
@@ -352,7 +360,17 @@ def get_customers():
     sql = "SELECT * FROM customers"
     customers = execute_read_query(conn, sql)
 
-    return jsonify(customers)
+    sql = """
+        SELECT * FROM states;
+        """
+    states = execute_read_query(conn, sql)
+
+    sql = """
+        SELECT * FROM roles;
+        """
+    roles = execute_read_query(conn, sql)
+
+    return jsonify(customers, states, roles)
 
 @app.route('/addcustomers', methods=['POST'])
 def add_customer():
@@ -415,7 +433,18 @@ def get_customer_contact():
                 JOIN Customer_Contact cc ON c.Customer_ct_id = cc.Customer_ct_id        
                 JOIN States s ON cc.state_code_id = s.State_Code_ID;_ct_id;"""
     customer_contact = execute_read_query(conn, sql)
-    return customer_contact
+
+    sql = """
+        SELECT * FROM states;
+        """
+    states = execute_read_query(conn, sql)
+
+    sql = """
+        SELECT * FROM roles;
+        """
+    roles = execute_read_query(conn, sql)
+
+    return jsonify(customer_contact, states, roles)
 
 
 @app.route('/addcustomercontact', methods=['POST'])
@@ -478,7 +507,18 @@ def get_vendors():
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "SELECT * FROM vendors"
     vendors = execute_read_query(conn, sql)
-    return vendors
+
+    sql = """
+        SELECT * FROM states;
+        """
+    states = execute_read_query(conn, sql)
+
+    sql = """
+        SELECT * FROM roles;
+        """
+    roles = execute_read_query(conn, sql)
+
+    return (vendors, states, roles)
 
 
 @app.route('/addvendor', methods=['POST'])
@@ -540,7 +580,18 @@ def get_vendor_contact():
             ON v.vendor_ct_id = vc.vendor_ct_id
             JOIN states s ON vc.state_code_id = s.state_code_id"""
     vendor_contact = execute_read_query(conn, sql)
-    return vendor_contact
+
+    sql = """
+        SELECT * FROM states;
+        """
+    states = execute_read_query(conn, sql)
+
+    sql = """
+        SELECT * FROM roles;
+        """
+    roles = execute_read_query(conn, sql)
+
+    return (vendor_contact, states, roles)
 
 
 @app.route('/addvendorcontact', methods=['POST'])
