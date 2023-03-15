@@ -6,7 +6,7 @@ import time
 import flask  # , werkzeug
 from flask import request, jsonify
 import datetime
-import time
+import time 
 from flask import jsonify
 from flask import jsonify, make_response
 from flask import request, make_response
@@ -62,7 +62,7 @@ app = flask.Flask(__name__)  # sets up the application
 app.config["DEBUG"] = True  # allow to show error in browser
 
 
-# ---- EMPLOYEE PAGE -----
+#---- EMPLOYEE PAGE ----- 
 
 # employees get method working now
 # not returning data for now since roles table is empty
@@ -82,12 +82,12 @@ def employee_info():
 
     sql = """
         SELECT * FROM states;
-        """
+        """ 
     states = execute_read_query(conn, sql)
 
     sql = """
         SELECT * FROM roles;
-        """
+        """ 
     roles = execute_read_query(conn, sql)
 
     return jsonify(employees, states, roles)
@@ -111,19 +111,19 @@ def employee_info():
 
 #     sql = """
 #         SELECT * FROM states;
-#         """
+#         """ 
 #     states = execute_read_query(conn, sql)
 
 #     sql = """
 #         SELECT * FROM roles;
-#         """
+#         """ 
 #     roles = execute_read_query(conn, sql)
 
 #     # sql = """SELECT * FROM states"""
 #     return jsonify(employee_info, states, roles)
 @app.route('/empinfo', methods=['GET'])
 def get_employee_info(emp_id):
-    emp_id = request.args.get('emp_id')
+    emp_id = request.args.get('id')
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = """
@@ -141,40 +141,43 @@ def get_employee_info(emp_id):
     return jsonify(employees)
 
 
-@app.route('/employees/add', methods=['POST'])
+@app.route('/employees/add', methods = ['POST'])
 def add_employee():
     conn = create_connection(
-        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     request_data = request.get_json()
     first_name = request_data['first_name']
-    last_name = request_data['last_name']
+    last_name= request_data['last_name']  
     start_date = request_data['start_date']
     end_date = request_data['end_date']
     emp_status = request_data['emp_status']
-    role_id = request_data['role_id']
-    phone = request_data['phone']
+    role_id = request_data['role_id']     
+    phone = request_data['phone']    
     email = request_data['email']
     street = request_data['street']
-    city = request_data['city']
-    state_code_id = request_data['state_code_id']
-    zipcode = request_data['zipcode']
-
+    city = request_data['city']   
+    state_code_id = request_data['state_code_id']     
+    zipcode = request_data['zipcode']  
+    
     sql = """
     INSERT INTO employees (first_name, last_name, start_date, end_date, emp_status, role_id) 
     VALUES ('%s', '%s', '%s', '%s', '%s', %s);
-    """ % (first_name, last_name, start_date, end_date, emp_status, role_id)
+    """ %(first_name, last_name, start_date, end_date, emp_status, role_id)
     execute_query(conn, sql)
     # gets the customer id from the above execution
-    sql = 'SELECT * FROM employees WHERE emp_id= LAST_INSERT_ID()'
+    sql = 'SELECT * FROM employees WHERE emp_id= LAST_INSERT_ID()' 
     emp_id = execute_read_query(conn, sql)
     emp_id = emp_id[0]['emp_id']
-    # Stores Customer Contacts Information
+    # Stores Customer Contacts Information 
     sql = """
     INSERT INTO customer_contacts (emp_id, phone, email, street, city, state_code_id, zipcode) 
     VALUES (%s, %s, '%s', '%s','%s', '%s', %s)
-    """ % (emp_id, phone, email, street, city, state_code_id, zipcode)
+    """%(emp_id, phone, email, street, city, state_code_id, zipcode)
     execute_query(conn, sql)
     return "Employee has been added"
+
+
+
 
 
 # customers get method working now
