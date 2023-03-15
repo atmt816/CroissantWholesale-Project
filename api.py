@@ -1083,7 +1083,14 @@ def get_garage():
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "SELECT * FROM garage"
     garage = execute_read_query(conn, sql)
-    return garage
+
+    sql = """
+        SELECT * FROM states;
+        """
+    states = execute_read_query(conn, sql)
+
+
+    return jsonify(garage, states)
 
 
 @app.route('/addgarage', methods=['POST'])
