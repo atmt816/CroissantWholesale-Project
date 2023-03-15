@@ -179,7 +179,7 @@ def add_employee():
     emp_id = emp_id[0]['emp_id']
     # Stores Customer Contacts Information 
     sql = """
-    INSERT INTO customer_contacts (emp_id, phone, email, street, city, state_code_id, zipcode) 
+    INSERT INTO employee_contact (emp_id, phone, email, street, city, state_code_id, zipcode) 
     VALUES (%s, %s, '%s', '%s','%s', '%s', %s)
     """%(emp_id, phone, email, street, city, state_code_id, zipcode)
     execute_query(conn, sql)

@@ -69,7 +69,7 @@ app.post('/employees/add', function(req, res) {
         email: req.body.email,
         street: req.body.street,
         city: req.body.city,
-        state_code_id: req.body.state_code_id,
+        state_code_id: req.body.states,
         zipcode: req.body.zipcode
      }
     )
