@@ -32,36 +32,40 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <form class="row g-3">
+              <form action="/employees/add" method="post" class="row g-3">
                 
                 <div class="col-md-6">
                   <label for="firstname" class="form-label">First Name</label>
-                  <input type="text" class="form-control" id="firstname" placeholder="Ex. John">
+                  <input class="form-control" placeholder="John" name="first_name" id="first_name" type="text">
                 </div>
                 <div class="col-md-6">
                   <label for="lastname" class="form-label">Last Name</label>
-                  <input type="text" class="form-control" id="lastname" placeholder="Ex. Doe">
+                  <input class="form-control" placeholder="Doe" name="last_name" id="ex1" type="text">
+                </div>
+                <div class="col-md-6">
+                  <label for="startdate" class="form-label">Start Date</label>
+                  <input class="form-control" placeholder="2021-03-02" name="start_date" id="ex1" type="text">
                 </div>
                 <div class="col-md-6">
                   <label for="email" class="form-label">Email</label>
-                  <input type="email" class="form-control" id="firstname" placeholder="exmail@example.com">
+                  <input class="form-control" placeholder="example@email.com" name="email" id="ex1" type="text">
                 </div>
                 <div class="col-md-6">
-                  <label for="lastname" class="form-label">Phone</label>
-                  <input type="phone" class="form-control" id="lastname" placeholder="000-000-0000">
+                  <label for="phone" class="form-label">Phone</label>
+                  <input class="form-control" placeholder="0000000000" name="phone" id="ex1" type="text">
                 </div>
                 <div class="col-12">
                   <label for="inputAddress" class="form-label">Address</label>
-                  <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
+                  <input type="text" class="form-control" name="street" id="street" placeholder="1234 Main St">
                 </div>
 
                 <div class="col-md-6">
                   <label for="inputCity" class="form-label">City</label>
-                  <input type="text" class="form-control" id="inputCity">
+                  <input type="text" class="form-control" name="city" id="city">
                 </div>
                 <div class="col-md-4">
                   <label for="inputState" class="form-label">State</label>
-                  <select class="form-select" name="states" id="state">
+                  <select class="form-select" name="state_code_id" id="states">
                     <% states.forEach(function(states) { %>              
                     <option value=<%=states.state_code_id %>><%=states.state %></option>
                     <% }); %>
@@ -69,11 +73,11 @@
                 </div>
                 <div class="col-md-2">
                   <label for="inputZip" class="form-label">Zip</label>
-                  <input type="text" class="form-control" id="inputZip">
+                  <input type="text" class="form-control" name="zipcode" id="zipcode">
                 </div>
                 <div class="col-md-6">
-                  <label for="inputRole" class="form-label">Role</label>                  
-                    <select class="form-select" name="roles" id="roles">
+                  <label for="Role" class="form-label">Role</label>                  
+                    <select class="form-select" name="role_id" id="role_id">
                       <% roles.forEach(function(roles) { %>              
                       <option value=<%=roles.Role_ID %>><%=roles.Role_Name %></option>
                       <% }); %>                 
@@ -81,7 +85,7 @@
                 </div>
                 <div class="col-md-6">
                   <label for="inputstatus" class="form-label">Status</label>
-                  <select id="inputstatus" class="form-select">
+                  <select id="emp_status" name="emp_status" class="form-select">
                     <option selected>Active</option>
                     <option>Terminated</option>
                   </select>
@@ -91,7 +95,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Create New Employee</button>
+              <button type="submit" class="btn btn-primary">Create New Employee</button>
               </form>
             </div>
           </div>

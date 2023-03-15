@@ -43,19 +43,42 @@ app.get('/employees', function(req, res){
 
 app.get('/empinfo/:id', function (req, res) {
     const emp_id = req.params.id;
-   
+    
     axios.get('http://127.0.0.1:5000/empinfo/'+ emp_id
     ).then((response, states)=>{
         var employee_data = response.data
         
         res.render('pages/empinfo', 
-        {employee_data: employee_data[0],
-         states: employee_data[1]});
+        {employee_data: employee_data[0]
+        });
     });
   
     
 });
 
+
+app.post('/employees/add', function(req, res) {
+    axios.post('http://127.0.0.1:5000/employees/add',
+     {
+        first_name : req.body.first_name,
+        last_name : req.body.last_name,
+        start_date: req.body.start_date,
+        emp_status : req.body.emp_status,
+        role_id: req.body.role_id,
+        phone: req.body.phone,
+        email: req.body.email,
+        street: req.body.street,
+        city: req.body.city,
+        state_code_id: req.body.state_code_id,
+        zipcode: req.body.zipcode
+     }
+    )
+    .then((response)=>{
+        
+        res.render('pages/employees');
+        
+    });
+});
 // CUSTOMER PAGE
 
 

@@ -23,14 +23,15 @@
               <div class="row">
                 <div class="col-sm">
                   Employee ID
+                  <p class="pt-1"><%= employee_data.emp_id %></p>
                 </div>
                 <div class="col-sm">
                   Employee Name
-                  <p><%= employee_data.first_name %></p>
+                  <p class="pt-1"><%= employee_data.first_name %>&nbsp;<%= employee_data.last_name %></p>
                 </div>
                 <div class="col-sm">
                   Employee Status
-                  <p><%= employee_data.emp_status %></p>
+                  <p class="pt-1"><%= employee_data.emp_status %></p>
                 </div>
               </div>
             </div>
@@ -38,12 +39,15 @@
               <div class="row">
                 <div class="col-sm">
                   Role
+                  <p class="pt-1"><%= employee_data.role_name %></p>
                 </div>
                 <div class="col-sm">
                   Start Date
+                  <p class="pt-1"><%= employee_data.start_date %></p>
                 </div>
                 <div class="col-sm">
                   End Date
+                  <p class="pt-1"><%= employee_data.end_name %></p>
                 </div>
               </div>
             </div>
@@ -54,31 +58,31 @@
               <div class="row">
                 <div class="col-sm">
                   Phone Number
+                  <p class="pt-1"><%= employee_data.phone %></p>
                 </div>
                 <div class="col-sm">
                   Email
+                  <p class="pt-1"><%= employee_data.email %></p>
                 </div>
                 <div class="col-sm pb-5">
                   Address
+                  <p class="pt-1"><%= employee_data.street %>, <%= employee_data.city %>, <%= employee_data.state_code_id %> <%= employee_data.zipcode %></p>
                 </div>
               </div>
             </div>
-            
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-              Edit
+              Create New Employee
             </button>
-            <button type="button" class="btn btn-danger">Delete</button>
-            <!-- Modal -->
             <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
               <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h4 class="modal-title" id="exampleModalLabel">Edit Employee Information</h4>
+                    <h4 class="modal-title" id="exampleModalLabel">Create New Employee Entry</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
                     <form class="row g-3">
-                      <hidden name="approveId" value=''>
+                      
                       <div class="col-md-6">
                         <label for="firstname" class="form-label">First Name</label>
                         <input type="text" class="form-control" id="firstname" placeholder="Ex. John">
@@ -106,11 +110,7 @@
                       </div>
                       <div class="col-md-4">
                         <label for="inputState" class="form-label">State</label>
-                        <select class="form-select" name="states" id="state">
-                          <% states.forEach(function(states) { %>              
-                          <option value=<%=states.state_code_id %>><%=states.state %></option>
-                          <% }); %>
-                      </select>
+                        
                       </div>
                       <div class="col-md-2">
                         <label for="inputZip" class="form-label">Zip</label>
@@ -118,7 +118,7 @@
                       </div>
                       <div class="col-md-6">
                         <label for="inputRole" class="form-label">Role</label>                  
-                          
+                        
                       </div>
                       <div class="col-md-6">
                         <label for="inputstatus" class="form-label">Status</label>
@@ -134,8 +134,10 @@
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary">Create New Employee</button>
                     </form>
-
-        </div>
+                  </div>
+                </div>
+              </div>
+            </div>
         
         </main>
 </body>

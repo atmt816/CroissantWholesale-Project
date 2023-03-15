@@ -136,14 +136,18 @@ def get_employee_info(emp_id):
             ON ec.state_code_id = s.state_code_id
         WHERE e.emp_id = '%s';
         """ % (emp_id)
+    
+    employees = execute_read_query(conn, sql)
     # print(sql)
     sql = """
          SELECT * FROM states;
         """ 
     states = execute_read_query(conn, sql)
 
-    employees = execute_read_query(conn, sql)
-    return jsonify(employees, states)
+    sql = """ SELECT * FROM roles;"""
+    roles = execute_read_query(conn, sql)
+
+    return jsonify(employees)
 
 
 @app.route('/employees/add', methods = ['POST'])
@@ -151,10 +155,10 @@ def add_employee():
     conn = create_connection(
     'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     request_data = request.get_json()
+   
     first_name = request_data['first_name']
     last_name= request_data['last_name']  
     start_date = request_data['start_date']
-    end_date = request_data['end_date']
     emp_status = request_data['emp_status']
     role_id = request_data['role_id']     
     phone = request_data['phone']    
@@ -165,9 +169,9 @@ def add_employee():
     zipcode = request_data['zipcode']  
     
     sql = """
-    INSERT INTO employees (first_name, last_name, start_date, end_date, emp_status, role_id) 
-    VALUES ('%s', '%s', '%s', '%s', '%s', %s);
-    """ %(first_name, last_name, start_date, end_date, emp_status, role_id)
+    INSERT INTO employees (first_name, last_name, start_date, emp_status, role_id) 
+    VALUES ('%s', '%s', '%s', '%s', %s);
+    """ %(first_name, last_name, start_date, emp_status, role_id)
     execute_query(conn, sql)
     # gets the customer id from the above execution
     sql = 'SELECT * FROM employees WHERE emp_id= LAST_INSERT_ID()' 
