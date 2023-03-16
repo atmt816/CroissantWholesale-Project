@@ -186,6 +186,50 @@ def add_employee():
     return "Employee has been added"
 
 
+@app.route('/update_employee/<emp_id>', methods=['PUT'])
+def update_employee(emp_id):
+    # The user input is gathered in JSON format and stored into an empty variable
+    update_data = request.get_json()
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    first_name = update_data['first_name']
+    last_name = update_data['last_name']
+    start_date = update_data['start_date']
+    end_date = update_data['end_date']
+    emp_status = update_data['emp_status']
+    role_id = update_data['role_id']
+    phone = update_data['phone']
+    email = update_data['email']
+    street = update_data['street']
+    city = update_data['city']
+    state_code_id = update_data['state_code_id']
+    zipcode = update_data['zipcode']
+
+    # date format as yyyy-mm-dd(2022-03-04) or mm-dd-yyyy(03-04-2022)
+    fmt_start_date = str(datetime.strptime(start_date, '%m-%d-%Y').date())
+
+    fmt_end_date = "null"
+    if end_date != "null" and end_date != "NULL":
+        fmt_end_date = str(datetime.strptime(end_date, '%m-%d-%Y').date())
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    #update employees table 
+    cursor = conn.cursor()
+    sql = "UPDATE employees SET first_name = %s, last_name = %s, start_date = %s, end_date = %s, emp_status = %s, role_id = %s WHERE emp_id = %s"
+    val = (first_name, last_name,
+           fmt_start_date, fmt_end_date, emp_status, role_id, emp_id)
+    cursor.execute(sql, val)
+
+    #update employee contacts table 
+    sql = "UPDATE employee_contact SET phone = %s, email = %s, street = %s, city = %s, state_code_id = %s, zipcode = %s WHERE emp_id = %s"
+    val = (phone, email, street, city, state_code_id, zipcode, emp_id)
+    cursor.execute(sql, val)
+
+    conn.commit()
+    return 'Employee was updated successfully'
+
+
+
 # customers get method working now
 # no data in customers for now
 # adjust sql as needed - Misael
