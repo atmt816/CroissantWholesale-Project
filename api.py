@@ -121,7 +121,7 @@ def employee_info():
 
 #     # sql = """SELECT * FROM states"""
 #     return jsonify(employee_info, states, roles)
-@app.route('/empinfo/<emp_id>', methods=['GET'])
+@app.route('/employees/<emp_id>', methods=['GET'])
 def get_employee_info(emp_id):
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
@@ -195,6 +195,31 @@ def get_customers():
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "SELECT * FROM customers"
     customers = execute_read_query(conn, sql)
+
+    sql = """
+         SELECT * FROM states;
+        """
+    states = execute_read_query(conn, sql)
+
+    return jsonify(customers, states)
+
+@app.route('/customers/<customer_id>', methods=['GET'])
+def get_customer_info(customer_id):
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = """SELECT c.customer_id, c.business_name, c.first_name, c.last_name, c.cust_acc_num, c.business_hrs, cc.phone, cc.email, cc.street, cc.city, cc.zipcode, cc.state_code_id
+        FROM customers c
+        JOIN customer_contact cc ON c.customer_id = cc.customer_id
+        JOIN states s ON cc.state_code_id = s.state_code_id
+        WHERE c.customer_id = '%s';
+        """ % (customer_id) 
+    customers = execute_read_query(conn, sql)
+
+    sql = """
+         SELECT * FROM states;
+        """
+    states = execute_read_query(conn, sql)
+
     return jsonify(customers)
 
 

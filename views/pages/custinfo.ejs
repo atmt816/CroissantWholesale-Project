@@ -23,12 +23,16 @@
               <div class="row">
                 <div class="col-sm">
                   Customer ID
+                  <p class="pt-1"><%= customer_data[0].customer_id %></p>
+                  
                 </div>
                 <div class="col-sm">
                   Business Name
+                  <p class="pt-1"><%= customer_data[0].business_name %></p>
                 </div>
                 <div class="col-sm">
                   Customer Name
+                  <p class="pt-1"><%= customer_data[0].first_name %> <%= customer_data[0].last_name %></p>
                 </div>
               </div>
             </div>
@@ -42,12 +46,15 @@
               <div class="row">
                 <div class="col-sm">
                   Phone Number
+                  <p class="pt-1"><%= customer_data[0].phone %></p>
                 </div>
                 <div class="col-sm">
                   Email
+                  <p class="pt-1"><%= customer_data[0].email %></p>
                 </div>
                 <div class="col-sm pb-5">
                   Business Address
+                  <p class="pt-1"><%= customer_data[0].street %>, <%= customer_data[0].city %>, <%= customer_data[0].state_code_id %> <%= customer_data[0].zipcode %></p>
                 </div>
               </div>
             </div>
@@ -69,11 +76,11 @@
                       
                       <div class="col-md-6">
                         <label for="firstname" class="form-label">Business Name</label>
-                        <input type="text" class="form-control" id="firstname" placeholder="Ex. John">
+                        <input type="text" class="form-control" name="business_name" id="business_name"  value=<%= customer_data[0].business_name %>>
                       </div>
                       <div class="col-md-6">
                         <label for="firstname" class="form-label">Business Hours</label>
-                        <input type="text" class="form-control" id="firstname" placeholder="Ex. John">
+                        <input type="text" class="form-control" name="business_hrs" id="business_hrs" value="<%= customer_data[0].business_hrs %>">
                       </div>
                       <div class="col-md-6">
                         <label for="lastname" class="form-label">Customer First Name</label>
