@@ -267,6 +267,87 @@ def get_customer_info(customer_id):
     return jsonify(customers)
 
 
+#Customers Insert Method
+@app.route('/addcustomers', methods=['POST'])
+def add_customer():
+    # The user input is gathered in JSON format and stored into an empty variable
+    customer_data = request.get_json()
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    business_name = customer_data['business_name']
+    business_hrs = customer_data['business_hrs']
+    last_name = customer_data['last_name']
+    first_name = customer_data['first_name']
+    cust_acc_num = customer_data['cust_acc_num']
+    phone = customer_data['phone']
+    email = customer_data['email']
+    street = customer_data['street']
+    city = customer_data['city']
+    state = customer_data['state_code_id']
+    zipcode = customer_data['Zipcode']
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "INSERT INTO customers(business_name, business_hrs, last_name, first_name, cust_acc_num) VALUES ('%s', '%s', '%s', '%s', %s')" % (
+        business_name, business_hrs, last_name, first_name, cust_acc_num)
+    
+    execute_query(conn, sql)
+    
+    # gets the customer id from the above execution
+    sql = 'SELECT * FROM customers WHERE emp_id= LAST_INSERT_ID()'
+    customer_id = execute_read_query(conn, sql)
+    customer_id = customer_id[0]['customer_id']
+
+    sql = "INSERT INTO customer_contact(Phone, Email, Street, City, state_code_id, Zipcode, customer_id ) VALUES (%s, '%s', '%s', '%s', '%s', %s, %s)" % (
+        phone, email, street, city, state, zipcode, customer_id)
+
+    execute_query(conn, sql)
+
+
+    return 'Customer was added Successfully'
+
+#Customers Update Method
+@app.route('/update_customer/<customer_id>', methods=['PUT'])
+def update_customer(customer_id):
+    # The user input is gathered in JSON format and stored into an empty variable
+    customer_data = request.get_json()
+    # we will be using customer_id to reference the entry to update
+    customer_id = customer_data['customer_id']
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    business_name = customer_data['business_name']
+    business_hrs = customer_data['business_hrs']
+    last_name = customer_data['last_name']
+    first_name = customer_data['first_name']
+    cust_acc_num = customer_data['cust_acc_num']
+    phone = customer_data['phone']
+    email = customer_data['email']
+    street = customer_data['street']
+    city = customer_data['city']
+    state = customer_data['state_code_id']
+    zipcode = customer_data['Zipcode']
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    #Update customers table
+    cursor = conn.cursor()
+    sql = "UPDATE customers SET business_name = %s, business_hrs = %s, last_name = %s, first_name = %s, cust_acc_num = %s WHERE customer_id = %s"
+    val = (business_name, business_hrs, last_name,
+           first_name, cust_acc_num, customer_id)
+    cursor.execute(sql, val)
+
+    #Update customer contacts table
+    cursor = conn.cursor()
+    sql = "UPDATE customer_contact SET Phone = %s, Email = %s, Street = %s, City = %s, state_code_id = %s, Zipcode = %s WHERE customer_id = %s"
+    val = (phone, email, street, city, state, zipcode, customer_id)
+
+    cursor.execute(sql, val)    
+
+
+
+    conn.commit()
+    return 'Customer was updated successfully'
+
+
 # inventory get method working now
 # no data in inventory for now
 # adjust sql as needed - Misael
