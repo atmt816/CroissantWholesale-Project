@@ -57,7 +57,6 @@ app.get('/empinfo/:id', function (req, res) {
             });
     });
 
-
 });
 
 
@@ -75,12 +74,22 @@ app.post('/employees/add', function (req, res) {
             city: req.body.city,
             state_code_id: req.body.states,
             zipcode: req.body.zipcode
+            
         }
     )
         .then((response) => {
-
-            res.render('pages/employees');
-
+            axios.get('http://127.0.0.1:5000/employees')
+            .then((response, states) => {
+                // console.log(response.data)
+                var employee_data = response.data
+    
+                res.render('pages/employees',
+                    {
+                        employee_data: employee_data[0],
+                        states: employee_data[1],
+                        roles: employee_data[2]
+                    });
+            });
         });
 });
 // CUSTOMER PAGE

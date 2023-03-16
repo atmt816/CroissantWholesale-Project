@@ -43,7 +43,7 @@
           </div>
         </div>
       </div>
-      <div class="container pt-5">
+      <div class="container pt-4">
         <div class="row">
           <div class="col-sm">
             Role
@@ -82,7 +82,7 @@
               <%= employee_data[0].email %>
             </p>
           </div>
-          <div class="col-sm pb-5">
+          <div class="col-sm pb-4">
             Address
             <p class="pt-1">
               <%= employee_data[0].street %>, <%= employee_data[0].city %>, <%= employee_data[0].state_code_id %>
@@ -90,85 +90,89 @@
             </p>
           </div>
         </div>
-      </div>
-      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-        Create New Employee
-      </button>
-      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 class="modal-title" id="exampleModalLabel">Create New Employee Entry</h4>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <form class="row g-3">
 
-                <div class="col-md-6">
-                  <label for="firstname" class="form-label">First Name</label>
-                  <input type="text" class="form-control" id="firstname" placeholder="Ex. John">
-                </div>
-                <div class="col-md-6">
-                  <label for="lastname" class="form-label">Last Name</label>
-                  <input type="text" class="form-control" id="lastname" placeholder="Ex. Doe">
-                </div>
-                <div class="col-md-6">
-                  <label for="email" class="form-label">Email</label>
-                  <input type="email" class="form-control" id="firstname" placeholder="exmail@example.com">
-                </div>
-                <div class="col-md-6">
-                  <label for="lastname" class="form-label">Phone</label>
-                  <input type="phone" class="form-control" id="lastname" placeholder="000-000-0000">
-                </div>
-                <div class="col-12">
-                  <label for="inputAddress" class="form-label">Address</label>
-                  <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
-                </div>
-
-                <div class="col-md-6">
-                  <label for="inputCity" class="form-label">City</label>
-                  <input type="text" class="form-control" id="inputCity">
-                </div>
-                <div class="col-md-4">
-                  <label for="inputState" class="form-label">State</label>
-                  <select class="form-select" name="states" id="states">
-                    <% states.forEach(function(states) { %>
-                      <option value=<%=states.state_code_id %>><%=states.state %>
-                      </option>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          Update
+        </button>
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel">Update Current Employee</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form class="row g-3">
+  
+                  <div class="col-md-6">
+                    <label for="firstname" class="form-label">First Name</label>
+                    <input type="text" class="form-control" name="first_name" id="firstname" value=<%= employee_data[0].first_name %>>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="lastname" class="form-label">Last Name</label>
+                    <input type="text" class="form-control" name="last_name" id="lastname" value=<%= employee_data[0].last_name %>>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" name="email" id="email" value=<%= employee_data[0].email %>>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="lastname" class="form-label">Phone</label>
+                    <input type="phone" class="form-control" name="phone" id="phone" value=<%= employee_data[0].phone %>>
+                  </div>
+                  <div class="col-12">
+                    <label for="inputAddress" class="form-label">Address</label>
+                    <input type="text" class="form-control" name="street" id="street" value=<%= employee_data[0].street %>>
+                  </div>
+  
+                  <div class="col-md-6">
+                    <label for="inputCity" class="form-label">City</label>
+                    <input type="text" class="form-control" name="city" id="city" value=<%= employee_data[0].city %>>
+                  </div>
+                  <div class="col-md-4">
+                    <label for="inputState" class="form-label">State</label>
+                    <select class="form-control" name="states" id="states">
+                      <option value=<%=employee_data[0].state_code_id%>><%=employee_data[0].state_code_id%> </option>
+                      <% states.forEach(function(states) { %>              
+                      <option value="<%=states.state_code_id %>"><%=states.state%></option>
                       <% }); %>
-                  </select>
-                </div>
-                <div class="col-md-2">
-                  <label for="inputZip" class="form-label">Zip</label>
-                  <input type="text" class="form-control" id="inputZip">
-                </div>
-                <div class="col-md-6">
-                  <label for="inputRole" class="form-label">Role</label>
-                  <select class="form-select" name="role_id" id="role_id">
-                    <% roles.forEach(function(roles) { %>
-                      <option value=<%=roles.Role_ID %>><%=roles.Role_Name %>
-                      </option>
-                      <% }); %>
-                  </select>
-                </div>
-                <div class="col-md-6">
-                  <label for="inputstatus" class="form-label">Status</label>
-                  <select id="inputstatus" class="form-select">
-                    <option selected>Active</option>
-                    <option>Terminated</option>
-                  </select>
-                </div>
-
-
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Create New Employee</button>
-              </form>
+                    </select>
+                  </div>
+                  <div class="col-md-2">
+                    <label for="inputZip" class="form-label">Zip</label>
+                    <input type="text" class="form-control" name="zipcode" id="zipcode" name="zipcode" value=<%= employee_data[0].zipcode %>>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="inputRole" class="form-label">Role</label>
+                    <select class="form-select" name="role_id" id="role_id">
+                      <% roles.forEach(function(roles) { %>
+                        <option value=<%=employee_data[0].role_id%>><%=employee_data[0].role_name%> </option>
+                        <option value=<%=roles.Role_ID %>><%=roles.Role_Name %>
+                        </option>
+                        <% }); %>
+                    </select>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="inputstatus" class="form-label">Status</label>
+                    <select id="inputstatus" class="form-select">
+                      <option selected>Active</option>
+                      <option>Terminated</option>
+                    </select>
+                  </div>
+  
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Update Employee</button>
+                </form>
+              </div>
             </div>
           </div>
         </div>
+
+
       </div>
+      
 
   </main>
 </body>
