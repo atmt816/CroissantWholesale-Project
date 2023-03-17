@@ -92,6 +92,47 @@ app.post('/employees/add', function (req, res) {
             });
         });
 });
+
+app.post('/employees/update', function(req, res) {
+    axios.put('http://127.0.0.1:5000/update_employee/',
+        {   
+            emp_id: req.body.emp_id,       
+            first_name: req.body.first_name,
+            last_name: req.body.last_name,
+            start_date: req.body.start_date,
+            end_date: req.body.end_date,
+            emp_status: req.body.emp_status,
+            role_id: req.body.role_id,
+            phone: req.body.phone,
+            email: req.body.email,
+            street: req.body.street,
+            city: req.body.city,
+            state_code_id: req.body.states,
+            zipcode: req.body.zipcode
+
+        }
+    ) 
+    .then((response)=>{
+        axios.get('http://127.0.0.1:5000/employees')
+        .then((response, states) => {
+            // console.log(response.data)
+            var employee_data = response.data
+
+            res.render('pages/employees',
+                {
+                    employee_data: employee_data[0],
+                    states: employee_data[1],
+                    roles: employee_data[2]
+                });
+        });
+        }
+        
+        );
+});
+
+
+
+
 // CUSTOMER PAGE
 
 
@@ -119,13 +160,45 @@ app.get('/custinfo/:id', function (req, res) {
 
         res.render('pages/custinfo',
             {
-                customer_data: customer_data[0]
+                customer_data: customer_data[0],
+                states: customer_data[1]
                 
             });
     });
 
 });
 
+app.post('/customers/add', function (req, res) {
+    axios.post('http://127.0.0.1:5000/customers/add',
+        {
+            business_name: req.body.business_name,
+            business_hrs: req.body.business_hrs,
+            last_name: req.body.last_name,
+            first_name: req.body.first_name,
+            cust_acc_num: req.body.cust_acc_num,
+            phone: req.body.phone,
+            email: req.body.email,
+            street: req.body.street,
+            city: req.body.city,
+            state_code_id: req.body.states,
+            zipcode: req.body.zipcode
+            
+        }
+    )
+        .then((response) => {
+            axios.get('http://127.0.0.1:5000/customers')
+            .then((response, states) => {
+                // console.log(response.data)
+                var customer_data = response.data
+    
+                res.render('pages/customers',
+                    {
+                        customer_data: customer_data[0],
+                        states: customer_data[1]
+                    });
+            });
+        });
+});
 
 
 

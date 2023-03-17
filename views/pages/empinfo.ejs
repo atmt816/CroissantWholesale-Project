@@ -102,8 +102,8 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
-                <form class="row g-3">
-  
+                <form action="/employees/update" method="post" class="row g-3">
+                  <input class="form-control" name="emp_id" type="hidden" id="emp_id" value=<%=employee_data[0].emp_id%>>
                   <div class="col-md-6">
                     <label for="firstname" class="form-label">First Name</label>
                     <input type="text" class="form-control" name="first_name" id="firstname" value=<%= employee_data[0].first_name %>>
@@ -145,8 +145,8 @@
                   <div class="col-md-6">
                     <label for="inputRole" class="form-label">Role</label>
                     <select class="form-select" name="role_id" id="role_id">
+                      <option value=<%=employee_data[0].role_id%>><%=employee_data[0].role_name%> </option>
                       <% roles.forEach(function(roles) { %>
-                        <option value=<%=employee_data[0].role_id%>><%=employee_data[0].role_name%> </option>
                         <option value=<%=roles.Role_ID %>><%=roles.Role_Name %>
                         </option>
                         <% }); %>
@@ -154,16 +154,25 @@
                   </div>
                   <div class="col-md-6">
                     <label for="inputstatus" class="form-label">Status</label>
-                    <select id="inputstatus" class="form-select">
+                    <select id="emp_status" name="emp_status" class="form-select">                  
                       <option selected>Active</option>
                       <option>Terminated</option>
                     </select>
                   </div>
+                  <div class="col-md-6">
+                    <label for="inputCity" class="form-label">Start Date</label>
+                    <input type="text" class="form-control" name="start_date" id="start_date" value="<%= employee_data[0].start_date %>">
+                  </div>
+                  <div class="col-md-6">
+                    <label for="inputCity" class="form-label">End Date</label>
+                    <input type="text" class="form-control" name="end_date" id="end_date" value="<%= employee_data[0].end_date %>">
+                  </div>
+                  
   
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Update Employee</button>
+                <button type="submit" type="button" class="btn btn-primary">Update Employee</button>
                 </form>
               </div>
             </div>

@@ -186,11 +186,12 @@ def add_employee():
     return "Employee has been added"
 
 
-@app.route('/update_employee/<emp_id>', methods=['PUT'])
-def update_employee(emp_id):
+@app.route('/update_employee/', methods=['PUT'])
+def update_employee():
     # The user input is gathered in JSON format and stored into an empty variable
     update_data = request.get_json()
     # The JSON object is then separated into variables so that they may be used in a sql query
+    emp_id = update_data['emp_id']
     first_name = update_data['first_name']
     last_name = update_data['last_name']
     start_date = update_data['start_date']
@@ -228,7 +229,7 @@ def update_employee(emp_id):
     conn.commit()
     return 'Employee was updated successfully'
 
-
+# CUSTOMER PAGE
 
 # customers get method working now
 # no data in customers for now
@@ -264,11 +265,11 @@ def get_customer_info(customer_id):
         """
     states = execute_read_query(conn, sql)
 
-    return jsonify(customers)
+    return jsonify(customers, states)
 
 
 #Customers Insert Method
-@app.route('/addcustomers', methods=['POST'])
+@app.route('/customers/add', methods=['POST'])
 def add_customer():
     # The user input is gathered in JSON format and stored into an empty variable
     customer_data = request.get_json()
@@ -282,8 +283,8 @@ def add_customer():
     email = customer_data['email']
     street = customer_data['street']
     city = customer_data['city']
-    state = customer_data['state_code_id']
-    zipcode = customer_data['Zipcode']
+    states = customer_data['state_code_id']
+    zipcode = customer_data['zipcode']
 
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
@@ -293,12 +294,12 @@ def add_customer():
     execute_query(conn, sql)
     
     # gets the customer id from the above execution
-    sql = 'SELECT * FROM customers WHERE emp_id= LAST_INSERT_ID()'
+    sql = 'SELECT * FROM customers WHERE customer_id= LAST_INSERT_ID()'
     customer_id = execute_read_query(conn, sql)
     customer_id = customer_id[0]['customer_id']
 
-    sql = "INSERT INTO customer_contact(Phone, Email, Street, City, state_code_id, Zipcode, customer_id ) VALUES (%s, '%s', '%s', '%s', '%s', %s, %s)" % (
-        phone, email, street, city, state, zipcode, customer_id)
+    sql = "INSERT INTO customer_contact(Phone, Email, Street, City, state_code_id, zipcode, customer_id ) VALUES (%s, '%s', '%s', '%s', '%s', %s, %s)" % (
+        phone, email, street, city, states, zipcode, customer_id)
 
     execute_query(conn, sql)
 

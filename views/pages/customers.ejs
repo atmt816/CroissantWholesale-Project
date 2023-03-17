@@ -27,51 +27,53 @@
       <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
+
             <div class="modal-header">
               <h4 class="modal-title" id="exampleModalLabel">Create New Customer</h4>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <form class="row g-3">
+              <form action="/customers/add" method="post" class="row g-3">
 
                 <div class="col-md-6">
                     <label for="firstname" class="form-label">Business Name</label>
-                    <input type="text" class="form-control" id="firstname" placeholder="Ex. Local Donut Shop">
+                    <input class="form-control" type="text"  name="business_name" id="business_name" placeholder="Ex. Local Donut Shop">
+                    
                   </div>
                   <div class="col-md-6">
                     <label for="lastname" class="form-label">Business Hours</label>
-                    <input type="text" class="form-control" id="lastname" placeholder="Ex. Mon-Sat 10-4PM, Sun 11-2PM">
+                    <input class="form-control" type="text" name="business_hrs" id="business_hrs" placeholder="Ex. Mon-Sat 10-4PM, Sun 11-2PM">
                   </div>  
                   <div class="col-md-6">
                     <label for="inputRole" class="form-label">Customer Account Number</label>                  
-                    <input type="text" class="form-control" id="inputAccNum">  
+                    <input class="form-control" type="text" name ="cust_acc_num" id="cust_acc_num">  
                   </div>
                   <br>
                   <div class="col-md-6">
                     <label for="firstname" class="form-label">First Name</label>
-                    <input type="text" class="form-control" id="firstname" placeholder="Ex. John">
+                    <input class="form-control" type="text" name="first_name" id="first_name" placeholder="Ex. John">
                  </div>
                   <div class="col-md-6">
                     <label for="lastname" class="form-label">Last Name</label>
-                    <input type="text" class="form-control" id="lastname" placeholder="Ex. Doe">
+                    <input class="form-control"  type="text" name="last_name" id="last_name" placeholder="Ex. Doe">
                   </div>
                 <hr class="hr" />
                 <div class="col-md-6">
                   <label for="email" class="form-label">Email</label>
-                  <input type="email" class="form-control" id="firstname" placeholder="exmail@example.com">
+                  <input class="form-control" type="email" name="email" id="email" placeholder="exmail@example.com">
                 </div>
                 <div class="col-md-6">
                   <label for="lastname" class="form-label">Phone</label>
-                  <input type="phone" class="form-control" id="lastname" placeholder="000-000-0000">
+                  <input class="form-control" type="phone" name="phone" id="phone" placeholder="0000000000">
                 </div>
                 <div class="col-12">
                   <label for="inputAddress" class="form-label">Address</label>
-                  <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
+                  <input class="form-control" type="text" name="street" id="street" placeholder="1234 Main St">
                 </div>
 
                 <div class="col-md-6">
                   <label for="inputCity" class="form-label">City</label>
-                  <input type="text" class="form-control" id="inputCity" placeholder="Houston">
+                  <input class="form-control" type="text" name="city" id="city" placeholder="Houston">
                 </div>
                 <div class="col-md-4">
                   <label for="inputState" class="form-label">State</label>
@@ -83,7 +85,7 @@
                 </div>
                 <div class="col-md-2">
                   <label for="inputZip" class="form-label">Zip</label>
-                  <input type="text" class="form-control" id="inputZip" placeholder="00000">
+                  <input type="text" class="form-control" name="zipcode" id="zipcode" placeholder="00000">
                 </div>
                 
             
@@ -91,7 +93,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Create New Customer</button>
+              <button type="submit" class="btn btn-primary">Create New Customer</button>
               </form>
             </div>
           </div>
