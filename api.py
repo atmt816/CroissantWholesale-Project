@@ -1382,6 +1382,29 @@ def update_vehicle():
     conn.commit()
     return 'Vehicle was updated successfully'
 
+# Get specific vehicle info with maintenence log data for modal 
+@app.route('/vehicles/<vehicle_id>', methods=['GET'])
+def get_vehicles(vehicle_id):
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = """SELECT v.vehicle_id, v.license_plate, v.make, v.model, v.vin, ml.log_id, ml.date, ml.status, ml.note, g.garage_name, g.phone_number, g.street, g.city, s.state_code_id, g.zipcode
+            FROM vehicles v
+            JOIN maintenance_logs ml
+            ON v.vehicle_id = ml.vehicle_id
+            JOIN garage AS g
+            ON ml.garage_id = g.garage_id
+            JOIN states s
+            ON g.state_code_id = s.state_code_id
+        WHERE v.vehicle_id = '%s';""" % (vehicle_id)
+    vehicles = execute_read_query(conn, sql)
+
+    sql = """
+         SELECT * FROM states;
+        """
+    states = execute_read_query(conn, sql)
+
+    return jsonify(vehicles, states)
+
 
 # Maintenance_Logs Table CRUD
 
