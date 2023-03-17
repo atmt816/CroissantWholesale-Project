@@ -492,7 +492,7 @@ def add_customer():
     execute_query(conn, sql)
     
     # gets the customer id from the above execution
-    sql = 'SELECT * FROM customers WHERE emp_id= LAST_INSERT_ID()'
+    sql = 'SELECT * FROM customers WHERE customer_id= LAST_INSERT_ID()'
     customer_id = execute_read_query(conn, sql)
     customer_id = customer_id[0]['customer_id']
 
