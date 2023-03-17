@@ -1442,8 +1442,8 @@ def add_maintenance_log():
 
 # Maintenance Log by Vehicle - Generates a report for all maintenance logs under a specified vehicle id.
 
-@app.route('/vehiclemaintenancelog', methods=['GET'])
-def get_vehicle_main_log():
+@app.route('/vehiclemaintenancelog/<vehicle_id>', methods=['GET'])
+def get_vehicle_main_log(vehicle_id):
     selected_vehicle_id = request.get_json()
     vehicle_id = selected_vehicle_id['vehicle_id']
     conn = create_connection(
@@ -1456,8 +1456,8 @@ def get_vehicle_main_log():
 
 # Maintenance Log by Garage - Generates a report for all maintenance logs under a specified garage id.
 
-@app.route('/garagemaintenancelog', methods=['GET'])
-def get_garagemain_log():
+@app.route('/garagemaintenancelog/<garage_id>', methods=['GET'])
+def get_garagemain_log(garage_id):
     selected_garage_id = request.get_json()
     garage_id = selected_garage_id['garage_id']
     conn = create_connection(
