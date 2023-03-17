@@ -200,7 +200,41 @@ app.post('/customers/add', function (req, res) {
         });
 });
 
+app.post('/customers/update', function(req, res) {
+    axios.put('http://127.0.0.1:5000/update_customer/',
+        {   
+            customer_id: req.body.customer_id,     
+            business_name: req.body.business_name,
+            business_hrs: req.body.business_hrs,
+            last_name: req.body.last_name,
+            first_name: req.body.first_name,
+            cust_acc_num: req.body.cust_acc_num,
+            phone: req.body.phone,
+            email: req.body.email,
+            street: req.body.street,
+            city: req.body.city,
+            state_code_id: req.body.states,
+            zipcode: req.body.zipcode
 
+        }
+    ) 
+    .then((response)=>{
+        axios.get('http://127.0.0.1:5000/customers')
+        .then((response, states) => {
+            // console.log(response.data)
+            var customer_data = response.data
+
+            res.render('pages/customers',
+                {
+                    customer_data: customer_data[0],
+                    states: customer_data[1]
+                    
+                });
+        });
+        }
+        
+        );
+});
 
 app.listen(3000);
 console.log('3000 is the magic port');

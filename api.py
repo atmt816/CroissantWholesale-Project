@@ -307,8 +307,8 @@ def add_customer():
     return 'Customer was added Successfully'
 
 #Customers Update Method
-@app.route('/update_customer/<customer_id>', methods=['PUT'])
-def update_customer(customer_id):
+@app.route('/update_customer/', methods=['PUT'])
+def update_customer():
     # The user input is gathered in JSON format and stored into an empty variable
     customer_data = request.get_json()
     # we will be using customer_id to reference the entry to update
@@ -324,7 +324,7 @@ def update_customer(customer_id):
     street = customer_data['street']
     city = customer_data['city']
     state = customer_data['state_code_id']
-    zipcode = customer_data['Zipcode']
+    zipcode = customer_data['zipcode']
 
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
@@ -338,11 +338,10 @@ def update_customer(customer_id):
 
     #Update customer contacts table
     cursor = conn.cursor()
-    sql = "UPDATE customer_contact SET Phone = %s, Email = %s, Street = %s, City = %s, state_code_id = %s, Zipcode = %s WHERE customer_id = %s"
+    sql = "UPDATE customer_contact SET Phone = %s, Email = %s, Street = %s, City = %s, state_code_id = %s, zipcode = %s WHERE customer_id = %s"
     val = (phone, email, street, city, state, zipcode, customer_id)
 
     cursor.execute(sql, val)    
-
 
 
     conn.commit()
