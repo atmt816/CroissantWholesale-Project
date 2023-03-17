@@ -114,7 +114,7 @@ def employee():
 # POST method for employees
 
 
-@app.route('/addemployee', methods=['POST'])
+""" #@app.route('/addemployee', methods=['POST'])
 def add_employee():
     # The user input is gathered in JSON format and stored into an empty variable
     employee_data = request.get_json()
@@ -139,10 +139,10 @@ def add_employee():
         first_name, last_name, fmt_start_date, fmt_end_date, emp_status, role_id)
 
     execute_query(conn, sql)
-    return 'Employee was added Successfully'
+    return 'Employee was added Successfully' """
 
 
-# PUT method for employees
+""" # PUT method for employees
 @app.route('/update_employee', methods=['PUT'])
 def update_employee():
     # The user input is gathered in JSON format and stored into an empty variable
@@ -175,7 +175,7 @@ def update_employee():
     cursor.execute(sql, val)
     conn.commit()
     return 'Employee was updated successfully'
-
+ """
 ############################# EMPLOYEES CONTACT ###################################
 
 # Employee Contact CRUD
@@ -557,7 +557,7 @@ def update_customer(customer_id):
 
     return jsonify(customers, states, roles)
 
-@app.route('/addcustomers', methods=['POST'])
+""" @app.route('/addcustomers', methods=['POST'])
 def add_customer():
     # The user input is gathered in JSON format and stored into an empty variable
     customer_data = request.get_json()
@@ -601,7 +601,7 @@ def update_customer():
 
     cursor.execute(sql, val)
     conn.commit()
-    return 'Customer was updated successfully'
+    return 'Customer was updated successfully' """
 
 
 ##################################### CUSTOMERS CONTACTS ###################################
