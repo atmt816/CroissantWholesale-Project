@@ -214,14 +214,14 @@ def update_employee():
 
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    #update employees table 
+    # update employees table
     cursor = conn.cursor()
     sql = "UPDATE employees SET first_name = %s, last_name = %s, start_date = %s, end_date = %s, emp_status = %s, role_id = %s WHERE emp_id = %s"
     val = (first_name, last_name,
            fmt_start_date, fmt_end_date, emp_status, role_id, emp_id)
     cursor.execute(sql, val)
 
-    #update employee contacts table 
+    # update employee contacts table
     sql = "UPDATE employee_contact SET phone = %s, email = %s, street = %s, city = %s, state_code_id = %s, zipcode = %s WHERE emp_id = %s"
     val = (phone, email, street, city, state_code_id, zipcode, emp_id)
     cursor.execute(sql, val)
@@ -234,6 +234,8 @@ def update_employee():
 # customers get method working now
 # no data in customers for now
 # adjust sql as needed - Misael
+
+
 @app.route('/customers', methods=['GET'])
 def get_customers():
     conn = create_connection(
@@ -248,6 +250,7 @@ def get_customers():
 
     return jsonify(customers, states)
 
+
 @app.route('/customers/<customer_id>', methods=['GET'])
 def get_customer_info(customer_id):
     conn = create_connection(
@@ -257,7 +260,7 @@ def get_customer_info(customer_id):
         JOIN customer_contact cc ON c.customer_id = cc.customer_id
         JOIN states s ON cc.state_code_id = s.state_code_id
         WHERE c.customer_id = '%s';
-        """ % (customer_id) 
+        """ % (customer_id)
     customers = execute_read_query(conn, sql)
 
     sql = """
@@ -268,7 +271,7 @@ def get_customer_info(customer_id):
     return jsonify(customers, states)
 
 
-#Customers Insert Method
+# Customers Insert Method
 @app.route('/customers/add', methods=['POST'])
 def add_customer():
     # The user input is gathered in JSON format and stored into an empty variable
@@ -290,9 +293,9 @@ def add_customer():
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "INSERT INTO customers(business_name, business_hrs, last_name, first_name, cust_acc_num) VALUES ('%s', '%s', '%s', '%s', %s')" % (
         business_name, business_hrs, last_name, first_name, cust_acc_num)
-    
+
     execute_query(conn, sql)
-    
+
     # gets the customer id from the above execution
     sql = 'SELECT * FROM customers WHERE customer_id= LAST_INSERT_ID()'
     customer_id = execute_read_query(conn, sql)
@@ -303,10 +306,11 @@ def add_customer():
 
     execute_query(conn, sql)
 
-
     return 'Customer was added Successfully'
 
-#Customers Update Method
+# Customers Update Method
+
+
 @app.route('/update_customer/', methods=['PUT'])
 def update_customer():
     # The user input is gathered in JSON format and stored into an empty variable
@@ -329,23 +333,69 @@ def update_customer():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
 
-    #Update customers table
+    # Update customers table
     cursor = conn.cursor()
     sql = "UPDATE customers SET business_name = %s, business_hrs = %s, last_name = %s, first_name = %s, cust_acc_num = %s WHERE customer_id = %s"
     val = (business_name, business_hrs, last_name,
            first_name, cust_acc_num, customer_id)
     cursor.execute(sql, val)
 
-    #Update customer contacts table
+    # Update customer contacts table
     cursor = conn.cursor()
     sql = "UPDATE customer_contact SET Phone = %s, Email = %s, Street = %s, City = %s, state_code_id = %s, zipcode = %s WHERE customer_id = %s"
     val = (phone, email, street, city, state, zipcode, customer_id)
 
-    cursor.execute(sql, val)    
-
+    cursor.execute(sql, val)
 
     conn.commit()
     return 'Customer was updated successfully'
+
+
+# ---- Vendors PAGE -----
+
+# vendors get method working now - Misael
+@app.route('/vendors', methods=['GET'])
+def vendors():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    # sql = "SELECT * FROM employees"
+    sql = """
+        SELECT e.emp_id, e.first_name, e.last_name, e.start_date, e.end_date, e.emp_status, r.role_name
+        FROM employees AS e
+        JOIN roles AS r
+        ON e.role_id = r.role_id;
+        """
+    vendors = execute_read_query(conn, sql)
+
+    sql = """
+        SELECT * FROM states;
+        """
+    states = execute_read_query(conn, sql)
+
+    return jsonify(vendors, states)
+
+# vendor info get method by id working now - Misael
+
+
+@app.route('/vendors/<vendor_id>', methods=['GET'])
+def vendor_info(vendor_id):
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    sql = """
+        SELECT v.vendor_name, v.vendor_hrs, vc.phone, vc.email, vc.street, vc.city, vc.zipcode, s.state_code_id 
+        FROM vendors v JOIN vendor_contacts vc ON v.vendor_ct_id = vc.vendor_ct_id 
+        JOIN states s ON vc.state_code_id = s.state_code_id
+        WHERE = v.vendor_id = '%s';
+        """ % (vendor_id)
+    vendor = execute_read_query(conn, sql)
+
+    sql = """
+        SELECT * FROM states;
+        """
+    states = execute_read_query(conn, sql)
+
+    return jsonify(vendor, states)
 
 
 # inventory get method working now
