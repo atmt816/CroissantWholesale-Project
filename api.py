@@ -93,6 +93,7 @@ def employee():
         FROM employees AS e
         JOIN roles AS r
         ON e.role_id = r.role_id
+        ORDER BY e.emp_status ASC
         """ 
     employees = execute_read_query(conn, sql)
 
@@ -376,7 +377,7 @@ def get_roles():
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "SELECT * FROM roles"
     roles = execute_read_query(conn, sql)
-    return roles
+    return jsonify(roles)
 
 # sql script used to create roles table is missing auto_increment for Role_ID********
 # either have to redo table or add in Role_ID to the insert below ******
@@ -462,7 +463,7 @@ def get_customer_info(customer_id):
         """
     states = execute_read_query(conn, sql)
 
-    return jsonify(customers)
+    return jsonify(customers, states)
 
 
 #Customers Insert Method
