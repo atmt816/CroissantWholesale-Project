@@ -1278,6 +1278,22 @@ def get_garage():
 
     return jsonify(garage, states)
 
+#Specifc garage id get for modal info
+@app.route('/garage/<garage_id>', methods=['GET'])
+def get_garage(garage_id):
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT * FROM garage WHERE garage_id = %s" % (garage_id)
+    garage = execute_read_query(conn, sql)
+
+    sql = """
+        SELECT * FROM states;
+        """
+    states = execute_read_query(conn, sql)
+
+
+    return jsonify(garage, states)
+
 
 @app.route('/addgarage', methods=['POST'])
 def add_garage():
@@ -1424,7 +1440,7 @@ def get_maintenance():
 def get_maintenance(log_id):
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "SELECT v.license_plate AS 'License Plate', g.garage_name AS 'Garage Name',logs.date AS 'Date', logs.status AS 'Status', logs.note AS 'note' FROM maintenance_logs AS logs INNER JOIN vehicles AS v ON logs.vehicle_id = v.vehicle_id INNER JOIN garage AS g ON logs.garage_id = g.garage_id ORDER BY date DESC;"
+    sql = "SELECT v.license_plate AS 'License Plate', g.garage_name AS 'Garage Name',logs.date AS 'Date', logs.status AS 'Status', logs.note AS 'note' FROM maintenance_logs AS logs INNER JOIN vehicles AS v ON logs.vehicle_id = v.vehicle_id INNER JOIN garage AS g ON logs.garage_id = g.garage_id ORDER BY date DESC WHERE logs.log_id = %s;" % (log_id)
     maintenance = execute_read_query(conn, sql)
     return maintenance
 
