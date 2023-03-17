@@ -1,93 +1,178 @@
 <head>
-    <%- include('../partials/head'); %>
+  <%- include('../partials/head'); %>
 </head>
 
 
 <style>
-    .top-buffer { margin-top: 60px;}
+  .top-buffer {
+    margin-top: 60px;
+  }
 </style>
 
 <body class="container">
-    <header>
-        <%- include('../partials/header'); %> 
-    </header>
-    
-    <main class="container pt-5"> 
-        <div class="p-5 mb-4 bg-white rounded-3 top-buffer">
-            <h2 class="text-center">
-              Employee Information
-            </h2>
-            <a href="/employees" class="link-primary pb-4">Go Back</a>
-            <h5 class= "pb-1">General Information</h5>
-            <div class="container pt-2">
-              <div class="row">
-                <div class="col-sm">
-                  Employee ID
-                </div>
-                <div class="col-sm">
-                  Employee Name
-                </div>
-                <div class="col-sm">
-                  Employee Status
-                </div>
-              </div>
-            </div>
-            <div class="container pt-5">
-              <div class="row">
-                <div class="col-sm">
-                  Role
-                </div>
-                <div class="col-sm">
-                  Start Date
-                </div>
-                <div class="col-sm">
-                  End Date
-                </div>
-              </div>
-            </div>
-            
-            <hr class="hr hr-blurry" />
-            <h5>Contact Information</h5>
-            <div class="container pt-2">
-              <div class="row">
-                <div class="col-sm">
-                  Phone Number
-                </div>
-                <div class="col-sm">
-                  Email
-                </div>
-                <div class="col-sm">
-                  Address
-                </div>
-              </div>
-            </div>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-              Launch demo modal
-            </button>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-              Launch demo modal
-            </button>
-            
-            <!-- Modal -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body">
-                    ...
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                  </div>
-                </div>
-              </div>
-            </div>
+  <header>
+    <%- include('../partials/header'); %>
+  </header>
 
+  <main class="container pt-5">
+    <div class="p-5 mb-4 bg-white rounded-3 top-buffer">
+      <h2 class="text-center">
+        Employee Information
+      </h2>
+      <a href="/employees" class="link-primary pb-4">Go Back</a>
+      <h5 class="pb-1 pt-2">General Information</h5>
+      <div class="container pt-2">
+        <div class="row">
+          <div class="col-sm">
+            Employee ID
+            <p class="pt-1">
+              <%= employee_data[0].emp_id %>
+            </p>
+          </div>
+          <div class="col-sm">
+            Employee Name
+            <p class="pt-1">
+              <%= employee_data[0].first_name %>&nbsp;<%= employee_data.last_name %>
+            </p>
+          </div>
+          <div class="col-sm">
+            Employee Status
+            <p class="pt-1">
+              <%= employee_data[0].emp_status %>
+            </p>
+          </div>
         </div>
-        
-        </main>
+      </div>
+      <div class="container pt-4">
+        <div class="row">
+          <div class="col-sm">
+            Role
+            <p class="pt-1">
+              <%= employee_data[0].role_name %>
+            </p>
+          </div>
+          <div class="col-sm">
+            Start Date
+            <p class="pt-1">
+              <%= employee_data[0].start_date %>
+            </p>
+          </div>
+          <div class="col-sm">
+            End Date
+            <p class="pt-1">
+              <%= employee_data[0].end_name %>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="hr hr-blurry" />
+      <h5>Contact Information</h5>
+      <div class="container pt-2">
+        <div class="row">
+          <div class="col-sm">
+            Phone Number
+            <p class="pt-1">
+              <%= employee_data[0].phone %>
+            </p>
+          </div>
+          <div class="col-sm">
+            Email
+            <p class="pt-1">
+              <%= employee_data[0].email %>
+            </p>
+          </div>
+          <div class="col-sm pb-4">
+            Address
+            <p class="pt-1">
+              <%= employee_data[0].street %>, <%= employee_data[0].city %>, <%= employee_data[0].state_code_id %>
+                    <%= employee_data[0].zipcode %>
+            </p>
+          </div>
+        </div>
+
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          Edit
+        </button>
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel">Update Current Employee</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form class="row g-3">
+  
+                  <div class="col-md-6">
+                    <label for="firstname" class="form-label">First Name</label>
+                    <input type="text" class="form-control" name="first_name" id="firstname" value=<%= employee_data[0].first_name %>>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="lastname" class="form-label">Last Name</label>
+                    <input type="text" class="form-control" name="last_name" id="lastname" value=<%= employee_data[0].last_name %>>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" name="email" id="email" value=<%= employee_data[0].email %>>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="lastname" class="form-label">Phone</label>
+                    <input type="phone" class="form-control" name="phone" id="phone" value=<%= employee_data[0].phone %>>
+                  </div>
+                  <div class="col-12">
+                    <label for="inputAddress" class="form-label">Address</label>
+                    <input type="text" class="form-control" name="street" id="street" value="<%= employee_data[0].street %>">
+                  </div>
+  
+                  <div class="col-md-6">
+                    <label for="inputCity" class="form-label">City</label>
+                    <input type="text" class="form-control" name="city" id="city" value=<%= employee_data[0].city %>>
+                  </div>
+                  <div class="col-md-4">
+                    <label for="inputState" class="form-label">State</label>
+                    <select class="form-control" name="states" id="states">
+                      <option value=<%=employee_data[0].state_code_id%>><%=employee_data[0].state_code_id%> </option>
+                      <% states.forEach(function(states) { %>              
+                      <option value="<%=states.state_code_id %>"><%=states.state%></option>
+                      <% }); %>
+                    </select>
+                  </div>
+                  <div class="col-md-2">
+                    <label for="inputZip" class="form-label">Zip</label>
+                    <input type="text" class="form-control" name="zipcode" id="zipcode" name="zipcode" value=<%= employee_data[0].zipcode %>>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="inputRole" class="form-label">Role</label>
+                    <select class="form-select" name="role_id" id="role_id">
+                      <% roles.forEach(function(roles) { %>
+                        <option value=<%=employee_data[0].role_id%>><%=employee_data[0].role_name%> </option>
+                        <option value=<%=roles.Role_ID %>><%=roles.Role_Name %>
+                        </option>
+                        <% }); %>
+                    </select>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="inputstatus" class="form-label">Status</label>
+                    <select id="inputstatus" class="form-select">
+                      <option selected>Active</option>
+                      <option>Terminated</option>
+                    </select>
+                  </div>
+  
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Update Employee</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+      
+
+  </main>
 </body>

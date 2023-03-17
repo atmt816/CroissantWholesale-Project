@@ -28,69 +28,76 @@
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+              <h4 class="modal-title" id="exampleModalLabel">Create New Employee Entry</h4>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <form class="row g-3">
-                <h4>Create New Employee Entry</h4>
+              <form action="/employees/add" method="post" class="row g-3">
+                
                 <div class="col-md-6">
                   <label for="firstname" class="form-label">First Name</label>
-                  <input type="text" class="form-control" id="firstname" placeholder="Ex. John">
+                  <input class="form-control" placeholder="John" name="first_name" id="first_name" type="text">
+                  
                 </div>
                 <div class="col-md-6">
                   <label for="lastname" class="form-label">Last Name</label>
-                  <input type="text" class="form-control" id="lastname" placeholder="Ex. Doe">
+                  <input class="form-control" placeholder="Doe" name="last_name" id="ex1" type="text">
                 </div>
+                <div class="col-md-6">
+                  <label for="startdate" class="form-label">Start Date</label>
+                  <input class="form-control" placeholder="2021-03-02" name="start_date" id="ex1" type="text">
+                </div>
+                <hr class="hr" />
                 <div class="col-md-6">
                   <label for="email" class="form-label">Email</label>
-                  <input type="email" class="form-control" id="firstname" placeholder="exmail@example.com">
+                  <input class="form-control" placeholder="example@email.com" name="email" id="ex1" type="text">
                 </div>
                 <div class="col-md-6">
-                  <label for="lastname" class="form-label">Phone</label>
-                  <input type="phone" class="form-control" id="lastname" placeholder="000-000-0000">
+                  <label for="phone" class="form-label">Phone</label>
+                  <input class="form-control" placeholder="0000000000" name="phone" id="ex1" type="text">
                 </div>
                 <div class="col-12">
                   <label for="inputAddress" class="form-label">Address</label>
-                  <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
+                  <input type="text" class="form-control" name="street" id="street" placeholder="1234 Main St">
                 </div>
 
                 <div class="col-md-6">
                   <label for="inputCity" class="form-label">City</label>
-                  <input type="text" class="form-control" id="inputCity">
+                  <input type="text" class="form-control" name="city" id="city" placeholder="Houston">
                 </div>
                 <div class="col-md-4">
                   <label for="inputState" class="form-label">State</label>
-                  
+                  <select class="form-select" name="states" id="states">
+                    <% states.forEach(function(states) { %>              
+                    <option value=<%=states.state_code_id %>><%=states.state %></option>
+                    <% }); %>
+                </select>
                 </div>
                 <div class="col-md-2">
                   <label for="inputZip" class="form-label">Zip</label>
-                  <input type="text" class="form-control" id="inputZip">
+                  <input type="text" class="form-control" name="zipcode" id="zipcode" placeholder="00000">
                 </div>
                 <div class="col-md-6">
-                  <label for="inputRole" class="form-label">Role</label>
-                  <select id="inputRole" class="form-select">
-                    <option selected>Select</option>
-                    <option>...</option>
+                  <label for="Role" class="form-label">Role</label>                  
+                    <select class="form-select" name="role_id" id="role_id">
+                      <% roles.forEach(function(roles) { %>              
+                      <option value=<%=roles.Role_ID %>><%=roles.Role_Name %></option>
+                      <% }); %>                 
                   </select>
                 </div>
                 <div class="col-md-6">
-                  <label for="inputState" class="form-label">Status</label>
-                  <select id="inputState" class="form-select">
+                  <label for="inputstatus" class="form-label">Status</label>
+                  <select id="emp_status" name="emp_status" class="form-select">
                     <option selected>Active</option>
                     <option>Terminated</option>
                   </select>
                 </div>
-                <div class="col-12">
-
-                </div>
-                <div class="col-12">
-                  <button type="submit" class="btn btn-primary">Create New Employee</button>
-                </div>
+                
+                
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
+              <button type="submit" class="btn btn-primary">Create New Employee</button>
               </form>
             </div>
           </div>
@@ -104,19 +111,19 @@
             <th scope="col">Name</th>
             <th scope="col">Start Date</th>
             <th scope="col">End Date</th>
-            <th scope="col">Role</th>
             <th scope="col">Status</th>
-            <th scope="col">Edit</th>
+            <th scope="col">Role</th>
+            
           </tr>
         </thead>
         <tbody>
           <% employee_data.forEach(function(employee_data) { %>
             <tr>
               <td>
-                <a style="text-decoration:none" href="/empinfo/"><%= employee_data.emp_id%></a>
+                <a style="text-decoration:none" href="/empinfo/<%= employee_data.emp_id%>"><%= employee_data.emp_id%></a>
               </td>
               <td>
-                <a style="text-decoration:none" href="/empinfo/"><%= employee_data.last_name%>,&nbsp<%= employee_data.first_name%></a>
+                <a style="text-decoration:none" href="/empinfo/<%= employee_data.emp_id%>"><%= employee_data.last_name%>,&nbsp<%= employee_data.first_name%></a>
               </td>
               <td>
                 <%= employee_data.start_date%>
@@ -130,56 +137,8 @@
               <td>
                 <%= employee_data.role_name%>
               </td>
-              <td><!-- Button trigger modal -->
+              
 
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                  Edit
-                </button>
-
-                <!-- Modal -->
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                  aria-hidden="true">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                      <div class="modal-body">
-                        ...
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                  Delete
-                </button>
-
-                <!-- Modal -->
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                  aria-hidden="true">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                      <div class="modal-body">
-                        ...
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </td>
 
             </tr>
             <% }); %>

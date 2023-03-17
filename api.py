@@ -47,14 +47,11 @@ def execute_query(connection, query):
 
 
 def execute_read_query(connection, query):
-    cursor = connection.cursor()
-    result = []
+    cursor = connection.cursor(dictionary=True)
+    result = None
     try:
         cursor.execute(query)
-        table = cursor.fetchall()
-        columnNames = [column[0] for column in cursor.description]
-        for record in table:
-            result.append(dict(zip(columnNames, record)))
+        result = cursor.fetchall()
         return result
     except Error as e:
         print(f"The error '{e}' occurred")
@@ -80,6 +77,7 @@ def get_states():
 ############################# EMPLOYEES ###################################
 
 # Employees Table CRUD
+# ---- EMPLOYEE PAGE -----
 
 # employees get method working now
 # not returning data for now since roles table is empty
@@ -110,32 +108,7 @@ def employee():
 
     return jsonify(employees, states, roles)
 
-
-@app.route('/employees/<emp_id>', methods=['GET'])
-def employee_info(emp_id):
-    emp_id = request.view_args['emp_id']
-    conn = create_connection(
-        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = """
-        SELECT e.emp_id, e.first_name, e.last_name, e.start_date, e.end_date, e.emp_status, r.role_name
-        FROM employees AS e
-        JOIN roles AS r
-        ON e.role_id = r.role_id
-        WHERE e.emp_id = '%s';
-        """ % (emp_id)
-    employees = execute_read_query(conn, sql)
-
-    sql = """
-        SELECT * FROM states;
-        """
-    states = execute_read_query(conn, sql)
-
-    sql = """
-        SELECT * FROM roles;
-        """
-    roles = execute_read_query(conn, sql)
-
-    return jsonify(employees, states, roles)
+   
 
 
 # POST method for employees
@@ -209,33 +182,138 @@ def update_employee():
 
 # employee_contact get method working now
 # adjust sql as needed - Misael
+# @app.route('/emp_info', methods=['GET'])
+# def get_employee_contact():
+#     conn = create_connection(
+#         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+#     sql = """SELECT e.emp_id, e.first_name, e.last_name, e.start_date, e.end_date, e.emp_status, r.role_name, ec.phone, ec.email, ec.street, ec.city, s.state_code_id, ec.zipcode
+#             FROM employees e
+#             JOIN employee_contact ec
+#             ON e.emp_id = ec.emp_id
+#             JOIN roles AS r
+# 			ON e.role_id = r.role_id
+#             JOIN states s
+#             ON ec.state_code_id = s.state_code_id;"""
+#     employee_info = execute_read_query(conn, sql)
 
+#     sql = """
+#         SELECT * FROM states;
+#         """
+#     states = execute_read_query(conn, sql)
 
-@app.route('/employee_contact', methods=['GET'])
-def get_employee_contact():
+#     sql = """
+#         SELECT * FROM roles;
+#         """
+#     roles = execute_read_query(conn, sql)
+
+#     # sql = """SELECT * FROM states"""
+#     return jsonify(employee_info, states, roles)
+@app.route('/employees/<emp_id>', methods=['GET'])
+def get_employee_info(emp_id):
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = """SELECT e.first_name, e.last_name, ec.phone, ec.email, ec.street, ec.city, s.state_code_id, ec.zipcode
-           FROM employees e
-           JOIN employee_contact ec
+    sql = """
+        SELECT e.emp_id, e.first_name, e.last_name, e.start_date, e.end_date, e.emp_status, r.role_name, ec.phone, ec.email, ec.street, ec.city, s.state_code_id, ec.zipcode
+            FROM employees e
+            JOIN employee_contact ec
             ON e.emp_id = ec.emp_id
             JOIN roles AS r
 			ON e.role_id = r.role_id
             JOIN states s
-            ON ec.state_code_id = s.state_code_id;"""
-    employee_info = execute_read_query(conn, sql)
+            ON ec.state_code_id = s.state_code_id
+        WHERE e.emp_id = '%s';
+        """ % (emp_id)
 
+    employees = execute_read_query(conn, sql)
+    # print(sql)
     sql = """
-        SELECT * FROM states;
+         SELECT * FROM states;
         """
     states = execute_read_query(conn, sql)
 
-    sql = """
-        SELECT * FROM roles;
-        """
+    sql = """ SELECT * FROM roles;"""
     roles = execute_read_query(conn, sql)
 
-    return jsonify(employee_info, states, roles)
+    return jsonify(employees, states, roles)
+
+
+@app.route('/employees/add', methods=['POST'])
+def add_employee():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    request_data = request.get_json()
+
+    first_name = request_data['first_name']
+    last_name = request_data['last_name']
+    start_date = request_data['start_date']
+    emp_status = request_data['emp_status']
+    role_id = request_data['role_id']
+    phone = request_data['phone']
+    email = request_data['email']
+    street = request_data['street']
+    city = request_data['city']
+    state_code_id = request_data['state_code_id']
+    zipcode = request_data['zipcode']
+
+    sql = """
+    INSERT INTO employees (first_name, last_name, start_date, emp_status, role_id) 
+    VALUES ('%s', '%s', '%s', '%s', %s);
+    """ % (first_name, last_name, start_date, emp_status, role_id)
+    execute_query(conn, sql)
+    # gets the customer id from the above execution
+    sql = 'SELECT * FROM employees WHERE emp_id= LAST_INSERT_ID()'
+    emp_id = execute_read_query(conn, sql)
+    emp_id = emp_id[0]['emp_id']
+    # Stores Customer Contacts Information
+    sql = """
+    INSERT INTO employee_contact (emp_id, phone, email, street, city, state_code_id, zipcode) 
+    VALUES (%s, %s, '%s', '%s','%s', '%s', %s)
+    """ % (emp_id, phone, email, street, city, state_code_id, zipcode)
+    execute_query(conn, sql)
+    return "Employee has been added"
+
+
+@app.route('/update_employee/<emp_id>', methods=['PUT'])
+def update_employee(emp_id):
+    # The user input is gathered in JSON format and stored into an empty variable
+    update_data = request.get_json()
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    first_name = update_data['first_name']
+    last_name = update_data['last_name']
+    start_date = update_data['start_date']
+    end_date = update_data['end_date']
+    emp_status = update_data['emp_status']
+    role_id = update_data['role_id']
+    phone = update_data['phone']
+    email = update_data['email']
+    street = update_data['street']
+    city = update_data['city']
+    state_code_id = update_data['state_code_id']
+    zipcode = update_data['zipcode']
+
+    # date format as yyyy-mm-dd(2022-03-04) or mm-dd-yyyy(03-04-2022)
+    fmt_start_date = str(datetime.strptime(start_date, '%m-%d-%Y').date())
+
+    fmt_end_date = "null"
+    if end_date != "null" and end_date != "NULL":
+        fmt_end_date = str(datetime.strptime(end_date, '%m-%d-%Y').date())
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    #update employees table 
+    cursor = conn.cursor()
+    sql = "UPDATE employees SET first_name = %s, last_name = %s, start_date = %s, end_date = %s, emp_status = %s, role_id = %s WHERE emp_id = %s"
+    val = (first_name, last_name,
+           fmt_start_date, fmt_end_date, emp_status, role_id, emp_id)
+    cursor.execute(sql, val)
+
+    #update employee contacts table 
+    sql = "UPDATE employee_contact SET phone = %s, email = %s, street = %s, city = %s, state_code_id = %s, zipcode = %s WHERE emp_id = %s"
+    val = (phone, email, street, city, state_code_id, zipcode, emp_id)
+    cursor.execute(sql, val)
+
+    conn.commit()
+    return 'Employee was updated successfully'
 
 
 @app.route('/addemployeecontact', methods=['POST'])
@@ -359,6 +437,113 @@ def get_customers():
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "SELECT * FROM customers"
     customers = execute_read_query(conn, sql)
+
+    sql = """
+         SELECT * FROM states;
+        """
+    states = execute_read_query(conn, sql)
+
+    return jsonify(customers, states)
+
+@app.route('/customers/<customer_id>', methods=['GET'])
+def get_customer_info(customer_id):
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = """SELECT c.customer_id, c.business_name, c.first_name, c.last_name, c.cust_acc_num, c.business_hrs, cc.phone, cc.email, cc.street, cc.city, cc.zipcode, cc.state_code_id
+        FROM customers c
+        JOIN customer_contact cc ON c.customer_id = cc.customer_id
+        JOIN states s ON cc.state_code_id = s.state_code_id
+        WHERE c.customer_id = '%s';
+        """ % (customer_id) 
+    customers = execute_read_query(conn, sql)
+
+    sql = """
+         SELECT * FROM states;
+        """
+    states = execute_read_query(conn, sql)
+
+    return jsonify(customers)
+
+
+#Customers Insert Method
+@app.route('/addcustomers', methods=['POST'])
+def add_customer():
+    # The user input is gathered in JSON format and stored into an empty variable
+    customer_data = request.get_json()
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    business_name = customer_data['business_name']
+    business_hrs = customer_data['business_hrs']
+    last_name = customer_data['last_name']
+    first_name = customer_data['first_name']
+    cust_acc_num = customer_data['cust_acc_num']
+    phone = customer_data['phone']
+    email = customer_data['email']
+    street = customer_data['street']
+    city = customer_data['city']
+    state = customer_data['state_code_id']
+    zipcode = customer_data['Zipcode']
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "INSERT INTO customers(business_name, business_hrs, last_name, first_name, cust_acc_num) VALUES ('%s', '%s', '%s', '%s', %s')" % (
+        business_name, business_hrs, last_name, first_name, cust_acc_num)
+    
+    execute_query(conn, sql)
+    
+    # gets the customer id from the above execution
+    sql = 'SELECT * FROM customers WHERE emp_id= LAST_INSERT_ID()'
+    customer_id = execute_read_query(conn, sql)
+    customer_id = customer_id[0]['customer_id']
+
+    sql = "INSERT INTO customer_contact(Phone, Email, Street, City, state_code_id, Zipcode, customer_id ) VALUES (%s, '%s', '%s', '%s', '%s', %s, %s)" % (
+        phone, email, street, city, state, zipcode, customer_id)
+
+    execute_query(conn, sql)
+
+
+    return 'Customer was added Successfully'
+
+#Customers Update Method
+@app.route('/update_customer/<customer_id>', methods=['PUT'])
+def update_customer(customer_id):
+    # The user input is gathered in JSON format and stored into an empty variable
+    customer_data = request.get_json()
+    # we will be using customer_id to reference the entry to update
+    customer_id = customer_data['customer_id']
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    business_name = customer_data['business_name']
+    business_hrs = customer_data['business_hrs']
+    last_name = customer_data['last_name']
+    first_name = customer_data['first_name']
+    cust_acc_num = customer_data['cust_acc_num']
+    phone = customer_data['phone']
+    email = customer_data['email']
+    street = customer_data['street']
+    city = customer_data['city']
+    state = customer_data['state_code_id']
+    zipcode = customer_data['Zipcode']
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    #Update customers table
+    cursor = conn.cursor()
+    sql = "UPDATE customers SET business_name = %s, business_hrs = %s, last_name = %s, first_name = %s, cust_acc_num = %s WHERE customer_id = %s"
+    val = (business_name, business_hrs, last_name,
+           first_name, cust_acc_num, customer_id)
+    cursor.execute(sql, val)
+
+    #Update customer contacts table
+    cursor = conn.cursor()
+    sql = "UPDATE customer_contact SET Phone = %s, Email = %s, Street = %s, City = %s, state_code_id = %s, Zipcode = %s WHERE customer_id = %s"
+    val = (phone, email, street, city, state, zipcode, customer_id)
+
+    cursor.execute(sql, val)    
+
+
+
+    conn.commit()
+    return 'Customer was updated successfully'
 
     sql = """
         SELECT * FROM states;
