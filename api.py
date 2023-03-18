@@ -1280,7 +1280,7 @@ def get_garage():
 
 #Specifc garage id get for modal info
 @app.route('/garage/<garage_id>', methods=['GET'])
-def get_garage(garage_id):
+def get_garage_info(garage_id):
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "SELECT * FROM garage WHERE garage_id = %s" % (garage_id)
@@ -1347,7 +1347,7 @@ def update_garage():
 # Vehicle Table CRUD
 
 @app.route('/vehicles', methods=['GET'])
-def get_vehicles():
+def get_vehicles_info():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "SELECT * FROM vehicles"
@@ -1437,7 +1437,7 @@ def get_maintenance():
 
 #Specific maintenance log details for selected row
 @app.route('/maintenance/<log_id>', methods=['GET'])
-def get_maintenance(log_id):
+def get_maintenance_info(log_id):
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "SELECT v.license_plate AS 'License Plate', g.garage_name AS 'Garage Name',logs.date AS 'Date', logs.status AS 'Status', logs.note AS 'note' FROM maintenance_logs AS logs INNER JOIN vehicles AS v ON logs.vehicle_id = v.vehicle_id INNER JOIN garage AS g ON logs.garage_id = g.garage_id ORDER BY date DESC WHERE logs.log_id = %s;" % (log_id)
@@ -1494,7 +1494,7 @@ def get_garagemain_log(garage_id):
 
 
 # PUT method for maintenance_logs
-@app.route('/update_maitenance_log', methods=['PUT'])
+@app.route('/update_maintenance_log', methods=['PUT'])
 def update_maintenance_log():
     # The user input is gathered in JSON format and stored into an empty variable
     maintenance_data = request.get_json()
