@@ -127,6 +127,21 @@ app.get('/custinfo/:id', function (req, res) {
 });
 
 
+// ORDER PAGE
+
+app.get('/orders', function (req, res) {
+    axios.get('http://127.0.0.1:5000/orders')
+        .then((response) => {
+            var order_data = response.data
+
+            res.render('pages/orders',
+                {
+                    order_data: order_data[0],
+                    states: order_data[1],
+                    customers: order_data[2]
+                });
+        });
+});
 
 
 app.listen(3000);

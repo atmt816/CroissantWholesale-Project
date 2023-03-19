@@ -10,6 +10,7 @@ import time
 from flask import jsonify
 from flask import jsonify, make_response
 from flask import request, make_response
+from flask import render_template
 # from sql import create_connection
 # from sql import execute_read_query
 # from sql import execute_query
@@ -1028,9 +1029,17 @@ def update_line_item():
 def get_orders():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "SELECT * FROM orders"
+    sql = "SELECT * FROM orders;"
     orders = execute_read_query(conn, sql)
-    return orders
+    sql = """
+         SELECT * FROM states;
+        """
+    states = execute_read_query(conn, sql)
+    sql = """
+         SELECT * FROM customers;
+        """
+    customers = execute_read_query(conn, sql)
+    return jsonify(orders, states, customers)
 
 
 @app.route('/addorder', methods=['POST'])
@@ -1049,6 +1058,17 @@ def add_order():
 
     execute_query(conn, sql)
     return 'Order was added Successfully'
+
+
+
+@app.route('/neworder', methods=['GET', 'POST'])
+def new_order():
+        # Process the form data
+        selected_items = request.form.getlist('item[]')
+        quantities = request.form.getlist('quantity[]')
+        # Do something with the data
+        return 'Order placed successfully'
+
 
 # Fulfillment Report
 # Fulfillment check per line item. Report generates all orders within a timeframe that are scheduled for delivery.
