@@ -360,10 +360,9 @@ def vendors():
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     # sql = "SELECT * FROM employees"
     sql = """
-        SELECT e.emp_id, e.first_name, e.last_name, e.start_date, e.end_date, e.emp_status, r.role_name
-        FROM employees AS e
-        JOIN roles AS r
-        ON e.role_id = r.role_id;
+        SELECT v.vendor_id, v.vendor_name, v.vendor_hrs, vc.phone, vc.email, vc.street, vc.city, vc.zipcode, s.state_code_id 
+        FROM vendors v JOIN vendor_contacts vc ON v.vendor_ct_id = vc.vendor_ct_id 
+        JOIN states s ON vc.state_code_id = s.state_code_id
         """
     vendors = execute_read_query(conn, sql)
 
@@ -396,6 +395,77 @@ def vendor_info(vendor_id):
     states = execute_read_query(conn, sql)
 
     return jsonify(vendor, states)
+
+
+@app.route('/vendors/add', methods=['POST'])
+def add_vendor():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    request_data = request.get_json()
+
+    vendor_name = request_data['vendor_name']
+    vendor_hrs = request_data['vendor_hrs']
+    vendor_account_number = request_data['vendor_account_number']
+    phone = request_data['phone']
+    email = request_data['email']
+    street = request_data['street']
+    city = request_data['city']
+    state_code_id = request_data['state_code_id']
+    zipcode = request_data['zipcode']
+
+    sql = """
+    INSERT INTO vendors (vendor_name, vendor_hrs, vendor_account_number) 
+    VALUES ('%s', '%s', %s);
+    """ % (vendor_name, vendor_hrs, vendor_account_number)
+    execute_query(conn, sql)
+    # gets the customer id from the above execution
+    sql = 'SELECT * FROM vendors WHERE vendor_id = LAST_INSERT_ID()'
+    vendor_id = execute_read_query(conn, sql)
+    vendor_id = vendor_id[0]['vendor_id']
+    # Stores Customer Contacts Information
+    sql = """
+    INSERT INTO vendor_contacts (phone, email, street, city, state_code_id, zipcode, vendor_id) 
+    VALUES (%s, %s, '%s', '%s','%s', '%s', %s)
+    """ % (phone, email, street, city, state_code_id, zipcode, vendor_id)
+    execute_query(conn, sql)
+    return "Vendor has been added"
+
+
+@app.route('/update_vendor/', methods=['PUT'])
+def update_vendor():
+    # The user input is gathered in JSON format and stored into an empty variable
+    vendor_data = request.get_json()
+    # we will be using customer_id to reference the entry to update
+    vendor_id = vendor_data['vendor_id']
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    vendor_name = vendor_data['vendor_name']
+    vendor_hrs = vendor_data['vendor_hrs']
+    vendor_account_number = vendor_data['vendor_account_number']
+    phone = vendor_data['phone']
+    email = vendor_data['email']
+    street = vendor_data['street']
+    city = vendor_data['city']
+    state_code_id = vendor_data['state_code_id']
+    zipcode = vendor_data['zipcode']
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    # Update vendor table
+    cursor = conn.cursor()
+    sql = "UPDATE vendors SET vendor_name = %s, vendor_hrs = %s, vendor_account_number = %s WHERE vendor_id = %s"
+    val = (vendor_name, vendor_hrs, vendor_account_number)
+    cursor.execute(sql, val)
+
+    # Update customer contacts table
+    cursor = conn.cursor()
+    sql = "UPDATE vendor_contacts SET Phone = %s, Email = %s, Street = %s, City = %s, state_code_id = %s, zipcode = %s WHERE vendor_id = %s"
+    val = (phone, email, street, city, state_code_id, zipcode, vendor_id)
+
+    cursor.execute(sql, val)
+
+    conn.commit()
+    return 'Customer was updated successfully'
 
 
 # inventory get method working now
