@@ -131,6 +131,20 @@ app.post('/employees/update', function(req, res) {
 });
 
 
+// ROLES PAGE
+app.get('/roles', function (req, res) {
+    axios.get('http://127.0.0.1:5000/roles')
+        .then((response, states) => {
+            console.log(response.data)
+            var roles_data = response.data
+
+            res.render('pages/roles',
+                {
+                    roles_data: roles_data[0]
+
+                });
+        });
+});
 
 
 // CUSTOMER PAGE
@@ -235,6 +249,71 @@ app.post('/customers/update', function(req, res) {
         
         );
 });
+
+//VENDORS PAGE
+app.get('/vendors', function (req, res) {
+    axios.get('http://127.0.0.1:5000/vendors')
+        .then((response, states) => {
+            // console.log(response.data)
+            var vendor_data = response.data
+
+            res.render('pages/vendors',
+                {
+                    vendor_data: vendor_data[0],
+                    states: vendor_data[1]
+                });
+        });
+});
+
+app.get('/vendinfo/:id', function (req, res) {
+    const vendor_id = req.params.id;
+    
+
+    axios.get('http://127.0.0.1:5000/vendors/' + vendor_id
+    ).then((response, states) => {
+        var vendor_data = response.data
+
+        res.render('pages/vendinfo',
+            {
+                vendor_data: vendor_data[0],
+                states: vendor_data[1]
+            });
+    });
+
+});
+
+app.post('/vendors/add', function (req, res) {
+    axios.post('http://127.0.0.1:5000/vendors/add',
+        {
+            vendor_name: req.body.vendor_name,
+            vendor_hrs: req.body.vendor_hrs,
+            vendor_account_number: req.body.vendor_account_number,
+            phone: req.body.phone,
+            email: req.body.email,
+            street: req.body.street,
+            city: req.body.city,
+            state_code_id: req.body.states,
+            zipcode: req.body.zipcode
+            
+        }
+    )
+        .then((response) => {
+            axios.get('http://127.0.0.1:5000/vendors')
+            .then((response, states) => {
+                // console.log(response.data)
+                var vendor_data = response.data
+    
+                res.render('pages/vendors',
+                    {
+                        vendor_data: vendor_data[0],
+                        states: vendor_data[1],
+                        roles: vendor_data[2]
+                    });
+            });
+        });
+});
+
+
 
 app.listen(3000);
 console.log('3000 is the magic port');

@@ -231,6 +231,116 @@ def update_employee():
 
 # CUSTOMER PAGE
 
+# @app.route('/addemployeecontact', methods=['POST'])
+# def add_employee_contact():
+#     # The user input is gathered in JSON format and stored into an empty variable
+#     employee_contact_data = request.get_json()
+#     # The JSON object is then separated into variables so that they may be used in a sql query
+#     phone = employee_contact_data['phone']
+#     email = employee_contact_data['email']
+#     street = employee_contact_data['street']
+#     city = employee_contact_data['city']
+#     state = employee_contact_data['state_code_id']
+#     zipcode = employee_contact_data['zipcode']
+#     emp_id = employee_contact_data['emp_id']
+
+#     conn = create_connection(
+#         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+#     sql = "INSERT INTO employee_contact(phone, email, street, city, state_code_id, zipcode, emp_id ) VALUES (%s, '%s', '%s', '%s', '%s', %s, %s)" % (
+#         phone, email, street, city, state, zipcode, emp_id)
+
+#     execute_query(conn, sql)
+#     return 'Employee Contact was added Successfully'
+
+
+# # PUT method for employees_contact
+# @app.route('/update_employee_contact', methods=['PUT'])
+# def update_employee_contact():
+#     # The user input is gathered in JSON format and stored into an empty variable
+#     employee_contact_data = request.get_json()
+#     # we will be using emp_id to reference the entry to update
+#     emp_id = employee_contact_data['emp_id']
+#     # The JSON object is then separated into variables so that they may be used in a sql query
+#     phone = employee_contact_data['phone']
+#     email = employee_contact_data['email']
+#     street = employee_contact_data['street']
+#     city = employee_contact_data['city']
+#     state_code_id = employee_contact_data['state_code_id']
+#     zipcode = employee_contact_data['zipcode']
+
+#     conn = create_connection(
+#         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+#     cursor = conn.cursor()
+#     sql = "UPDATE employee_contact SET phone = %s, email = %s, street = %s, city = %s, state_code_id = %s, zipcode = %s WHERE emp_id = %s"
+#     val = (phone, email, street, city, state_code_id, zipcode, emp_id)
+
+#     cursor.execute(sql, val)
+#     conn.commit()
+#     return 'Employee Contact was updated successfully'
+
+
+############################# ROLES PAGE #######################################
+
+# Roles Table CRUD
+
+
+@app.route('/roles', methods=['GET'])
+def get_roles():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT * FROM roles"
+    roles = execute_read_query(conn, sql)
+    return jsonify(roles)
+
+# sql script used to create roles table is missing auto_increment for Role_ID********
+# either have to redo table or add in Role_ID to the insert below ******
+
+
+@app.route('/addrole', methods=['POST'])
+def add_role():
+    # The user input is gathered in JSON format and stored into an empty variable
+    role_data = request.get_json()
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    role_name = role_data['Role_Name']
+    role_description = role_data['Role_Description']
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "INSERT INTO roles(role_name, role_description) VALUES ('%s', '%s')" % (
+        role_name, role_description)
+
+    execute_query(conn, sql)
+    return 'Role was added Successfully'
+
+
+# PUT method for roles
+@app.route('/update_role', methods=['PUT'])
+def update_role():
+    # The user input is gathered in JSON format and stored into an empty variable
+    role_data = request.get_json()
+    # we will be using Role_ID to reference the entry to update
+    Role_ID = role_data['Role_ID']
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    Role_Name = role_data['Role_Name']
+    Role_Description = role_data['Role_Description']
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    cursor = conn.cursor()
+    sql = "UPDATE roles SET Role_Name = %s, Role_Description = %s WHERE Role_ID = %s"
+    val = (Role_Name, Role_Description, Role_ID)
+
+    cursor.execute(sql, val)
+    conn.commit()
+    return 'Role was updated successfully'
+
+
+##################################### CUSTOMERS ###################################
+
+# Customers Table CRUD
+
 # customers get method working now
 # no data in customers for now
 # adjust sql as needed - Misael
@@ -360,8 +470,8 @@ def vendors():
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     # sql = "SELECT * FROM employees"
     sql = """
-        SELECT v.vendor_id, v.vendor_name, v.vendor_hrs, vc.phone, vc.email, vc.street, vc.city, vc.zipcode, s.state_code_id 
-        FROM vendors v JOIN vendor_contacts vc ON v.vendor_ct_id = vc.vendor_ct_id 
+        SELECT v.vendor_id, v.vendor_name, v.vendor_hrs, v.vendor_account_number, vc.phone, vc.email, vc.street, vc.city, vc.zipcode, s.state_code_id 
+        FROM vendors v JOIN vendor_contacts vc ON v.vendor_id = vc.vendor_id
         JOIN states s ON vc.state_code_id = s.state_code_id
         """
     vendors = execute_read_query(conn, sql)
@@ -382,10 +492,10 @@ def vendor_info(vendor_id):
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
 
     sql = """
-        SELECT v.vendor_name, v.vendor_hrs, vc.phone, vc.email, vc.street, vc.city, vc.zipcode, s.state_code_id 
-        FROM vendors v JOIN vendor_contacts vc ON v.vendor_ct_id = vc.vendor_ct_id 
+        SELECT v.vendor_id, v.vendor_name, v.vendor_hrs, v.vendor_account_number, vc.phone, vc.email, vc.street, vc.city, vc.zipcode, s.state_code_id 
+        FROM vendors v JOIN vendor_contacts vc ON v.vendor_id = vc.vendor_id
         JOIN states s ON vc.state_code_id = s.state_code_id
-        WHERE = v.vendor_id = '%s';
+        WHERE v.vendor_id = '%s';
         """ % (vendor_id)
     vendor = execute_read_query(conn, sql)
 
