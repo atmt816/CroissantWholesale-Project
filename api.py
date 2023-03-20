@@ -534,9 +534,9 @@ def add_vendor():
     vendor_id = vendor_id[0]['vendor_id']
     # Stores Customer Contacts Information
     sql = """
-    INSERT INTO vendor_contacts (phone, email, street, city, state_code_id, zipcode, vendor_id) 
-    VALUES (%s, %s, '%s', '%s','%s', '%s', %s)
-    """ % (phone, email, street, city, state_code_id, zipcode, vendor_id)
+    INSERT INTO vendor_contacts (vendor_id, phone, email, street, city, state_code_id, zipcode) 
+    VALUES (%s, %s, '%s', '%s', '%s','%s', %s)
+    """ % (vendor_id, phone, email, street, city, state_code_id, zipcode)
     execute_query(conn, sql)
     return "Vendor has been added"
 
