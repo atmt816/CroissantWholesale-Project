@@ -74,29 +74,29 @@ app.post('/employees/add', function (req, res) {
             city: req.body.city,
             state_code_id: req.body.states,
             zipcode: req.body.zipcode
-            
+
         }
     )
         .then((response) => {
             axios.get('http://127.0.0.1:5000/employees')
-            .then((response, states) => {
-                // console.log(response.data)
-                var employee_data = response.data
-    
-                res.render('pages/employees',
-                    {
-                        employee_data: employee_data[0],
-                        states: employee_data[1],
-                        roles: employee_data[2]
-                    });
-            });
+                .then((response, states) => {
+                    // console.log(response.data)
+                    var employee_data = response.data
+
+                    res.render('pages/employees',
+                        {
+                            employee_data: employee_data[0],
+                            states: employee_data[1],
+                            roles: employee_data[2]
+                        });
+                });
         });
 });
 
-app.post('/employees/update', function(req, res) {
+app.post('/employees/update', function (req, res) {
     axios.put('http://127.0.0.1:5000/update_employee/',
-        {   
-            emp_id: req.body.emp_id,       
+        {
+            emp_id: req.body.emp_id,
             first_name: req.body.first_name,
             last_name: req.body.last_name,
             start_date: req.body.start_date,
@@ -111,22 +111,22 @@ app.post('/employees/update', function(req, res) {
             zipcode: req.body.zipcode
 
         }
-    ) 
-    .then((response)=>{
-        axios.get('http://127.0.0.1:5000/employees')
-        .then((response, states) => {
-            // console.log(response.data)
-            var employee_data = response.data
+    )
+        .then((response) => {
+            axios.get('http://127.0.0.1:5000/employees')
+                .then((response, states) => {
+                    // console.log(response.data)
+                    var employee_data = response.data
 
-            res.render('pages/employees',
-                {
-                    employee_data: employee_data[0],
-                    states: employee_data[1],
-                    roles: employee_data[2]
+                    res.render('pages/employees',
+                        {
+                            employee_data: employee_data[0],
+                            states: employee_data[1],
+                            roles: employee_data[2]
+                        });
                 });
-        });
         }
-        
+
         );
 });
 
@@ -140,7 +140,7 @@ app.get('/roles', function (req, res) {
 
             res.render('pages/roles',
                 {
-                    roles_data: roles_data[0]
+                    roles_data: roles_data
 
                 });
         });
@@ -153,7 +153,7 @@ app.get('/roles', function (req, res) {
 app.get('/customers', function (req, res) {
     axios.get('http://127.0.0.1:5000/customers')
         .then((response, states) => {
-            
+
             var customer_data = response.data
 
             res.render('pages/customers',
@@ -166,7 +166,7 @@ app.get('/customers', function (req, res) {
 
 app.get('/custinfo/:id', function (req, res) {
     const customer_id = req.params.id;
-    
+
 
     axios.get('http://127.0.0.1:5000/customers/' + customer_id
     ).then((response, states) => {
@@ -176,7 +176,7 @@ app.get('/custinfo/:id', function (req, res) {
             {
                 customer_data: customer_data[0],
                 states: customer_data[1]
-                
+
             });
     });
 
@@ -196,28 +196,28 @@ app.post('/customers/add', function (req, res) {
             city: req.body.city,
             state_code_id: req.body.states,
             zipcode: req.body.zipcode
-            
+
         }
     )
         .then((response) => {
             axios.get('http://127.0.0.1:5000/customers')
-            .then((response, states) => {
-                // console.log(response.data)
-                var customer_data = response.data
-    
-                res.render('pages/customers',
-                    {
-                        customer_data: customer_data[0],
-                        states: customer_data[1]
-                    });
-            });
+                .then((response, states) => {
+                    // console.log(response.data)
+                    var customer_data = response.data
+
+                    res.render('pages/customers',
+                        {
+                            customer_data: customer_data[0],
+                            states: customer_data[1]
+                        });
+                });
         });
 });
 
-app.post('/customers/update', function(req, res) {
+app.post('/customers/update', function (req, res) {
     axios.put('http://127.0.0.1:5000/update_customer/',
-        {   
-            customer_id: req.body.customer_id,     
+        {
+            customer_id: req.body.customer_id,
             business_name: req.body.business_name,
             business_hrs: req.body.business_hrs,
             last_name: req.body.last_name,
@@ -231,22 +231,22 @@ app.post('/customers/update', function(req, res) {
             zipcode: req.body.zipcode
 
         }
-    ) 
-    .then((response)=>{
-        axios.get('http://127.0.0.1:5000/customers')
-        .then((response, states) => {
-            // console.log(response.data)
-            var customer_data = response.data
+    )
+        .then((response) => {
+            axios.get('http://127.0.0.1:5000/customers')
+                .then((response, states) => {
+                    // console.log(response.data)
+                    var customer_data = response.data
 
-            res.render('pages/customers',
-                {
-                    customer_data: customer_data[0],
-                    states: customer_data[1]
-                    
+                    res.render('pages/customers',
+                        {
+                            customer_data: customer_data[0],
+                            states: customer_data[1]
+
+                        });
                 });
-        });
         }
-        
+
         );
 });
 
@@ -267,7 +267,7 @@ app.get('/vendors', function (req, res) {
 
 app.get('/vendinfo/:id', function (req, res) {
     const vendor_id = req.params.id;
-    
+
 
     axios.get('http://127.0.0.1:5000/vendors/' + vendor_id
     ).then((response, states) => {
@@ -294,22 +294,22 @@ app.post('/vendors/add', function (req, res) {
             city: req.body.city,
             state_code_id: req.body.states,
             zipcode: req.body.zipcode
-            
+
         }
     )
         .then((response) => {
             axios.get('http://127.0.0.1:5000/vendors')
-            .then((response, states) => {
-                // console.log(response.data)
-                var vendor_data = response.data
-    
-                res.render('pages/vendors',
-                    {
-                        vendor_data: vendor_data[0],
-                        states: vendor_data[1],
-                        roles: vendor_data[2]
-                    });
-            });
+                .then((response, states) => {
+                    // console.log(response.data)
+                    var vendor_data = response.data
+
+                    res.render('pages/vendors',
+                        {
+                            vendor_data: vendor_data[0],
+                            states: vendor_data[1],
+                            roles: vendor_data[2]
+                        });
+                });
         });
 });
 
