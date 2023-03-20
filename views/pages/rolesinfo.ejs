@@ -1,0 +1,50 @@
+<head>
+    <%- include('../partials/head'); %>
+  </head>
+  
+  
+  <style>
+    .top-buffer {
+      margin-top: 60px;
+    }
+  </style>
+  
+  <body class="container">
+    <header>
+      <%- include('../partials/header'); %>
+    </header>
+  
+    <main class="container pt-5">
+      <div class="p-5 mb-4 bg-white rounded-3 top-buffer">
+        <h2 class="text-center pb-2">
+          Edit Role
+        </h2>
+        <form action="/roles/update" method="post">
+            
+            <div class="col-md-6 mb-3">
+                <input class="form-control" name="role_id" type="hidden" id="role_id" value=<%=roles_data[0].role_id%>>
+              <label for="role name" class="form-label">Role Name</label>
+              <input type="text" class="form-control" name="role_name" id="role_name" value="<%= roles_data[0].role_name %>">
+              
+            </div>
+            <div class="mb-3">
+              <label for="role description" class="form-label">Role Description</label>
+              <input type="text" class="form-control" name="role_description" id="role_description" value="<%= roles_data[0].role_description %>">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="role status" class="form-label">Role Status</label>
+                <select id="role_status" name="role_status" class="form-select">
+                    <option selected>Active</option>
+                    <option>Inactive</option>
+                  </select>
+              </div>
+            
+            <button type="submit" class="btn btn-primary">Update</button>
+            <button href="/roles" class="btn btn-secondary" type="button">Cancel</button>
+          </form>
+
+  
+      </div>
+  
+    </main>
+  </body>

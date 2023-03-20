@@ -135,7 +135,7 @@ app.post('/employees/update', function (req, res) {
 app.get('/roles', function (req, res) {
     axios.get('http://127.0.0.1:5000/roles')
         .then((response, states) => {
-            console.log(response.data)
+            
             var roles_data = response.data
 
             res.render('pages/roles',
@@ -144,6 +144,79 @@ app.get('/roles', function (req, res) {
 
                 });
         });
+});
+
+
+app.post('/roles/add', function (req, res) {
+    axios.post('http://127.0.0.1:5000/addrole',
+        {
+            role_name : req.body.role_name,
+            role_description : req.body.role_description,
+            role_status : req.body.role_status
+
+        }
+    )
+        .then((response) => {
+            axios.get('http://127.0.0.1:5000/roles')
+                .then((response, states) => {
+                    // console.log(response.data)
+                    var roles_data = response.data
+
+                    res.render('pages/roles',
+                        {
+                            roles_data: roles_data
+                            
+                        });
+                });
+        });
+});
+
+app.get('/rolesinfo', function (req, res) {
+
+    res.render('pages/rolesinfo');
+});
+
+app.get('/rolesinfo/:id', function (req, res) {
+    const role_id = req.params.id;
+
+    axios.get('http://127.0.0.1:5000/roles/' + role_id
+    ).then((response, states) => {
+        var roles_data = response.data
+
+        res.render('pages/rolesinfo',
+            {
+                roles_data : roles_data[0]
+            });
+    });
+
+});
+
+
+app.post('/roles/update', function (req, res) {
+    axios.put('http://127.0.0.1:5000/update_role',
+        {
+            role_id : req.body.role_id,
+            role_name : req.body.role_name,
+            role_description : req.body.role_description,
+            role_status : req.body.role_status
+
+        }
+    )
+        .then((response) => {
+            axios.get('http://127.0.0.1:5000/roles')
+                .then((response, states) => {
+                    // console.log(response.data)
+                    var roles_data = response.data
+
+                    res.render('pages/roles',
+                        {
+                            roles_data: roles_data
+                        
+                        });
+                });
+        }
+
+        );
 });
 
 
@@ -313,7 +386,38 @@ app.post('/vendors/add', function (req, res) {
         });
 });
 
+app.post('/vendors/update', function (req, res) {
+    axios.put('http://127.0.0.1:5000//update_vendor//',
+        {
+            vendor_name: req.body.vendor_name,
+            vendor_hrs: req.body.vendor_hrs,
+            vendor_account_number: req.body.vendor_account_number,
+            phone: req.body.phone,
+            email: req.body.email,
+            street: req.body.street,
+            city: req.body.city,
+            state_code_id: req.body.states,
+            zipcode: req.body.zipcode
 
+        }
+    )
+        .then((response) => {
+            axios.get('http://127.0.0.1:5000/vendors')
+                .then((response, states) => {
+                    // console.log(response.data)
+                    var vendor_data = response.data
+
+                    res.render('pages/vendors',
+                        {
+                            vendor_data: vendor_data[0],
+                            states: vendor_data[1]
+
+                        });
+                });
+        }
+
+        );
+});
 
 app.listen(3000);
 console.log('3000 is the magic port');

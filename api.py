@@ -302,17 +302,30 @@ def add_role():
     # The user input is gathered in JSON format and stored into an empty variable
     role_data = request.get_json()
     # The JSON object is then separated into variables so that they may be used in a sql query
-    role_name = role_data['Role_Name']
-    role_description = role_data['Role_Description']
+    role_name = role_data['role_name']
+    role_description = role_data['role_description']
+    role_status = role_data['role_status']
 
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "INSERT INTO roles(role_name, role_description) VALUES ('%s', '%s')" % (
-        role_name, role_description)
+    sql = "INSERT INTO roles(role_name, role_description, role_status) VALUES ('%s', '%s', '%s')" % (
+        role_name, role_description, role_status)
 
     execute_query(conn, sql)
     return 'Role was added Successfully'
 
+@app.route('/roles/<role_id>', methods=['GET'])
+def get_roles_info(role_id):
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = """
+        SELECT * FROM cid4375.roles where role_id = '%s';
+        """ % (role_id)
+
+    roles = execute_read_query(conn, sql)
+    
+
+    return jsonify(roles)
 
 # PUT method for roles
 @app.route('/update_role', methods=['PUT'])
@@ -320,17 +333,18 @@ def update_role():
     # The user input is gathered in JSON format and stored into an empty variable
     role_data = request.get_json()
     # we will be using Role_ID to reference the entry to update
-    Role_ID = role_data['Role_ID']
+    role_id = role_data['role_id']
     # The JSON object is then separated into variables so that they may be used in a sql query
-    Role_Name = role_data['Role_Name']
-    Role_Description = role_data['Role_Description']
+    role_name = role_data['role_name']
+    role_description = role_data['role_description']
+    role_status = role_data['role_status']
 
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
 
     cursor = conn.cursor()
-    sql = "UPDATE roles SET Role_Name = %s, Role_Description = %s WHERE Role_ID = %s"
-    val = (Role_Name, Role_Description, Role_ID)
+    sql = "UPDATE roles SET role_name = %s, role_description = %s, role_status = %s WHERE role_id = %s"
+    val = (role_name, role_description, role_status, role_id)
 
     cursor.execute(sql, val)
     conn.commit()

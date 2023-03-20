@@ -28,71 +28,47 @@
           <div class="modal-dialog modal-lg">
             <div class="modal-content">
               <div class="modal-header">
-                <h4 class="modal-title" id="exampleModalLabel">Create New Order</h4>
+                <h4 class="modal-title" id="exampleModalLabel">Create New Role</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
-                <form class="row g-3">
+                <form action="/roles/add" method="post" class="row g-3">
   
                   <div class="col-md-6">
-                      <label for="firstname" class="form-label">Select Customer</label>
-                      <input type="text" class="form-control" id="firstname" placeholder="Ex. Local Donut Shop">
+                      <label for="firstname" class="form-label">Role Name</label>
+                      <input type="text" class="form-control" name="role_name" id="role_name" placeholder="Ex. Baker">
                     </div>
-                    <div class="col-md-6">
-                      <label for="lastname" class="form-label">Product</label>
-                      <input type="text" class="form-control" id="lastname" placeholder="Ex. Mon-Sat 10-4PM, Sun 11-2PM">
+                    <div>
+                      <label for="lastname" class="form-label">Role Description</label>
+                      <textarea class="form-control" rows="5" id="role_description" name="role_description"></textarea>
                     </div>  
                     <div class="col-md-6">
-                      <label for="inputRole" class="form-label">Vendor Account Number</label>                  
-                      <input type="text" class="form-control" id="inputAccNum">  
+                      <label for="inputRole" class="form-label">Role Status</label>                  
+                      <select id="role_status" name="role_status" id="role_status" class="form-select">
+                        <option selected>Active</option>
+                        <option>Inactive</option>
+                      </select>
                     </div>
-                 
-                  <div class="col-md-6">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="email" class="form-control" id="firstname" placeholder="exmail@example.com">
-                  </div>
-                  <div class="col-md-6">
-                    <label for="lastname" class="form-label">Phone</label>
-                    <input type="phone" class="form-control" id="lastname" placeholder="000-000-0000">
-                  </div>
-                  <div class="col-12">
-                    <label for="inputAddress" class="form-label">Address</label>
-                    <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
-                  </div>
-  
-                  <div class="col-md-6">
-                    <label for="inputCity" class="form-label">City</label>
-                    <input type="text" class="form-control" id="inputCity">
-                  </div>
-                  <div class="col-md-4">
-                    <label for="inputState" class="form-label">State</label>
-                    
-                  </div>
-                  <div class="col-md-2">
-                    <label for="inputZip" class="form-label">Zip</label>
-                    <input type="text" class="form-control" id="inputZip">
-                  </div>
+             
                   
-                 
-                  
+              
                   
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Create New Order</button>
+                <button type="submit" class="btn btn-primary">Create New Role</button>
                 </form>
               </div>
             </div>
           </div>
         </div>
-  
         <table class="table table-hover">
           <thead>
             <tr>
               <th scope="col">ID</th>
               <th scope="col">Role Name</th>
               <th scope="col">Role Description</th>
-             
+              
               
             </tr>
           </thead>
@@ -100,16 +76,18 @@
             <% roles_data.forEach(function(roles_data) { %>
               <tr>
                 <td>
-                  <a><%= roles_data.Role_ID%></a>
+                  <a><%= roles_data.role_id%></a>
                 </td>
                 <td>
-                  <a><%= roles_data.Role_Name%></a>
+                  <a><%= roles_data.role_name%></a>
                 </td>
                 <td>
-                    <a><%= roles_data.Role_Description%></a>
-                  </td>
+                  <a><%= roles_data.role_description%></a>
+                </td>
+                <td>
+                  <a style="text-decoration:none" href="/rolesinfo/<%= roles_data.role_id%>""> Edit</a>
+                </td>
                 
-  
   
               </tr>
               <% }); %>
