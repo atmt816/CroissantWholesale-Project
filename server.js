@@ -185,7 +185,7 @@ app.get('/rolesinfo/:id', function (req, res) {
 
         res.render('pages/rolesinfo',
             {
-                roles_data : roles_data[0]
+                roles_data : roles_data
             });
     });
 
@@ -387,8 +387,9 @@ app.post('/vendors/add', function (req, res) {
 });
 
 app.post('/vendors/update', function (req, res) {
-    axios.put('http://127.0.0.1:5000//update_vendor//',
+    axios.put('http://127.0.0.1:5000/update_vendor/',
         {
+            vendor_id: req.body.vendor_id,
             vendor_name: req.body.vendor_name,
             vendor_hrs: req.body.vendor_hrs,
             vendor_account_number: req.body.vendor_account_number,

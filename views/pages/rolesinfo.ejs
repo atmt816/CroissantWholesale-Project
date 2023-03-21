@@ -22,14 +22,14 @@
         <form action="/roles/update" method="post">
             
             <div class="col-md-6 mb-3">
-                <input class="form-control" name="role_id" type="hidden" id="role_id" value=<%=roles_data[0].role_id%>>
+                <input class="form-control" name="role_id" type="hidden" id="role_id" value=<%=roles_data.role_id%>>
               <label for="role name" class="form-label">Role Name</label>
-              <input type="text" class="form-control" name="role_name" id="role_name" value="<%= roles_data[0].role_name %>">
+              <input type="text" class="form-control" name="role_name" id="role_name" value="<%= roles_data.role_name %>">
               
             </div>
             <div class="mb-3">
               <label for="role description" class="form-label">Role Description</label>
-              <input type="text" class="form-control" name="role_description" id="role_description" value="<%= roles_data[0].role_description %>">
+              <input type="text" class="form-control" name="role_description" id="role_description" value="<%= roles_data.role_description %>">
             </div>
             <div class="col-md-6 mb-3">
                 <label for="role status" class="form-label">Role Status</label>

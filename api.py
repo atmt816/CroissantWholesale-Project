@@ -578,7 +578,7 @@ def update_vendor():
     # Update vendor table
     cursor = conn.cursor()
     sql = "UPDATE vendors SET vendor_name = %s, vendor_hrs = %s, vendor_account_number = %s WHERE vendor_id = %s"
-    val = (vendor_name, vendor_hrs, vendor_account_number)
+    val = (vendor_name, vendor_hrs, vendor_account_number, vendor_id)
     cursor.execute(sql, val)
 
     # Update customer contacts table
