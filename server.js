@@ -185,7 +185,7 @@ app.get('/rolesinfo/:id', function (req, res) {
 
         res.render('pages/rolesinfo',
             {
-                roles_data : roles_data
+                roles_data : roles_data[0]
             });
     });
 
