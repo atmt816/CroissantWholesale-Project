@@ -34,29 +34,31 @@
             </div>
             <div class="modal-body">
               <form action="/customers/add" method="post" class="row g-3">
-                
+
                 <div class="col-md-6">
-                    <label for="firstname" class="form-label">Business Name</label>
-                    <input class="form-control" type="text"  name="business_name" id="business_name" placeholder="Ex. Local Donut Shop">
-                    
-                  </div>
-                  <div class="col-md-6">
-                    <label for="lastname" class="form-label">Business Hours</label>
-                    <input class="form-control" type="text" name="business_hrs" id="business_hrs" placeholder="Ex. Mon-Sat 10-4PM, Sun 11-2PM">
-                  </div>  
-                  <div class="col-md-6">
-                    <label for="inputRole" class="form-label">Customer Account Number</label>                  
-                    <input class="form-control" type="text" name ="cust_acc_num" id="cust_acc_num">  
-                  </div>
-                  <br>
-                  <div class="col-md-6">
-                    <label for="firstname" class="form-label">First Name</label>
-                    <input class="form-control" type="text" name="first_name" id="first_name" placeholder="Ex. John">
-                 </div>
-                  <div class="col-md-6">
-                    <label for="lastname" class="form-label">Last Name</label>
-                    <input class="form-control"  type="text" name="last_name" id="last_name" placeholder="Ex. Doe">
-                  </div>
+                  <label for="firstname" class="form-label">Business Name</label>
+                  <input class="form-control" type="text" name="business_name" id="business_name"
+                    placeholder="Ex. Local Donut Shop">
+
+                </div>
+                <div class="col-md-6">
+                  <label for="lastname" class="form-label">Business Hours</label>
+                  <input class="form-control" type="text" name="business_hrs" id="business_hrs"
+                    placeholder="Ex. Mon-Sat 10-4PM, Sun 11-2PM">
+                </div>
+                <div class="col-md-6">
+                  <label for="inputRole" class="form-label">Customer Account Number</label>
+                  <input class="form-control" type="text" name="cust_acc_num" id="cust_acc_num">
+                </div>
+                <br>
+                <div class="col-md-6">
+                  <label for="firstname" class="form-label">First Name</label>
+                  <input class="form-control" type="text" name="first_name" id="first_name" placeholder="Ex. John">
+                </div>
+                <div class="col-md-6">
+                  <label for="lastname" class="form-label">Last Name</label>
+                  <input class="form-control" type="text" name="last_name" id="last_name" placeholder="Ex. Doe">
+                </div>
                 <hr class="hr" />
                 <div class="col-md-6">
                   <label for="email" class="form-label">Email</label>
@@ -78,18 +80,26 @@
                 <div class="col-md-4">
                   <label for="inputState" class="form-label">State</label>
                   <select class="form-select" name="states" id="states">
-                    <% states.forEach(function(states) { %>              
-                    <option value=<%=states.state_code_id %>><%=states.state %></option>
-                    <% }); %>
-                </select>
+                    <% states.forEach(function(states) { %>
+                      <option value=<%=states.state_code_id %>><%=states.state %>
+                      </option>
+                      <% }); %>
+                  </select>
                 </div>
                 <div class="col-md-2">
                   <label for="inputZip" class="form-label">Zip</label>
                   <input type="text" class="form-control" name="zipcode" id="zipcode" placeholder="00000">
                 </div>
-                
-            
-                
+                <div class="col-md-6">
+                  <label for="inputstatus" class="form-label">Status</label>
+                  <select id="customer_status" name="customer_status" class="form-select">
+                    <option selected>Active</option>
+                    <option>Inactive</option>
+                  </select>
+                </div>
+
+
+
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -108,17 +118,22 @@
             <th scope="col">Business Hours</th>
             <th scope="col">Main Contact</th>
             <th scope="col">Account Number</th>
-            
+            <th scope="col">Status</th>
+
           </tr>
         </thead>
         <tbody>
           <% customer_data.forEach(function(customer_data) { %>
             <tr>
               <td>
-                <a style="text-decoration:none" href="/custinfo/<%= customer_data.customer_id%>"><%= customer_data.customer_id%></a>
+                <a style="text-decoration:none" href="/custinfo/<%= customer_data.customer_id%>">
+                  <%= customer_data.customer_id%>
+                </a>
               </td>
               <td>
-                <a style="text-decoration:none" href="/custinfo/<%= customer_data.customer_id%>"><%= customer_data.business_name%></a>
+                <a style="text-decoration:none" href="/custinfo/<%= customer_data.customer_id%>">
+                  <%= customer_data.business_name%>
+                </a>
               </td>
               <td>
                 <%= customer_data.business_hrs%>
@@ -129,6 +144,10 @@
               <td>
                 <%= customer_data.cust_acc_num%>
               </td>
+              <td>
+                <%= customer_data.customer_status%>
+              </td>
+
 
             </tr>
             <% }); %>

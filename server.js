@@ -135,7 +135,7 @@ app.post('/employees/update', function (req, res) {
 app.get('/roles', function (req, res) {
     axios.get('http://127.0.0.1:5000/roles')
         .then((response, states) => {
-            
+
             var roles_data = response.data
 
             res.render('pages/roles',
@@ -150,9 +150,9 @@ app.get('/roles', function (req, res) {
 app.post('/roles/add', function (req, res) {
     axios.post('http://127.0.0.1:5000/addrole',
         {
-            role_name : req.body.role_name,
-            role_description : req.body.role_description,
-            role_status : req.body.role_status
+            role_name: req.body.role_name,
+            role_description: req.body.role_description,
+            role_status: req.body.role_status
 
         }
     )
@@ -165,7 +165,7 @@ app.post('/roles/add', function (req, res) {
                     res.render('pages/roles',
                         {
                             roles_data: roles_data
-                            
+
                         });
                 });
         });
@@ -185,7 +185,7 @@ app.get('/rolesinfo/:id', function (req, res) {
 
         res.render('pages/rolesinfo',
             {
-                roles_data : roles_data[0]
+                roles_data: roles_data[0]
             });
     });
 
@@ -195,10 +195,10 @@ app.get('/rolesinfo/:id', function (req, res) {
 app.post('/roles/update', function (req, res) {
     axios.put('http://127.0.0.1:5000/update_role',
         {
-            role_id : req.body.role_id,
-            role_name : req.body.role_name,
-            role_description : req.body.role_description,
-            role_status : req.body.role_status
+            role_id: req.body.role_id,
+            role_name: req.body.role_name,
+            role_description: req.body.role_description,
+            role_status: req.body.role_status
 
         }
     )
@@ -211,7 +211,7 @@ app.post('/roles/update', function (req, res) {
                     res.render('pages/roles',
                         {
                             roles_data: roles_data
-                        
+
                         });
                 });
         }
@@ -263,6 +263,7 @@ app.post('/customers/add', function (req, res) {
             last_name: req.body.last_name,
             first_name: req.body.first_name,
             cust_acc_num: req.body.cust_acc_num,
+            customer_status: req.body.customer_status,
             phone: req.body.phone,
             email: req.body.email,
             street: req.body.street,
@@ -296,6 +297,7 @@ app.post('/customers/update', function (req, res) {
             last_name: req.body.last_name,
             first_name: req.body.first_name,
             cust_acc_num: req.body.cust_acc_num,
+            customer_status: req.body.customer_status,
             phone: req.body.phone,
             email: req.body.email,
             street: req.body.street,
@@ -361,6 +363,7 @@ app.post('/vendors/add', function (req, res) {
             vendor_name: req.body.vendor_name,
             vendor_hrs: req.body.vendor_hrs,
             vendor_account_number: req.body.vendor_account_number,
+            vendor_status: req.body.vendor_status,
             phone: req.body.phone,
             email: req.body.email,
             street: req.body.street,
@@ -393,6 +396,7 @@ app.post('/vendors/update', function (req, res) {
             vendor_name: req.body.vendor_name,
             vendor_hrs: req.body.vendor_hrs,
             vendor_account_number: req.body.vendor_account_number,
+            vendor_status: req.body.vendor_status,
             phone: req.body.phone,
             email: req.body.email,
             street: req.body.street,
