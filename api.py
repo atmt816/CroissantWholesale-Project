@@ -314,6 +314,7 @@ def add_role():
     execute_query(conn, sql)
     return 'Role was added Successfully'
 
+
 @app.route('/roles/<role_id>', methods=['GET'])
 def get_roles_info(role_id):
     conn = create_connection(
@@ -323,11 +324,12 @@ def get_roles_info(role_id):
         """ % (role_id)
 
     roles = execute_read_query(conn, sql)
-    
 
     return jsonify(roles)
 
 # PUT method for roles
+
+
 @app.route('/update_role', methods=['PUT'])
 def update_role():
     # The user input is gathered in JSON format and stored into an empty variable
@@ -379,7 +381,7 @@ def get_customers():
 def get_customer_info(customer_id):
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = """SELECT c.customer_id, c.business_name, c.first_name, c.last_name, c.cust_acc_num, c.business_hrs, cc.phone, cc.email, cc.street, cc.city, cc.zipcode, cc.state_code_id
+    sql = """SELECT c.customer_id, c.business_name, c.first_name, c.last_name, c.cust_acc_num, c.business_hrs, c.customer_status, cc.phone, cc.email, cc.street, cc.city, cc.zipcode, cc.state_code_id
         FROM customers c
         JOIN customer_contact cc ON c.customer_id = cc.customer_id
         JOIN states s ON cc.state_code_id = s.state_code_id
@@ -406,6 +408,7 @@ def add_customer():
     last_name = customer_data['last_name']
     first_name = customer_data['first_name']
     cust_acc_num = customer_data['cust_acc_num']
+    customer_status = customer_data['customer_status']
     phone = customer_data['phone']
     email = customer_data['email']
     street = customer_data['street']
@@ -415,8 +418,8 @@ def add_customer():
 
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "INSERT INTO customers(business_name, business_hrs, last_name, first_name, cust_acc_num) VALUES ('%s', '%s', '%s', '%s', %s')" % (
-        business_name, business_hrs, last_name, first_name, cust_acc_num)
+    sql = "INSERT INTO customers(business_name, business_hrs, last_name, first_name, cust_acc_num) VALUES ('%s', '%s', '%s', '%s', %s', '%s')" % (
+        business_name, business_hrs, last_name, first_name, cust_acc_num, customer_status)
 
     execute_query(conn, sql)
 
@@ -447,6 +450,7 @@ def update_customer():
     last_name = customer_data['last_name']
     first_name = customer_data['first_name']
     cust_acc_num = customer_data['cust_acc_num']
+    customer_status = customer_data['customer_status']
     phone = customer_data['phone']
     email = customer_data['email']
     street = customer_data['street']
@@ -459,9 +463,9 @@ def update_customer():
 
     # Update customers table
     cursor = conn.cursor()
-    sql = "UPDATE customers SET business_name = %s, business_hrs = %s, last_name = %s, first_name = %s, cust_acc_num = %s WHERE customer_id = %s"
+    sql = "UPDATE customers SET business_name = %s, business_hrs = %s, last_name = %s, first_name = %s, cust_acc_num = %s, customer_status = %s WHERE customer_id = %s"
     val = (business_name, business_hrs, last_name,
-           first_name, cust_acc_num, customer_id)
+           first_name, cust_acc_num, customer_status, customer_id)
     cursor.execute(sql, val)
 
     # Update customer contacts table
@@ -484,7 +488,7 @@ def vendors():
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     # sql = "SELECT * FROM employees"
     sql = """
-        SELECT v.vendor_id, v.vendor_name, v.vendor_hrs, v.vendor_account_number, vc.phone, vc.email, vc.street, vc.city, vc.zipcode, s.state_code_id 
+        SELECT v.vendor_id, v.vendor_name, v.vendor_hrs, v.vendor_account_number, v.vendor_status, vc.phone, vc.email, vc.street, vc.city, vc.zipcode, s.state_code_id 
         FROM vendors v JOIN vendor_contacts vc ON v.vendor_id = vc.vendor_id
         JOIN states s ON vc.state_code_id = s.state_code_id
         """
@@ -506,7 +510,7 @@ def vendor_info(vendor_id):
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
 
     sql = """
-        SELECT v.vendor_id, v.vendor_name, v.vendor_hrs, v.vendor_account_number, vc.phone, vc.email, vc.street, vc.city, vc.zipcode, s.state_code_id 
+        SELECT v.vendor_id, v.vendor_name, v.vendor_hrs, v.vendor_account_number, v.vendor_status, vc.phone, vc.email, vc.street, vc.city, vc.zipcode, s.state_code_id 
         FROM vendors v JOIN vendor_contacts vc ON v.vendor_id = vc.vendor_id
         JOIN states s ON vc.state_code_id = s.state_code_id
         WHERE v.vendor_id = '%s';
@@ -530,6 +534,7 @@ def add_vendor():
     vendor_name = request_data['vendor_name']
     vendor_hrs = request_data['vendor_hrs']
     vendor_account_number = request_data['vendor_account_number']
+    vendor_status = request_data['vendor_status']
     phone = request_data['phone']
     email = request_data['email']
     street = request_data['street']
@@ -538,9 +543,9 @@ def add_vendor():
     zipcode = request_data['zipcode']
 
     sql = """
-    INSERT INTO vendors (vendor_name, vendor_hrs, vendor_account_number) 
-    VALUES ('%s', '%s', %s);
-    """ % (vendor_name, vendor_hrs, vendor_account_number)
+    INSERT INTO vendors (vendor_name, vendor_hrs, vendor_account_number, vendor_status) 
+    VALUES ('%s', '%s', %s, %s);
+    """ % (vendor_name, vendor_hrs, vendor_account_number, vendor_status)
     execute_query(conn, sql)
     # gets the customer id from the above execution
     sql = 'SELECT * FROM vendors WHERE vendor_id = LAST_INSERT_ID()'
@@ -565,6 +570,7 @@ def update_vendor():
     vendor_name = vendor_data['vendor_name']
     vendor_hrs = vendor_data['vendor_hrs']
     vendor_account_number = vendor_data['vendor_account_number']
+    vendor_status = vendor_data['vendor_status']
     phone = vendor_data['phone']
     email = vendor_data['email']
     street = vendor_data['street']
@@ -577,8 +583,9 @@ def update_vendor():
 
     # Update vendor table
     cursor = conn.cursor()
-    sql = "UPDATE vendors SET vendor_name = %s, vendor_hrs = %s, vendor_account_number = %s WHERE vendor_id = %s"
-    val = (vendor_name, vendor_hrs, vendor_account_number, vendor_id)
+    sql = "UPDATE vendors SET vendor_name = %s, vendor_hrs = %s, vendor_account_number = %s, vendor_status = %s WHERE vendor_id = %s"
+    val = (vendor_name, vendor_hrs, vendor_account_number,
+           vendor_status, vendor_id)
     cursor.execute(sql, val)
 
     # Update customer contacts table
