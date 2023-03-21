@@ -1039,7 +1039,12 @@ def get_orders():
          SELECT * FROM customers;
         """
     customers = execute_read_query(conn, sql)
-    return jsonify(orders, states, customers)
+    sql = """
+         SELECT * FROM products;
+        """
+    products = execute_read_query(conn, sql)
+
+    return jsonify(orders, states, customers, products)
 
 
 @app.route('/addorder', methods=['POST'])
@@ -1047,27 +1052,51 @@ def add_order():
     # The user input is gathered in JSON format and stored into an empty variable
     order_data = request.get_json()
     # The JSON object is then separated into variables so that they may be used in a sql query
-    invoice_id = order_data['invoice_id']
-    date_produced = order_data['date_produced']
+    sql = """
+         SELECT CURDATE;
+        """
+    date_produced = execute_read_query(conn, sql)
+
+    customer_id = order_data['customer_id']
     delivery_date = order_data['delivery_date']
+    delivery_phone = order_data['delivery_phone']
+    delivery_street = order_data['delivery_street']
+    delivery_city = order_data['delivery_city']
+    state_code_id = order_data['state_code_id']
+    zipcode = order_data['zipcode']
+    line_items = order_data['line_items']
 
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "INSERT INTO orders(invoice_id, date_produced, delivery_date) VALUES (%s, %s, %s)" % (
-        invoice_id, date_produced, delivery_date)
-
+    sql = "INSERT INTO orders(date_produced, delivery_date, delivery_phone, delivery_street, delivery_city, state_code_id, zipcode) VALUES (%s, %s, %s, '%s', '%s', '%s', %s)" % (
+        date_produced, delivery_date, delivery_phone, delivery_street, delivery_city, state_code_id, zipcode)
     execute_query(conn, sql)
+
+    # gets the order id from the above execution
+    sql = 'SELECT * FROM orders WHERE order_id= LAST_INSERT_ID()'
+    order_id = execute_read_query(conn, sql)
+    order_id = order_id[0]['order_id']
+
+    # Set up future invoice with corresponding ids
+    sql = "INSERT INTO invoices(customer_id, order_id) VALUES (%s, %s)" % (
+        customer_id, order_id)
+    execute_query(conn, sql)
+
+
+    cursor = conn.cursor()
+    for product_id, items in line_items.items():
+        for item in items:
+            quantity = item['quantity']
+            price_per_unit = item['price_per_unit']
+            total = item['total']
+            cursor.execute("INSERT INTO line_items (order_id, product_id, quantity, price_per_unit, total) VALUES (%s, %s, %s, %s, %s)", (order_id, product_id, quantity, price_per_unit, total))
+    conn.commit()
+
+
     return 'Order was added Successfully'
 
 
 
-@app.route('/neworder', methods=['GET', 'POST'])
-def new_order():
-        # Process the form data
-        selected_items = request.form.getlist('item[]')
-        quantities = request.form.getlist('quantity[]')
-        # Do something with the data
-        return 'Order placed successfully'
 
 
 # Fulfillment Report
