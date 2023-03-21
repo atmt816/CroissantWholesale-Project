@@ -139,7 +139,8 @@ app.get('/orders', function (req, res) {
                     order_data: order_data[0],
                     states: order_data[1],
                     customers: order_data[2],
-                    products: order_data[3]
+                    customer_contact: order_data[3],
+                    products: order_data[4]
                 });
         });
 });

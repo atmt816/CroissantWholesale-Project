@@ -1040,11 +1040,53 @@ def get_orders():
         """
     customers = execute_read_query(conn, sql)
     sql = """
+         SELECT * FROM customer_contact;
+        """
+    customer_contact = execute_read_query(conn, sql)
+    sql = """
          SELECT * FROM products;
         """
     products = execute_read_query(conn, sql)
 
-    return jsonify(orders, states, customers, products)
+    return jsonify(orders, states, customers, customer_contact, products)
+
+
+@app.route('/customerorderinfo/<customer_id>', methods=['GET'])
+def get_customer_order_info(customer_id):
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = """
+        SELECT * FROM customer_contact
+        WHERE customer_id = '%s';
+        """ % (customer_id)
+
+    customer_order_info = execute_read_query(conn, sql)
+    # print(sql)
+    sql = """
+         SELECT * FROM states;
+        """
+    states = execute_read_query(conn, sql)
+
+    sql = """ SELECT * FROM roles;"""
+    roles = execute_read_query(conn, sql)
+
+    return jsonify(customer_order_info, states, roles)
+
+
+@app.route('/getcustomerid/<business_name>', methods=['GET'])
+def get_customer_id(business_name):
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = """
+        SELECT customer_id FROM customers
+        WHERE business_name = '%s';
+        """ % (business_name)
+
+    get_customer_id = execute_read_query(conn, sql)
+    
+
+    return jsonify(get_customer_id)
+
 
 
 @app.route('/addorder', methods=['POST'])
