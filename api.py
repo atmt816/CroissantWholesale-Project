@@ -1128,14 +1128,15 @@ def update_garage():
     city = garage_data['city']
     state_code_id = garage_data['state_code_id']
     zipcode = garage_data['zipcode']
+    status = garage_data['status']
 
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
 
     cursor = conn.cursor()
-    sql = "UPDATE garage SET garage_name = %s, phone_number = %s, street = %s, city = %s, state_code_id = %s, zipcode = %s WHERE garage_id = %s"
+    sql = "UPDATE garage SET garage_name = %s, phone_number = %s, street = %s, city = %s, state_code_id = %s, zipcode = %s, status = %s WHERE garage_id = %s"
     val = (garage_name, phone_number, street,
-           city, state_code_id, zipcode, garage_id)
+           city, state_code_id, zipcode, status, garage_id)
 
     cursor.execute(sql, val)
     conn.commit()
