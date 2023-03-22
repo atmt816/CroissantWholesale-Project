@@ -762,13 +762,14 @@ def update_product():
     product_id = products_data['product_id']
     # The JSON object is then separated into variables so that they may be used in a sql query
     product_name = products_data['product_name']
+    Status = products_data['Status']
 
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
 
     cursor = conn.cursor()
-    sql = "UPDATE products SET product_name = %s WHERE product_id = %s"
-    val = (product_name, product_id)
+    sql = "UPDATE products SET product_name = %s, status = %s WHERE product_id = %s"
+    val = (product_name, Status, product_id)
 
     cursor.execute(sql, val)
     conn.commit()
