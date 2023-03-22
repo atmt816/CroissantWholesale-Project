@@ -1,5 +1,7 @@
 <head>
     <%- include('../partials/head'); %>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   </head>
   
   
@@ -17,10 +19,10 @@
     <main class="container pt-5">
       <div class="p-5 mb-4 bg-white rounded-3 top-buffer">
         <h2 class="text-center pb-2">
-          Vendors
+          Orders
         </h2>
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-          Create New Vendor
+          Create New Order
         </button>
   
         <!-- Modal -->
@@ -33,12 +35,16 @@
               </div>
               <div class="modal-body">
                 <form class="row g-3">
-  
+                  <div class="col-md-4">
+                    <label for="inputState" class="form-label">Select Customer</label>
+                    <select class="form-select" name="customers" id="customers">
+                      <option value="" disabled selected> </option>
+                      <% customers.forEach(function(customers) { %>              
+                      <option value=<%=customers.customer_id %>><%=customers.business_name %></option>
+                      <% }); %>
+                  </select>
+                  </div>
                   <div class="col-md-6">
-                      <label for="firstname" class="form-label">Select Customer</label>
-                      <input type="text" class="form-control" id="firstname" placeholder="Ex. Local Donut Shop">
-                    </div>
-                    <div class="col-md-6">
                       <label for="lastname" class="form-label">Product</label>
                       <input type="text" class="form-control" id="lastname" placeholder="Ex. Mon-Sat 10-4PM, Sun 11-2PM">
                     </div>  
@@ -49,7 +55,8 @@
                  
                   <div class="col-md-6">
                     <label for="email" class="form-label">Email</label>
-                    <input type="email" class="form-control" id="firstname" placeholder="exmail@example.com">
+                    <input type="email" class="form-control" id="email" name="email">
+              
                   </div>
                   <div class="col-md-6">
                     <label for="lastname" class="form-label">Phone</label>
@@ -66,7 +73,12 @@
                   </div>
                   <div class="col-md-4">
                     <label for="inputState" class="form-label">State</label>
-                    
+                    <select class="form-select" name="states" id="states">
+                      <option value="" disabled selected> </option>
+                      <% states.forEach(function(states) { %>              
+                      <option value=<%=states.state_code_id %>><%=states.state %></option>
+                      <% }); %>
+                  </select>
                   </div>
                   <div class="col-md-2">
                     <label for="inputZip" class="form-label">Zip</label>
@@ -104,4 +116,32 @@
       </div>
   
     </main>
+    <script>
+      $('#customers').on('click', function() {
+         var business_name = $(this).val();
+         var customer_id = get_customer_id(business_name);
+         get_customer_email(customer_id);
+      });
+
+      function get_customer_id(business_name) {
+        axios.get('/getcustomerid/' + business_name)
+          .then(function(response) {
+           console.log(business_name)
+         })
+       .catch(function(error) {
+           console.log(error);
+       });
+     }
+ 
+      function get_customer_email(customer_id) {
+        axios.get('/customerorderinfo/' + customer_id)
+          .then(function(response) {
+           console.log(customer_id)
+           $('#email').val(response.data.email);
+         })
+       .catch(function(error) {
+           console.log(error);
+       });
+     }
+      </script> 
   </body>

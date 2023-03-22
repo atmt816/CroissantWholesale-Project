@@ -10,6 +10,7 @@ import time
 from flask import jsonify
 from flask import jsonify, make_response
 from flask import request, make_response
+from flask import render_template
 # from sql import create_connection
 # from sql import execute_read_query
 # from sql import execute_query
@@ -62,6 +63,21 @@ app = flask.Flask(__name__)  # sets up the application
 app.config["DEBUG"] = True  # allow to show error in browser
 
 
+############################# STATES ###################################
+
+# States Table CRUD
+
+@app.route('/states', methods=['GET'])
+def get_states():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT * FROM states"
+    states = execute_read_query(conn, sql)
+    return states
+
+############################# EMPLOYEES ###################################
+
+# Employees Table CRUD
 # ---- EMPLOYEE PAGE -----
 
 # employees get method working now
@@ -72,14 +88,15 @@ app.config["DEBUG"] = True  # allow to show error in browser
 
 
 @app.route('/employees', methods=['GET'])
-def employees():
+def employee():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = """
         SELECT e.emp_id, e.first_name, e.last_name, e.start_date, e.end_date, e.emp_status, r.role_name
         FROM employees AS e
         JOIN roles AS r
-        ON e.role_id = r.role_id;
+        ON e.role_id = r.role_id
+        ORDER BY e.emp_status ASC
         """
     employees = execute_read_query(conn, sql)
 
@@ -96,7 +113,8 @@ def employees():
     return jsonify(employees, states, roles)
 
 
-@app.route('/addemployee', methods=['POST'])
+# POST method for employees
+""" #@app.route('/addemployee', methods=['POST'])
 def add_employee():
     # The user input is gathered in JSON format and stored into an empty variable
     employee_data = request.get_json()
@@ -121,10 +139,10 @@ def add_employee():
         first_name, last_name, fmt_start_date, fmt_end_date, emp_status, role_id)
 
     execute_query(conn, sql)
-    return 'Employee was added Successfully'
+    return 'Employee was added Successfully' """
 
 
-# PUT method for employees
+""" # PUT method for employees
 @app.route('/update_employee', methods=['PUT'])
 def update_employee():
     # The user input is gathered in JSON format and stored into an empty variable
@@ -157,7 +175,7 @@ def update_employee():
     cursor.execute(sql, val)
     conn.commit()
     return 'Employee was updated successfully'
-
+ """
 ############################# EMPLOYEES CONTACT ###################################
 
 # Employee Contact CRUD
@@ -299,29 +317,6 @@ def update_employee():
 
     conn.commit()
     return 'Employee was updated successfully'
-
-# CUSTOMER PAGE
-
-# @app.route('/addemployeecontact', methods=['POST'])
-# def add_employee_contact():
-#     # The user input is gathered in JSON format and stored into an empty variable
-#     employee_contact_data = request.get_json()
-#     # The JSON object is then separated into variables so that they may be used in a sql query
-#     phone = employee_contact_data['phone']
-#     email = employee_contact_data['email']
-#     street = employee_contact_data['street']
-#     city = employee_contact_data['city']
-#     state = employee_contact_data['state_code_id']
-#     zipcode = employee_contact_data['zipcode']
-#     emp_id = employee_contact_data['emp_id']
-
-#     conn = create_connection(
-#         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-#     sql = "INSERT INTO employee_contact(phone, email, street, city, state_code_id, zipcode, emp_id ) VALUES (%s, '%s', '%s', '%s', '%s', %s, %s)" % (
-#         phone, email, street, city, state, zipcode, emp_id)
-
-#     execute_query(conn, sql)
-#     return 'Employee Contact was added Successfully'
 
 
 # # PUT method for employees_contact
@@ -669,8 +664,20 @@ def update_vendor():
     conn.commit()
     return 'Customer was updated successfully'
 
+    sql = """
+        SELECT * FROM states;
+        """
+    states = execute_read_query(conn, sql)
 
-@app.route('/addcustomers', methods=['POST'])
+    sql = """
+        SELECT * FROM roles;
+        """
+    roles = execute_read_query(conn, sql)
+
+    return jsonify(customers, states, roles)
+
+
+""" @app.route('/addcustomers', methods=['POST'])
 def add_customer():
     # The user input is gathered in JSON format and stored into an empty variable
     customer_data = request.get_json()
@@ -714,7 +721,7 @@ def update_customer():
 
     cursor.execute(sql, val)
     conn.commit()
-    return 'Customer was updated successfully'
+    return 'Customer was updated successfully' """
 
 
 ##################################### CUSTOMERS CONTACTS ###################################
@@ -731,7 +738,18 @@ def get_customer_contact():
                 JOIN Customer_Contact cc ON c.Customer_ct_id = cc.Customer_ct_id        
                 JOIN States s ON cc.state_code_id = s.State_Code_ID;_ct_id;"""
     customer_contact = execute_read_query(conn, sql)
-    return customer_contact
+
+    sql = """
+        SELECT * FROM states;
+        """
+    states = execute_read_query(conn, sql)
+
+    sql = """
+        SELECT * FROM roles;
+        """
+    roles = execute_read_query(conn, sql)
+
+    return jsonify(customer_contact, states, roles)
 
 
 @app.route('/addcustomercontact', methods=['POST'])
@@ -794,7 +812,18 @@ def get_vendors():
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "SELECT * FROM vendors"
     vendors = execute_read_query(conn, sql)
-    return vendors
+
+    sql = """
+        SELECT * FROM states;
+        """
+    states = execute_read_query(conn, sql)
+
+    sql = """
+        SELECT * FROM roles;
+        """
+    roles = execute_read_query(conn, sql)
+
+    return (vendors, states, roles)
 
 
 @app.route('/addvendor', methods=['POST'])
@@ -856,7 +885,18 @@ def get_vendor_contact():
             ON v.vendor_ct_id = vc.vendor_ct_id
             JOIN states s ON vc.state_code_id = s.state_code_id"""
     vendor_contact = execute_read_query(conn, sql)
-    return vendor_contact
+
+    sql = """
+        SELECT * FROM states;
+        """
+    states = execute_read_query(conn, sql)
+
+    sql = """
+        SELECT * FROM roles;
+        """
+    roles = execute_read_query(conn, sql)
+
+    return (vendor_contact, states, roles)
 
 
 @app.route('/addvendorcontact', methods=['POST'])
@@ -1107,9 +1147,62 @@ def update_line_item():
 def get_orders():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "SELECT * FROM orders"
+    sql = "SELECT * FROM orders;"
     orders = execute_read_query(conn, sql)
-    return orders
+    sql = """
+         SELECT * FROM states;
+        """
+    states = execute_read_query(conn, sql)
+    sql = """
+         SELECT * FROM customers;
+        """
+    customers = execute_read_query(conn, sql)
+    sql = """
+         SELECT * FROM customer_contact;
+        """
+    customer_contact = execute_read_query(conn, sql)
+    sql = """
+         SELECT * FROM products;
+        """
+    products = execute_read_query(conn, sql)
+
+    return jsonify(orders, states, customers, customer_contact, products)
+
+
+@app.route('/customerorderinfo/<customer_id>', methods=['GET'])
+def get_customer_order_info(customer_id):
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = """
+        SELECT * FROM customer_contact
+        WHERE customer_id = '%s';
+        """ % (customer_id)
+
+    customer_order_info = execute_read_query(conn, sql)
+    # print(sql)
+    sql = """
+         SELECT * FROM states;
+        """
+    states = execute_read_query(conn, sql)
+
+    sql = """ SELECT * FROM roles;"""
+    roles = execute_read_query(conn, sql)
+
+    return jsonify(customer_order_info, states, roles)
+
+
+@app.route('/getcustomerid/<business_name>', methods=['GET'])
+def get_customer_id(business_name):
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = """
+        SELECT customer_id FROM customers
+        WHERE business_name = '%s';
+        """ % (business_name)
+
+    get_customer_id = execute_read_query(conn, sql)
+
+    return jsonify(get_customer_id)
 
 
 @app.route('/addorder', methods=['POST'])
@@ -1117,17 +1210,48 @@ def add_order():
     # The user input is gathered in JSON format and stored into an empty variable
     order_data = request.get_json()
     # The JSON object is then separated into variables so that they may be used in a sql query
-    invoice_id = order_data['invoice_id']
-    date_produced = order_data['date_produced']
+    sql = """
+         SELECT CURDATE;
+        """
+    date_produced = execute_read_query(conn, sql)
+
+    customer_id = order_data['customer_id']
     delivery_date = order_data['delivery_date']
+    delivery_phone = order_data['delivery_phone']
+    delivery_street = order_data['delivery_street']
+    delivery_city = order_data['delivery_city']
+    state_code_id = order_data['state_code_id']
+    zipcode = order_data['zipcode']
+    line_items = order_data['line_items']
 
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "INSERT INTO orders(invoice_id, date_produced, delivery_date) VALUES (%s, %s, %s)" % (
-        invoice_id, date_produced, delivery_date)
-
+    sql = "INSERT INTO orders(date_produced, delivery_date, delivery_phone, delivery_street, delivery_city, state_code_id, zipcode) VALUES (%s, %s, %s, '%s', '%s', '%s', %s)" % (
+        date_produced, delivery_date, delivery_phone, delivery_street, delivery_city, state_code_id, zipcode)
     execute_query(conn, sql)
+
+    # gets the order id from the above execution
+    sql = 'SELECT * FROM orders WHERE order_id= LAST_INSERT_ID()'
+    order_id = execute_read_query(conn, sql)
+    order_id = order_id[0]['order_id']
+
+    # Set up future invoice with corresponding ids
+    sql = "INSERT INTO invoices(customer_id, order_id) VALUES (%s, %s)" % (
+        customer_id, order_id)
+    execute_query(conn, sql)
+
+    cursor = conn.cursor()
+    for product_id, items in line_items.items():
+        for item in items:
+            quantity = item['quantity']
+            price_per_unit = item['price_per_unit']
+            total = item['total']
+            cursor.execute("INSERT INTO line_items (order_id, product_id, quantity, price_per_unit, total) VALUES (%s, %s, %s, %s, %s)",
+                           (order_id, product_id, quantity, price_per_unit, total))
+    conn.commit()
+
     return 'Order was added Successfully'
+
 
 # Fulfillment Report
 # Fulfillment check per line item. Report generates all orders within a timeframe that are scheduled for delivery.
@@ -1285,18 +1409,18 @@ def add_invoice():
     # The user input is gathered in JSON format and stored into an empty variable
     invoice_data = request.get_json()
     # The JSON object is then separated into variables so that they may be used in a sql query
-    vendor_id = invoice_data['vendor_id']
     customer_id = invoice_data['customer_id']
     invoice_number = invoice_data['invoice_number']
     invoice_date = invoice_data['invoice_date']
     invoice_total = invoice_data['invoice_total']
     payment_status = invoice_data['payment_status']
     date_paid = invoice_data['date_paid']
+    order_id = order_id['order_id']
 
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "INSERT INTO invoices(vendor_id, customer_id, invoice_number, invoice_date, invoice_total, payment_status, date_paid) VALUES (%s, %s, %s, %s, %s, '%s', %s)" % (
-        vendor_id, customer_id, invoice_number, invoice_date, invoice_total, payment_status, date_paid)
+    sql = "INSERT INTO invoices(customer_id, customer_id, invoice_number, invoice_date, invoice_total, payment_status, date_paid, order_id) VALUES (%s, %s, %s, %s, %s, '%s', %s, %s)" % (
+        customer_id, customer_id, invoice_number, invoice_date, invoice_total, payment_status, date_paid, order_id)
 
     execute_query(conn, sql)
     return 'Invoice was added Successfully'
@@ -1348,7 +1472,30 @@ def get_garage():
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "SELECT * FROM garage"
     garage = execute_read_query(conn, sql)
-    return garage
+
+    sql = """
+        SELECT * FROM states;
+        """
+    states = execute_read_query(conn, sql)
+
+    return jsonify(garage, states)
+
+# Specifc garage id get for modal info
+
+
+@app.route('/garage/<garage_id>', methods=['GET'])
+def get_garage_info(garage_id):
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT * FROM garage WHERE garage_id = %s" % (garage_id)
+    garage = execute_read_query(conn, sql)
+
+    sql = """
+        SELECT * FROM states;
+        """
+    states = execute_read_query(conn, sql)
+
+    return jsonify(garage, states)
 
 
 @app.route('/addgarage', methods=['POST'])
@@ -1403,7 +1550,7 @@ def update_garage():
 # Vehicle Table CRUD
 
 @app.route('/vehicles', methods=['GET'])
-def get_vehicles():
+def get_vehicles_info():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "SELECT * FROM vehicles"
@@ -1454,6 +1601,31 @@ def update_vehicle():
     conn.commit()
     return 'Vehicle was updated successfully'
 
+# Get specific vehicle info with maintenence log data for modal
+
+
+@app.route('/vehicles/<vehicle_id>', methods=['GET'])
+def get_vehicles(vehicle_id):
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = """SELECT v.vehicle_id, v.license_plate, v.make, v.model, v.vin, ml.log_id, ml.date, ml.status, ml.note, g.garage_name, g.phone_number, g.street, g.city, s.state_code_id, g.zipcode
+            FROM vehicles v
+            JOIN maintenance_logs ml
+            ON v.vehicle_id = ml.vehicle_id
+            JOIN garage AS g
+            ON ml.garage_id = g.garage_id
+            JOIN states s
+            ON g.state_code_id = s.state_code_id
+        WHERE v.vehicle_id = '%s';""" % (vehicle_id)
+    vehicles = execute_read_query(conn, sql)
+
+    sql = """
+         SELECT * FROM states;
+        """
+    states = execute_read_query(conn, sql)
+
+    return jsonify(vehicles, states)
+
 
 # Maintenance_Logs Table CRUD
 
@@ -1465,6 +1637,18 @@ def get_maintenance():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "SELECT v.license_plate AS 'License Plate', g.garage_name AS 'Garage Name',logs.date AS 'Date', logs.status AS 'Status', logs.note AS 'note' FROM maintenance_logs AS logs INNER JOIN vehicles AS v ON logs.vehicle_id = v.vehicle_id INNER JOIN garage AS g ON logs.garage_id = g.garage_id ORDER BY date DESC;"
+    maintenance = execute_read_query(conn, sql)
+    return maintenance
+
+# Specific maintenance log details for selected row
+
+
+@app.route('/maintenance/<log_id>', methods=['GET'])
+def get_maintenance_info(log_id):
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT v.license_plate AS 'License Plate', g.garage_name AS 'Garage Name',logs.date AS 'Date', logs.status AS 'Status', logs.note AS 'note' FROM maintenance_logs AS logs INNER JOIN vehicles AS v ON logs.vehicle_id = v.vehicle_id INNER JOIN garage AS g ON logs.garage_id = g.garage_id ORDER BY date DESC WHERE logs.log_id = %s;" % (
+        log_id)
     maintenance = execute_read_query(conn, sql)
     return maintenance
 
@@ -1491,8 +1675,8 @@ def add_maintenance_log():
 
 # Maintenance Log by Vehicle - Generates a report for all maintenance logs under a specified vehicle id.
 
-@app.route('/vehiclemaintenancelog', methods=['GET'])
-def get_vehicle_main_log():
+@app.route('/vehiclemaintenancelog/<vehicle_id>', methods=['GET'])
+def get_vehicle_main_log(vehicle_id):
     selected_vehicle_id = request.get_json()
     vehicle_id = selected_vehicle_id['vehicle_id']
     conn = create_connection(
@@ -1505,8 +1689,8 @@ def get_vehicle_main_log():
 
 # Maintenance Log by Garage - Generates a report for all maintenance logs under a specified garage id.
 
-@app.route('/garagemaintenancelog', methods=['GET'])
-def get_garagemain_log():
+@app.route('/garagemaintenancelog/<garage_id>', methods=['GET'])
+def get_garagemain_log(garage_id):
     selected_garage_id = request.get_json()
     garage_id = selected_garage_id['garage_id']
     conn = create_connection(
@@ -1518,7 +1702,7 @@ def get_garagemain_log():
 
 
 # PUT method for maintenance_logs
-@app.route('/update_maitenance_log', methods=['PUT'])
+@app.route('/update_maintenance_log', methods=['PUT'])
 def update_maintenance_log():
     # The user input is gathered in JSON format and stored into an empty variable
     maintenance_data = request.get_json()
