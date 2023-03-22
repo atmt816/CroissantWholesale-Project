@@ -1184,13 +1184,14 @@ def update_vehicle():
     make = vehicle_data['make']
     model = vehicle_data['model']
     vin = vehicle_data['vin']
+    status = vehicle_data['status']
 
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
 
     cursor = conn.cursor()
-    sql = "UPDATE vehicles SET license_plate = %s, make = %s, model = %s, vin = %s WHERE vehicle_id = %s"
-    val = (license_plate, make, model, vin, vehicle_id)
+    sql = "UPDATE vehicles SET license_plate = %s, make = %s, model = %s, vin = %s, status = %s WHERE vehicle_id = %s"
+    val = (license_plate, make, model, vin, status, vehicle_id)
 
     cursor.execute(sql, val)
     conn.commit()
