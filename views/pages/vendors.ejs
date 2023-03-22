@@ -17,10 +17,10 @@
   <main class="container pt-5">
     <div class="p-5 mb-4 bg-white rounded-3 top-buffer">
       <h2 class="text-center pb-2">
-        Employees
+        Vendors
       </h2>
       <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-        Create New Employee
+        Create New Vendor
       </button>
 
       <!-- Modal -->
@@ -28,33 +28,41 @@
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
             <div class="modal-header">
-              <h4 class="modal-title" id="exampleModalLabel">Create New Employee Entry</h4>
+              <h4 class="modal-title" id="exampleModalLabel">Create New Vendor</h4>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <form action="/employees/add" method="post" class="row g-3">
+              <form action="/vendors/add" method="post" class="row g-3">
 
                 <div class="col-md-6">
-                  <label for="firstname" class="form-label">First Name</label>
-                  <input class="form-control" placeholder="John" name="first_name" id="first_name" type="text">
+                  <label for="firstname" class="form-label">Vendor Name</label>
+                  <input type="text" class="form-control" name="vendor_name" id="vendor_name"
+                    placeholder="Ex. Local Wholesaler">
+                </div>
+                <div class="col-md-6">
+                  <label for="lastname" class="form-label">Vendor Hours</label>
+                  <input class="form-control" name="vendor_hrs" id="vendor_hrs"
+                    placeholder="Ex. Mon-Sat 10-4PM, Sun 11-2PM" type="text">
+                </div>
+                <div class="col-md-6">
+                  <label for="inputRole" class="form-label">Vendor Account Number</label>
+                  <input class="form-control" name="vendor_account_number" id="vendor_account_number" type="text">
+                </div>
+                <div class="col-md-6">
+                  <label for="inputstatus" class="form-label">Status</label>
+                  <select id="vendor_status" name="vendor_status" class="form-select">
+                    <option selected>Active</option>
+                    <option>Inactive</option>
+                  </select>
+                </div>
 
-                </div>
-                <div class="col-md-6">
-                  <label for="lastname" class="form-label">Last Name</label>
-                  <input class="form-control" placeholder="Doe" name="last_name" id="ex1" type="text">
-                </div>
-                <div class="col-md-6">
-                  <label for="startdate" class="form-label">Start Date</label>
-                  <input class="form-control" placeholder="2021-03-02" name="start_date" id="ex1" type="text">
-                </div>
-                <hr class="hr" />
                 <div class="col-md-6">
                   <label for="email" class="form-label">Email</label>
                   <input class="form-control" placeholder="example@email.com" name="email" id="ex1" type="text">
                 </div>
                 <div class="col-md-6">
-                  <label for="phone" class="form-label">Phone</label>
-                  <input class="form-control" placeholder="0000000000" name="phone" id="ex1" type="text">
+                  <label for="lastname" class="form-label">Phone</label>
+                  <input type="phone" class="form-control" name="phone" id="phone" placeholder="000-000-0000">
                 </div>
                 <div class="col-12">
                   <label for="inputAddress" class="form-label">Address</label>
@@ -63,7 +71,7 @@
 
                 <div class="col-md-6">
                   <label for="inputCity" class="form-label">City</label>
-                  <input type="text" class="form-control" name="city" id="city" placeholder="Houston">
+                  <input type="text" class="form-control" name="city" id="city">
                 </div>
                 <div class="col-md-4">
                   <label for="inputState" class="form-label">State</label>
@@ -76,29 +84,16 @@
                 </div>
                 <div class="col-md-2">
                   <label for="inputZip" class="form-label">Zip</label>
-                  <input type="text" class="form-control" name="zipcode" id="zipcode" placeholder="00000">
+                  <input type="text" class="form-control" name="zipcode" id="zipcode">
                 </div>
-                <div class="col-md-6">
-                  <label for="Role" class="form-label">Role</label>
-                  <select class="form-select" name="role_id" id="role_id">
-                    <% roles.forEach(function(roles) { %>
-                      <option value=<%=roles.Role_ID %>><%=roles.Role_Name %>
-                      </option>
-                      <% }); %>
-                  </select>
-                </div>
-                <div class="col-md-6">
-                  <label for="inputstatus" class="form-label">Status</label>
-                  <select id="emp_status" name="emp_status" class="form-select">
-                    <option selected>Active</option>
-                    <option>Terminated</option>
-                  </select>
-                </div>
+
+
+
 
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-primary">Create New Employee</button>
+              <button type="submit" class="btn btn-primary">Create New Vendor</button>
               </form>
             </div>
           </div>
@@ -109,41 +104,41 @@
         <thead>
           <tr>
             <th scope="col">ID</th>
-            <th scope="col">Name</th>
-            <th scope="col">Start Date</th>
-            <th scope="col">End Date</th>
-            <th scope="col">Status</th>
-            <th scope="col">Role</th>
+            <th scope="col">Vendor Name</th>
+            <th scope="col">Vendor Hours</th>
+            <th scope="col">Account Number</th>
+            <th scope="col">Vendor Status</th>
 
           </tr>
         </thead>
         <tbody>
-          <% employee_data.forEach(function(employee_data) { %>
+          <% vendor_data.forEach(function(vendor_data) { %>
             <tr>
               <td>
-                <a style="text-decoration:none" href="/empinfo/<%= employee_data.emp_id%>">
-                  <%= employee_data.emp_id%>
+                <a style="text-decoration:none" href="/vendinfo/<%= vendor_data.vendor_id%>">
+                  <%= vendor_data.vendor_id%>
                 </a>
               </td>
               <td>
-                <a style="text-decoration:none" href="/empinfo/<%= employee_data.emp_id%>">
-                  <%= employee_data.last_name%>,&nbsp<%= employee_data.first_name%>
+                <a style="text-decoration:none" href="/vendinfo/<%= vendor_data.vendor_id%>">
+                  <%= vendor_data.vendor_name%>
                 </a>
               </td>
               <td>
-                <%= employee_data.start_date%>
+                <a>
+                  <%= vendor_data.vendor_hrs%>
+                </a>
               </td>
               <td>
-                <%= employee_data.end_date%>
+                <a>
+                  <%= vendor_data.vendor_account_number%>
+                </a>
               </td>
               <td>
-                <%= employee_data.emp_status%>
+                <a>
+                  <%= vendor_data.vendor_status%>
+                </a>
               </td>
-              <td>
-                <%= employee_data.role_name%>
-              </td>
-
-
 
             </tr>
             <% }); %>

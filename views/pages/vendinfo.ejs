@@ -1,0 +1,149 @@
+<head>
+    <%- include('../partials/head'); %>
+</head>
+
+
+<style>
+    .top-buffer { margin-top: 60px;}
+</style>
+
+<body class="container">
+    <header>
+        <%- include('../partials/header'); %> 
+    </header>
+    
+    <main class="container pt-5"> 
+        <div class="p-5 mb-4 bg-white rounded-3 top-buffer">
+            <h2 class="text-center">
+              Customer Information
+            </h2>
+            <a href="/vendors" class="link-primary pb-4">Go Back</a>
+            <h5 class= "pb-1 pt-2">General Information</h5>
+            <div class="container pt-2">
+              <div class="row">
+                <div class="col-sm">
+                  Vendor ID
+                  <p class="pt-1">
+                    <%= vendor_data[0].vendor_id %>
+                  </p>
+                </div>
+                <div class="col-sm">
+                  Vendor Name
+                  <p class="pt-1">
+                    <%= vendor_data[0].vendor_name %>
+                  </p>
+                </div>
+                <div class="col-sm">
+                  Vendor Name
+                  <p class="pt-1">
+                    <%= vendor_data[0].vendor_hrs %>
+                  </p>
+                </div>
+              </div>
+              <div class="col-sm">
+                Vendor Account Number
+                <p class="pt-1">
+                  <%= vendor_data[0].vendor_account_number %>
+                </p>
+              </div>
+            </div>
+            <div class="container pt-5">
+            
+            </div>
+            
+            <hr class="hr hr-blurry" />
+            <h5>Contact Information</h5>
+            <div class="container pt-2">
+              <div class="row">
+                <div class="col-sm">
+                  Phone Number
+                  <p class="pt-1">
+                    <%= vendor_data[0].phone %>
+                  </p>
+                </div>
+                <div class="col-sm">
+                  Email
+                  <p class="pt-1">
+                    <%= vendor_data[0].email %>
+                  </p>
+                </div>
+                <div class="col-sm pb-5">
+                  Vendor Address
+                  <p class="pt-1">
+                    <%= vendor_data[0].street %>, <%= vendor_data[0].city %>, <%= vendor_data[0].state_code_id %>
+                          <%= vendor_data[0].zipcode %>
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+              Edit
+            </button>
+            <button type="button" class="btn btn-danger">Delete</button>
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title" id="exampleModalLabel">Edit Vendor Information</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <form action="/vendors/update" method="post" class="row g-3">
+                      <input class="form-control" name="vendor_id" id="vendor_id" type="hidden" value=<%=vendor_data[0].vendor_id %>> 
+                      <div class="col-md-6">
+                        <label for="firstname" class="form-label">Vendor Name</label>
+                        <input type="text" class="form-control" name="vendor_name" id="vendor_name" value= "<%= vendor_data[0].vendor_name %>">
+                      </div>
+                      <div class="col-md-6">
+                        <label for="firstname" class="form-label">Vendor Hours</label>
+                        <input type="text" class="form-control" name="vendor_hrs" id="vendor_hrs" value= "<%= vendor_data[0].vendor_hrs %>">
+                      </div>
+                      <div class="col-md-6 pb-2">
+                        <label for="firstname" class="form-label">Vendor Account Number</label>
+                        <input type="text" class="form-control" name="vendor_account_number" id="vendor_account_number" value= "<%= vendor_data[0].vendor_account_number %>">
+                      </div>
+                      <hr class="hr" />
+                      <div class="col-md-6">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" value= "<%= vendor_data[0].email %>">
+                      </div>
+                      <div class="col-md-6">
+                        <label for="lastname" class="form-label">Phone</label>
+                        <input type="phone" class="form-control" id="phone" name="phone" value= <%= vendor_data[0].phone %>>
+                      </div>
+                      <div class="col-12">
+                        <label for="inputAddress" class="form-label">Vendor Address</label>
+                        <input type="text" class="form-control" name="street" id="street" value= "<%= vendor_data[0].street %>">
+                      </div>
+      
+                      <div class="col-md-6">
+                        <label for="inputCity" class="form-label">City</label>
+                        <input type="text" class="form-control" id="city" name="city" value= "<%= vendor_data[0].city %>">
+                      </div>
+                      <div class="col-md-4">
+                        <label for="inputState" class="form-label">State</label>
+                        <select class="form-control" name="states" id="states">
+                          <option value=<%=vendor_data[0].state_code_id%>><%=vendor_data[0].state_code_id%> </option>
+                          <% states.forEach(function(states) { %>              
+                          <option value="<%=states.state_code_id %>"><%=states.state%></option>
+                          <% }); %>
+                        </select>
+                      </div>
+                      <div class="col-md-2">
+                        <label for="inputZip" class="form-label">Zip code</label>
+                        <input type="text" class="form-control" id="zipcode" name="zipcode" value= "<%= vendor_data[0].zipcode %>">
+                      </div>
+                      
+                      
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Update Vendor</button>
+                    </form>
+
+        </div>
+        
+        </main>
+</body>

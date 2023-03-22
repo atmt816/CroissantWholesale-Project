@@ -17,53 +17,65 @@
   <main class="container pt-5">
     <div class="p-5 mb-4 bg-white rounded-3 top-buffer">
       <h2 class="text-center pb-2">
-        Employees
+        Customers
       </h2>
       <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-        Create New Employee
+        Create New Customer
       </button>
 
       <!-- Modal -->
       <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
+
             <div class="modal-header">
-              <h4 class="modal-title" id="exampleModalLabel">Create New Employee Entry</h4>
+              <h4 class="modal-title" id="exampleModalLabel">Create New Customer</h4>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <form action="/employees/add" method="post" class="row g-3">
+              <form action="/customers/add" method="post" class="row g-3">
 
                 <div class="col-md-6">
-                  <label for="firstname" class="form-label">First Name</label>
-                  <input class="form-control" placeholder="John" name="first_name" id="first_name" type="text">
+                  <label for="firstname" class="form-label">Business Name</label>
+                  <input class="form-control" type="text" name="business_name" id="business_name"
+                    placeholder="Ex. Local Donut Shop">
 
+                </div>
+                <div class="col-md-6">
+                  <label for="lastname" class="form-label">Business Hours</label>
+                  <input class="form-control" type="text" name="business_hrs" id="business_hrs"
+                    placeholder="Ex. Mon-Sat 10-4PM, Sun 11-2PM">
+                </div>
+                <div class="col-md-6">
+                  <label for="inputRole" class="form-label">Customer Account Number</label>
+                  <input class="form-control" type="text" name="cust_acc_num" id="cust_acc_num">
+                </div>
+                <br>
+                <div class="col-md-6">
+                  <label for="firstname" class="form-label">First Name</label>
+                  <input class="form-control" type="text" name="first_name" id="first_name" placeholder="Ex. John">
                 </div>
                 <div class="col-md-6">
                   <label for="lastname" class="form-label">Last Name</label>
-                  <input class="form-control" placeholder="Doe" name="last_name" id="ex1" type="text">
-                </div>
-                <div class="col-md-6">
-                  <label for="startdate" class="form-label">Start Date</label>
-                  <input class="form-control" placeholder="2021-03-02" name="start_date" id="ex1" type="text">
+                  <input class="form-control" type="text" name="last_name" id="last_name" placeholder="Ex. Doe">
                 </div>
                 <hr class="hr" />
                 <div class="col-md-6">
                   <label for="email" class="form-label">Email</label>
-                  <input class="form-control" placeholder="example@email.com" name="email" id="ex1" type="text">
+                  <input class="form-control" type="email" name="email" id="email" placeholder="exmail@example.com">
                 </div>
                 <div class="col-md-6">
-                  <label for="phone" class="form-label">Phone</label>
-                  <input class="form-control" placeholder="0000000000" name="phone" id="ex1" type="text">
+                  <label for="lastname" class="form-label">Phone</label>
+                  <input class="form-control" type="phone" name="phone" id="phone" placeholder="0000000000">
                 </div>
                 <div class="col-12">
                   <label for="inputAddress" class="form-label">Address</label>
-                  <input type="text" class="form-control" name="street" id="street" placeholder="1234 Main St">
+                  <input class="form-control" type="text" name="street" id="street" placeholder="1234 Main St">
                 </div>
 
                 <div class="col-md-6">
                   <label for="inputCity" class="form-label">City</label>
-                  <input type="text" class="form-control" name="city" id="city" placeholder="Houston">
+                  <input class="form-control" type="text" name="city" id="city" placeholder="Houston">
                 </div>
                 <div class="col-md-4">
                   <label for="inputState" class="form-label">State</label>
@@ -79,26 +91,19 @@
                   <input type="text" class="form-control" name="zipcode" id="zipcode" placeholder="00000">
                 </div>
                 <div class="col-md-6">
-                  <label for="Role" class="form-label">Role</label>
-                  <select class="form-select" name="role_id" id="role_id">
-                    <% roles.forEach(function(roles) { %>
-                      <option value=<%=roles.Role_ID %>><%=roles.Role_Name %>
-                      </option>
-                      <% }); %>
-                  </select>
-                </div>
-                <div class="col-md-6">
                   <label for="inputstatus" class="form-label">Status</label>
-                  <select id="emp_status" name="emp_status" class="form-select">
+                  <select id="customer_status" name="customer_status" class="form-select">
                     <option selected>Active</option>
-                    <option>Terminated</option>
+                    <option>Inactive</option>
                   </select>
                 </div>
+
+
 
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-primary">Create New Employee</button>
+              <button type="submit" class="btn btn-primary">Create New Customer</button>
               </form>
             </div>
           </div>
@@ -109,40 +114,39 @@
         <thead>
           <tr>
             <th scope="col">ID</th>
-            <th scope="col">Name</th>
-            <th scope="col">Start Date</th>
-            <th scope="col">End Date</th>
+            <th scope="col">Business Name</th>
+            <th scope="col">Business Hours</th>
+            <th scope="col">Main Contact</th>
+            <th scope="col">Account Number</th>
             <th scope="col">Status</th>
-            <th scope="col">Role</th>
 
           </tr>
         </thead>
         <tbody>
-          <% employee_data.forEach(function(employee_data) { %>
+          <% customer_data.forEach(function(customer_data) { %>
             <tr>
               <td>
-                <a style="text-decoration:none" href="/empinfo/<%= employee_data.emp_id%>">
-                  <%= employee_data.emp_id%>
+                <a style="text-decoration:none" href="/custinfo/<%= customer_data.customer_id%>">
+                  <%= customer_data.customer_id%>
                 </a>
               </td>
               <td>
-                <a style="text-decoration:none" href="/empinfo/<%= employee_data.emp_id%>">
-                  <%= employee_data.last_name%>,&nbsp<%= employee_data.first_name%>
+                <a style="text-decoration:none" href="/custinfo/<%= customer_data.customer_id%>">
+                  <%= customer_data.business_name%>
                 </a>
               </td>
               <td>
-                <%= employee_data.start_date%>
+                <%= customer_data.business_hrs%>
               </td>
               <td>
-                <%= employee_data.end_date%>
+                <%= customer_data.last_name%>,&nbsp<%= customer_data.first_name%>
               </td>
               <td>
-                <%= employee_data.emp_status%>
+                <%= customer_data.cust_acc_num%>
               </td>
               <td>
-                <%= employee_data.role_name%>
+                <%= customer_data.customer_status%>
               </td>
-
 
 
             </tr>
