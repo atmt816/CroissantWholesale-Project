@@ -1,91 +1,103 @@
 <head>
-    <%- include('../partials/head'); %>
-  </head>
-  
-  
-  <style>
-    .top-buffer {
-      margin-top: 60px;
-    }
-  </style>
-  
-  <body class="container">
-    <header>
-      <%- include('../partials/header'); %>
-    </header>
-  
-    <main class="container pt-5">
-      <div class="p-5 mb-4 bg-white rounded-3 top-buffer">
-        <h2 class="text-center pb-2">
-          Employee Roles
-        </h2>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-          Create New Role
-        </button>
-  
-        <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h4 class="modal-title" id="exampleModalLabel">Create New Role</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <form action="/roles/add" method="post" class="row g-3">
-  
-                  <div class="col-md-6">
-                      <label for="firstname" class="form-label">Role Name</label>
-                      <input type="text" class="form-control" name="role_name" id="role_name" placeholder="Ex. Baker">
-                    </div>
-                    <div>
-                      <label for="lastname" class="form-label">Role Description</label>
-                      <textarea class="form-control" rows="5" id="role_description" name="role_description"></textarea>
-                    </div>  
-                    <div class="col-md-6">
-                      <label for="inputRole" class="form-label">Role Status</label>                  
-                      <select id="role_status" name="role_status" id="role_status" class="form-select">
-                        <option selected>Active</option>
-                        <option>Inactive</option>
-                      </select>
-                    </div>
-             
-                  
-              
-                  
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Create New Role</button>
-                </form>
-              </div>
+  <%- include('../partials/head'); %>
+</head>
+
+
+<style>
+  .top-buffer {
+    margin-top: 60px;
+  }
+</style>
+
+<body class="container">
+  <header>
+    <%- include('../partials/header'); %>
+  </header>
+
+  <main class="container pt-5">
+    <div class="p-5 mb-4 bg-white rounded-3 top-buffer">
+      <h2 class="text-center pb-2">
+        Employee Roles
+      </h2>
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Create New Role
+      </button>
+
+      <!-- Modal -->
+      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title" id="exampleModalLabel">Create New Role</h4>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form action="/roles/add" method="post" class="row g-3">
+
+                <div class="col-md-6">
+                  <label for="firstname" class="form-label">Role Name</label>
+                  <input type="text" class="form-control" name="role_name" id="role_name" placeholder="Ex. Baker">
+                </div>
+                <div>
+                  <label for="lastname" class="form-label">Role Description</label>
+                  <textarea class="form-control" rows="5" id="role_description" name="role_description"></textarea>
+                </div>
+                <div class="col-md-6">
+                  <label for="inputRole" class="form-label">Role Status</label>
+                  <select id="role_status" name="role_status" id="role_status" class="form-select">
+                    <option selected>Active</option>
+                    <option>Inactive</option>
+                  </select>
+                </div>
+
+
+
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Create New Role</button>
+              </form>
             </div>
           </div>
         </div>
-        <table class="table table-hover">
-          <thead>
+      </div>
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Role Name</th>
+            <th scope="col">Role Description</th>
+            <th scope="col">Status</th>
+
+
+          </tr>
+        </thead>
+        <tbody>
+          <% roles_data.forEach(function(roles_data) { %>
             <tr>
-              <th scope="col">ID</th>
-              <th scope="col">Role Name</th>
-              <th scope="col">Role Description</th>
-              
-              
-            </tr>
-          </thead>
-          <tbody>
-            <% roles_data.forEach(function(roles_data) { %>
-              <tr>
-                <td>
-                  <a><%= roles_data.role_id%></a>
-                </td>
-                <td>
-                  <a><%= roles_data.role_name%></a>
-                </td>
-                <td>
-                  <a><%= roles_data.role_description%></a>
-                </td>
-                <td>
-                  <a style="text-decoration:none" href="/rolesinfo/<%= roles_data.role_id%>""> Edit</a>
+              <td>
+                <a>
+                  <%= roles_data.role_id%>
+                </a>
+              </td>
+              <td>
+                <a>
+                  <%= roles_data.role_name%>
+                </a>
+              </td>
+              <td>
+                <a>
+                  <%= roles_data.role_description%>
+                </a>
+              </td>
+              <td>
+                <a>
+                  <%= role_data.role_status%>
+                </a>
+              </td>
+              <td>
+                <a style="text-decoration:none" href="/rolesinfo/<%= roles_data.role_id%>""> Edit</a>
                 </td>
                 
   
