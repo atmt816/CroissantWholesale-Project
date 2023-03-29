@@ -121,6 +121,7 @@ def employee_info():
 
 #     # sql = """SELECT * FROM states"""
 #     return jsonify(employee_info, states, roles)
+
 @app.route('/employees/<emp_id>', methods=['GET'])
 def get_employee_info(emp_id):
     conn = create_connection(
