@@ -434,7 +434,7 @@ def update_customer():
 #         """
 #     roles = execute_read_query(conn, sql)
 
-#     return (vendors, states, roles)
+    return jsonify(vendors, states, roles)
 
 
 # vendors get method working now - Misael
