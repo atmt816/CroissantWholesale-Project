@@ -343,16 +343,16 @@ def add_customer():
     first_name = customer_data['first_name']
     cust_acc_num = customer_data['cust_acc_num']
     customer_status = customer_data['customer_status']
-    phone = customer_data['phone']
-    email = customer_data['email']
-    street = customer_data['street']
-    city = customer_data['city']
+    phone = customer_data['Phone']
+    email = customer_data['Email']
+    street = customer_data['Street']
+    city = customer_data['City']
     states = customer_data['state_code_id']
-    zipcode = customer_data['zipcode']
+    zipcode = customer_data['Zipcode']
 
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "INSERT INTO customers(business_name, business_hrs, last_name, first_name, cust_acc_num) VALUES ('%s', '%s', '%s', '%s', %s', '%s')" % (
+    sql = "INSERT INTO customers(business_name, business_hrs, last_name, first_name, cust_acc_num) VALUES ('%s', '%s', '%s', '%s', %s, '%s')" % (
         business_name, business_hrs, last_name, first_name, cust_acc_num, customer_status)
 
     execute_query(conn, sql)
@@ -362,7 +362,7 @@ def add_customer():
     customer_id = execute_read_query(conn, sql)
     customer_id = customer_id[0]['customer_id']
 
-    sql = "INSERT INTO customer_contact(Phone, Email, Street, City, state_code_id, zipcode, customer_id ) VALUES (%s, '%s', '%s', '%s', '%s', %s, %s)" % (
+    sql = "INSERT INTO customer_contact(Phone, Email, Street, City, state_code_id, Zipcode, customer_id ) VALUES (%s, '%s', '%s', '%s', '%s', %s, %s)" % (
         phone, email, street, city, states, zipcode, customer_id)
 
     execute_query(conn, sql)
@@ -417,24 +417,24 @@ def update_customer():
 # Vendors Table CRUD
 
 
-@app.route('/vendors', methods=['GET'])
-def get_vendors():
-    conn = create_connection(
-        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "SELECT * FROM vendors"
-    vendors = execute_read_query(conn, sql)
+# @app.route('/vendors', methods=['GET'])
+# def get_vendors():
+#     conn = create_connection(
+#         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+#     sql = "SELECT * FROM vendors"
+#     vendors = execute_read_query(conn, sql)
 
-    sql = """
-        SELECT * FROM states;
-        """
-    states = execute_read_query(conn, sql)
+#     sql = """
+#         SELECT * FROM states;
+#         """
+#     states = execute_read_query(conn, sql)
 
-    sql = """
-        SELECT * FROM roles;
-        """
-    roles = execute_read_query(conn, sql)
+#     sql = """
+#         SELECT * FROM roles;
+#         """
+#     roles = execute_read_query(conn, sql)
 
-    return (vendors, states, roles)
+#     return (vendors, states, roles)
 
 
 # vendors get method working now - Misael
@@ -554,7 +554,6 @@ def update_vendor():
     conn.commit()
     return 'Vendor was updated successfully'
 
- 
 
 # Vendor Inventory Report - report generates a list of all inventory items, grouped by the vendor id the items are procured from.
 
