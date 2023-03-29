@@ -633,5 +633,262 @@ def get_maintenance():
     maintenance = execute_read_query(conn, sql)
     return maintenance
 
+@app.route('/vehicles', methods=['GET'])
+def get_vehicles_info():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT * FROM vehicles"
+    vehicles = execute_read_query(conn, sql)
+    return vehicles
+
+@app.route('/garage', methods=['GET'])
+def get_garage():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT * FROM garage"
+    garage = execute_read_query(conn, sql)
+
+    sql = """
+        SELECT * FROM states;
+        """
+    states = execute_read_query(conn, sql)
+
+
+    return jsonify(garage, states)
+
+#Specifc garage id get for modal info
+@app.route('/garage/<garage_id>', methods=['GET'])
+def get_garage_info(garage_id):
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT * FROM garage WHERE garage_id = %s" % (garage_id)
+    garage = execute_read_query(conn, sql)
+
+    sql = """
+        SELECT * FROM states;
+        """
+    states = execute_read_query(conn, sql)
+
+
+    return jsonify(garage, states)
+
+
+@app.route('/addgarage', methods=['POST'])
+def add_garage():
+    # The user input is gathered in JSON format and stored into an empty variable
+    garage_data = request.get_json()
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    garage_name = garage_data['garage_name']
+    phone_number = garage_data['phone_number']
+    street = garage_data['street']
+    city = garage_data['city']
+    state = garage_data['state_code_id']
+    zipcode = garage_data['zipcode']
+    status = garage_data['status']
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "INSERT INTO garage(garage_name, phone_number, street, city, state, zipcode, status) VALUES ('%s', %s, '%s', '%s', '%s', %s,'%s')" % (
+        garage_name, phone_number, street, city, state, zipcode, status)
+
+    execute_query(conn, sql)
+    return 'Garage was added Successfully'
+
+
+# PUT method for garage
+@app.route('/update_garage', methods=['PUT'])
+def update_garage():
+    # The user input is gathered in JSON format and stored into an empty variable
+    garage_data = request.get_json()
+    # we will be using garage_id to reference the entry to update
+    garage_id = garage_data['garage_id']
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    garage_name = garage_data['garage_name']
+    phone_number = garage_data['phone_number']
+    street = garage_data['street']
+    city = garage_data['city']
+    state_code_id = garage_data['state_code_id']
+    zipcode = garage_data['zipcode']
+    status = garage_data['status']
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    cursor = conn.cursor()
+    sql = "UPDATE garage SET garage_name = %s, phone_number = %s, street = %s, city = %s, state_code_id = %s, zipcode = %s, status = %s WHERE garage_id = %s"
+    val = (garage_name, phone_number, street,
+           city, state_code_id, zipcode,status, garage_id)
+
+    cursor.execute(sql, val)
+    conn.commit()
+    return 'Garage was updated successfully'
+
+@app.route('/addvehicle', methods=['POST'])
+def add_vehicle():
+    # The user input is gathered in JSON format and stored into an empty variable
+    vehicle_data = request.get_json()
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    license_plate = vehicle_data['license_plate']
+    make = vehicle_data['make']
+    model = vehicle_data['model']
+    vin = vehicle_data['vin']
+    status = vehicle_data['status']
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "INSERT INTO vehicles(license_plate, make, model, vin, status) VALUES ('%s', '%s', '%s', '%s')" % (
+        license_plate, make, model, vin,status)
+
+    execute_query(conn, sql)
+    return 'Vehicle was added Successfully'
+
+
+# PUT method for vehicles
+@app.route('/update_vehicle', methods=['PUT'])
+def update_vehicle():
+    # The user input is gathered in JSON format and stored into an empty variable
+    vehicle_data = request.get_json()
+    # we will be using vehicle_id to reference the entry to update
+    vehicle_id = vehicle_data['vehicle_id']
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    license_plate = vehicle_data['license_plate']
+    make = vehicle_data['make']
+    model = vehicle_data['model']
+    vin = vehicle_data['vin']
+    status = vehicle_data['status']
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    cursor = conn.cursor()
+    sql = "UPDATE vehicles SET license_plate = %s, make = %s, model = %s, vin = %s,status = %s WHERE vehicle_id = %s"
+    val = (license_plate, make, model, vin, status, vehicle_id)
+
+    cursor.execute(sql, val)
+    conn.commit()
+    return 'Vehicle was updated successfully'
+
+# Get specific vehicle info with maintenence log data for modal 
+@app.route('/vehicles/<vehicle_id>', methods=['GET'])
+def get_vehicles(vehicle_id):
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = """SELECT v.vehicle_id, v.license_plate, v.make, v.model, v.vin,v.status, ml.log_id, ml.date, ml.status, ml.note, g.garage_name, g.phone_number, g.street, g.city, s.state_code_id, g.zipcode
+            FROM vehicles v
+            JOIN maintenance_logs ml
+            ON v.vehicle_id = ml.vehicle_id
+            JOIN garage AS g
+            ON ml.garage_id = g.garage_id
+            JOIN states s
+            ON g.state_code_id = s.state_code_id
+        WHERE v.vehicle_id = '%s';""" % (vehicle_id)
+    vehicles = execute_read_query(conn, sql)
+
+    sql = """
+         SELECT * FROM states;
+        """
+    states = execute_read_query(conn, sql)
+
+    return jsonify(vehicles, states)
+
+
+# Maintenance_Logs Table CRUD
+
+
+# maintenance get method working now
+# adjust sql as needed - Misael
+@app.route('/maintenance', methods=['GET'])
+def get_maintenance():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT v.license_plate AS 'License Plate', g.garage_name AS 'Garage Name',logs.date AS 'Date', logs.status AS 'Status', logs.note AS 'note' FROM maintenance_logs AS logs INNER JOIN vehicles AS v ON logs.vehicle_id = v.vehicle_id INNER JOIN garage AS g ON logs.garage_id = g.garage_id ORDER BY date DESC;"
+    maintenance = execute_read_query(conn, sql)
+    return maintenance
+
+#Specific maintenance log details for selected row
+@app.route('/maintenance/<log_id>', methods=['GET'])
+def get_maintenance_info(log_id):
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT v.license_plate AS 'License Plate', g.garage_name AS 'Garage Name',logs.date AS 'Date', logs.status AS 'Status', logs.note AS 'note' FROM maintenance_logs AS logs INNER JOIN vehicles AS v ON logs.vehicle_id = v.vehicle_id INNER JOIN garage AS g ON logs.garage_id = g.garage_id ORDER BY date DESC WHERE logs.log_id = %s;" % (log_id)
+    maintenance = execute_read_query(conn, sql)
+    return maintenance
+
+
+@app.route('/addmaintenancelog', methods=['POST'])
+def add_maintenance_log():
+    # The user input is gathered in JSON format and stored into an empty variable
+    log_data = request.get_json()
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    garage_id = log_data['garage_id']
+    vehicle_id = log_data['vehicle_id']
+    date = log_data['date']
+    status = log_data['status']
+    note = log_data['note']
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "INSERT INTO maintenance_logs(garage_id, vehicle_id, date, status, note) VALUES (%s, %s, %s, '%s', '%s')" % (
+        garage_id, vehicle_id, date, status, note)
+
+    execute_query(conn, sql)
+    return 'Maintenance Log was added Successfully'
+
+
+# Maintenance Log by Vehicle - Generates a report for all maintenance logs under a specified vehicle id.
+
+@app.route('/vehiclemaintenancelog/<vehicle_id>', methods=['GET'])
+def get_vehicle_main_log(vehicle_id):
+    selected_vehicle_id = request.get_json()
+    vehicle_id = selected_vehicle_id['vehicle_id']
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT g.garage_name AS 'Garage Name', logs.date AS 'Date', logs.status AS 'Status', logs.note AS 'note' FROM maintenance_logs AS logs INNER JOIN vehicles AS v ON logs.vehicle_id = v.vehicle_id INNER JOIN garage AS g ON logs.garage_id = g.garage_id WHERE v.vehicle_id = %s ORDER BY date DESC;  " % (
+        vehicle_id)
+    vehicle_main_log = execute_read_query(conn, sql)
+    return vehicle_main_log
+
+
+# Maintenance Log by Garage - Generates a report for all maintenance logs under a specified garage id.
+
+@app.route('/garagemaintenancelog/<garage_id>', methods=['GET'])
+def get_garagemain_log(garage_id):
+    selected_garage_id = request.get_json()
+    garage_id = selected_garage_id['garage_id']
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT v.license_plate AS 'License Plate', logs.date AS 'Date', logs.status AS 'Status', logs.note AS 'note' FROM maintenance_logs AS logs INNER JOIN vehicles AS v ON logs.vehicle_id = v.vehicle_id INNER JOIN garage AS g ON logs.garage_id = g.garage_id WHERE g.garage_id = %s ORDER BY date DESC" % (
+        garage_id)
+    garage_main_log = execute_read_query(conn, sql)
+    return garage_main_log
+
+
+# PUT method for maintenance_logs
+@app.route('/update_maintenance_log', methods=['PUT'])
+def update_maintenance_log():
+    # The user input is gathered in JSON format and stored into an empty variable
+    maintenance_data = request.get_json()
+    # we will be using log_id to reference the entry to update
+    log_id = maintenance_data['log_id']
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    garage_id = maintenance_data['garage_id']
+    vehicle_id = maintenance_data['vehicle_id']
+    date = maintenance_data['date']
+    status = maintenance_data['status']
+    note = maintenance_data['note']
+
+    # date format as yyyy-mm-dd(2022-03-04) or mm-dd-yyyy(03-04-2022)
+    fmt_date = str(datetime.strptime(date, '%m-%d-%Y').date())
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    cursor = conn.cursor()
+    sql = "UPDATE maintenance_logs SET garage_id = %s, vehicle_id = %s, date = %s, status = %s, note = %s WHERE log_id = %s"
+    val = (garage_id, vehicle_id, fmt_date, status, note, log_id)
+
+    cursor.execute(sql, val)
+    conn.commit()
+    return 'Maintenance Log was updated successfully'
 
 app.run()
