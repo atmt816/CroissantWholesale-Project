@@ -124,17 +124,17 @@
                 </div>
                 <div class="col-md-6">
                   <label for="lastname" class="form-label">Phone</label>
-                  <input type="phone" class="form-control" name="Phone" id="Phone" value=<%=customer_data[0].Phone %>>
+                  <input type="phone" class="form-control" name="phone" id="phone" value=<%=customer_data[0].phone %>>
                 </div>
                 <div class="col-12">
                   <label for="inputAddress" class="form-label">Business Address</label>
-                  <input type="text" class="form-control" name="Street" id="Street"
-                    value="<%= customer_data[0].Street %>">
+                  <input type="text" class="form-control" name="street" id="street"
+                    value="<%= customer_data[0].street %>">
                 </div>
 
                 <div class="col-md-6">
                   <label for="inputCity" class="form-label">City</label>
-                  <input type="text" class="form-control" name="City" id="City" value="<%= customer_data[0].City %>">
+                  <input type="text" class="form-control" name="city" id="city" value="<%= customer_data[0].city %>">
                 </div>
                 <div class="col-md-4">
                   <label for="inputState" class="form-label">State</label>
@@ -150,8 +150,15 @@
                 </div>
                 <div class="col-md-2">
                   <label for="inputZip" class="form-label">Zip</label>
-                  <input type="text" class="form-control" name="Zipcode" id="Zipcode" value=<%=customer_data[0].Zipcode
+                  <input type="text" class="form-control" name="zipcode" id="zipcode" value=<%=customer_data[0].zipcode
                     %> >
+                </div>
+                <div class="col-md-6">
+                  <label for="inputstatus" class="form-label">Status</label>
+                  <select id="customer_status" name="customer_status" class="form-select">
+                    <option selected>Active</option>
+                    <option>Inactive</option>
+                  </select>
                 </div>
 
 

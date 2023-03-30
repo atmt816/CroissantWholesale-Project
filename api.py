@@ -406,7 +406,7 @@ def update_customer():
 
     # Update customer contacts table
     cursor = conn.cursor()
-    sql = "UPDATE customer_contact SET Phone = %s, Email = %s, Street = %s, City = %s, state_code_id = %s, zipcode = %s WHERE customer_id = %s"
+    sql = "UPDATE customer_contact SET phone = %s, email = %s, street = %s, city = %s, state_code_id = %s, zipcode = %s WHERE customer_id = %s"
     val = (phone, email, street, city, state, zipcode, customer_id)
 
     cursor.execute(sql, val)
