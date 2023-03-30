@@ -828,17 +828,13 @@ def add_order():
 
     customer_id = order_data['customer_id']
     delivery_date = order_data['delivery_date']
-    delivery_phone = order_data['delivery_phone']
-    delivery_street = order_data['delivery_street']
-    delivery_city = order_data['delivery_city']
-    state_code_id = order_data['state_code_id']
-    zipcode = order_data['zipcode']
+    status = order_data['Status']
     line_items = order_data['line_items']
-
+    
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "INSERT INTO orders(date_produced, delivery_date, delivery_phone, delivery_street, delivery_city, state_code_id, zipcode) VALUES (%s, %s, %s, '%s', '%s', '%s', %s)" % (
-        date_produced, delivery_date, delivery_phone, delivery_street, delivery_city, state_code_id, zipcode)
+    sql = "INSERT INTO orders(date_produced, delivery_date, status, customer_id) VALUES (%s, %s, '%s', %s)" % (
+        date_produced, delivery_date, status, customer_id)
     execute_query(conn, sql)
 
     # gets the order id from the above execution
@@ -851,15 +847,24 @@ def add_order():
         customer_id, order_id)
     execute_query(conn, sql)
 
-    cursor = conn.cursor()
-    for product_id, items in line_items.items():
-        for item in items:
-            quantity = item['quantity']
-            price_per_unit = item['price_per_unit']
-            total = item['total']
-            cursor.execute("INSERT INTO line_items (order_id, product_id, quantity, price_per_unit, total) VALUES (%s, %s, %s, %s, %s)",
-                           (order_id, product_id, quantity, price_per_unit, total))
-    conn.commit()
+    sql = "INSERT INTO line_items (order_id, product_id, quantity, price_per_unit, total) VALUES" 
+
+    list_length = len(line_items.items)-1
+    index = 0;
+    for item in line_items.items():
+        product_id = item['product_id']
+        quantity = item['quantity']
+        price_per_unit = item['price_per_unit']
+        total = item['total']
+        sql += " (%s, %s, %s, %s, %s)" % (order_id, product_id, quantity, price_per_unit, total)
+        if index < list_length: 
+            sql += ", "
+        else:
+            index = index + 1
+    execute_query(conn, sql)
+
+
+    
 
     return 'Order was added Successfully'
 
