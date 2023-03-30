@@ -523,6 +523,37 @@ app.get('/garageedit/:id', function (req, res) {
 });
 
 
+app.post('/garage/add', function (req, res) {
+    axios.put('http://127.0.0.1:5000/addgarage',
+        {
+            garage_name: req.body.garage_name,
+            phone_number: req.body.phone_number,
+            street: req.body.street,
+            city: req.body.city,
+            state_code_id: req.body.states,
+            status: req.body.status,
+            garage_hrs: req.body.garage_hrs
+
+
+        }
+    )
+        .then((response) => {
+            axios.get('http://127.0.0.1:5000/garage')
+                .then((response, states) => {
+                    // console.log(response.data)
+                    var garage_data = response.data
+
+                    res.render('pages/garage',
+                        {
+                            garage_data: garage_data
+
+                        });
+                });
+        }
+
+        );
+});
+
 app.post('/garage/update', function (req, res) {
     axios.put('http://127.0.0.1:5000/update_garage',
         {
@@ -539,14 +570,14 @@ app.post('/garage/update', function (req, res) {
         }
     )
         .then((response) => {
-            axios.get('http://127.0.0.1:5000/roles')
+            axios.get('http://127.0.0.1:5000/garage')
                 .then((response, states) => {
                     // console.log(response.data)
-                    var roles_data = response.data
+                    var garage_data = response.data
 
-                    res.render('pages/roles',
+                    res.render('pages/garage',
                         {
-                            roles_data: roles_data
+                            garage_data: garage_data
 
                         });
                 });
