@@ -506,10 +506,6 @@ app.get('/garage', function (req, res) {
 });
 
 
-app.get('/rolesinfo', function (req, res) {
-
-    res.render('pages/rolesinfo');
-});
 
 app.get('/garageedit/:id', function (req, res) {
     const garage_id = req.params.id;
@@ -518,7 +514,7 @@ app.get('/garageedit/:id', function (req, res) {
     ).then((response, states) => {
         var garage_data = response.data
 
-        res.render('pages/garageedu=it',
+        res.render('pages/garageedit',
             {
                 garage_data: garage_data[0]
             });
