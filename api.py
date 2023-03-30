@@ -364,7 +364,7 @@ def add_customer():
     customer_id = customer_id[0]['customer_id']
     # customer_id = request_data['customer_id']
 
-    sql = """INSERT INTO customer_contact(Phone, Email, Street, City, state_code_id, Zipcode, customer_id ) VALUES (%s, %s, '%s', '%s', '%s', '%s', %s)""" % (
+    sql = """INSERT INTO customer_contact(customer_id,  Phone, Email, Street, City, state_code_id, Zipcode ) VALUES (%s, %s, '%s', '%s', '%s', '%s', %s)""" % (
         customer_id, Phone, Email, Street, City, state_code_id, Zipcode)
 
     execute_query(conn, sql)
