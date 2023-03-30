@@ -510,6 +510,7 @@ def add_vendor():
     vendor_id = execute_read_query(conn, sql)
     vendor_id = vendor_id[0]['vendor_id']
     # Stores Customer Contacts Information
+
     sql = """
     INSERT INTO vendor_contacts (vendor_id, phone, email, street, city, state_code_id, zipcode) 
     VALUES (%s, %s, '%s', '%s', '%s','%s', %s)
@@ -546,7 +547,7 @@ def update_vendor():
            vendor_status, vendor_id)
     cursor.execute(sql, val)
 
-    # Update vendor contacts table
+    # Update customer contacts table
     cursor = conn.cursor()
     sql = "UPDATE vendor_contacts SET Phone = %s, Email = %s, Street = %s, City = %s, state_code_id = %s, zipcode = %s WHERE vendor_id = %s"
     val = (phone, email, street, city, state_code_id, zipcode, vendor_id)
@@ -554,7 +555,7 @@ def update_vendor():
     cursor.execute(sql, val)
 
     conn.commit()
-    return 'Vendor was updated successfully'
+    return 'Customer was updated successfully'
 
 
 # Vendor Inventory Report - report generates a list of all inventory items, grouped by the vendor id the items are procured from.
