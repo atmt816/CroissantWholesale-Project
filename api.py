@@ -502,7 +502,7 @@ def add_vendor():
 
     sql = """
     INSERT INTO vendors (vendor_name, vendor_hrs, vendor_account_number, vendor_status) 
-    VALUES ('%s', '%s', %s, %s);
+    VALUES ('%s', '%s', %s, '%s');
     """ % (vendor_name, vendor_hrs, vendor_account_number, vendor_status)
     execute_query(conn, sql)
     # gets the customer id from the above execution
