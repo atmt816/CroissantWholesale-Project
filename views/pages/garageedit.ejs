@@ -17,20 +17,20 @@
   <main class="container pt-5">
     <div class="p-5 mb-4 bg-white rounded-3 top-buffer">
       <h2 class="text-center pb-2">
-        Edit Role
+        Edit Auto Shop
       </h2>
-      <form action="/roles/update" method="post">
+      <form action="/garage/update" method="post">
 
         <div class="col-md-6 mb-3">
-          <input class="form-control" name="garage_id" type="hidden" id="garage_id" value=<%=garage_data.garage_id%>>
-          <label for="role name" class="form-label">Auto Shop Name</label>
-          <input type="text" class="form-control" name="garage_name" id="garage_name" value="<%= garage_data.garage_name %>">
+          <input class="form-control" name="role_id" type="hidden" id="role_id" >
+          <label for="role name" class="form-label">Role Name</label>
+          <input type="text" class="form-control" name="role_name" id="role_name" >
 
         </div>
         <div class="mb-3">
-          <label for="role description" class="form-label">Auto Shop Hours</label>
-          <input type="text" class="form-control" name="garage_hrs" id="garage_hrs"
-            value="<%= garage_data.garage_hrs% %>">
+          <label for="role description" class="form-label">Role Description</label>
+          <input type="text" class="form-control" name="role_description" id="role_description"
+            >
         </div>
         <div class="col-md-6 mb-3">
           <label for="role status" class="form-label">Role Status</label>
@@ -41,7 +41,7 @@
         </div>
 
         <button type="submit" class="btn btn-primary">Update</button>
-        <a class="btn btn-secondary" href="/roles" role="button">Cancel</a>
+        <a class="btn btn-secondary" href="/garage" role="button">Cancel</a>
       </form>
 
 
