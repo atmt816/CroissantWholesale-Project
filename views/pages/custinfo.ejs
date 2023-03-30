@@ -1,142 +1,169 @@
 <head>
-    <%- include('../partials/head'); %>
+  <%- include('../partials/head'); %>
 </head>
 
 
 <style>
-    .top-buffer { margin-top: 60px;}
+  .top-buffer {
+    margin-top: 60px;
+  }
 </style>
 
 <body class="container">
-    <header>
-        <%- include('../partials/header'); %> 
-    </header>
-    
-    <main class="container pt-5"> 
-        <div class="p-5 mb-4 bg-white rounded-3 top-buffer">
-            <h2 class="text-center">
-              Customer Information
-            </h2>
-            <a href="/customers" class="link-primary pb-4">Go Back</a>
-            <h5 class= "pb-1 pt-2">General Information</h5>
-            <div class="container pt-2">
-              <div class="row">
-                <div class="col-sm">
-                  Customer ID
-                  <p class="pt-1"><%= customer_data[0].customer_id %></p>
-                  
-                </div>
-                <div class="col-sm">
-                  Business Name
-                  <p class="pt-1"><%= customer_data[0].business_name %></p>
-                </div>
-                <div class="col-sm">
-                  Customer Name
-                  <p class="pt-1"><%= customer_data[0].first_name %> <%= customer_data[0].last_name %></p>
-                </div>
-              </div>
-            </div>
-            <div class="container pt-5">
-            
-            </div>
-            
-            <hr class="hr hr-blurry" />
-            <h5>Contact Information</h5>
-            <div class="container pt-2">
-              <div class="row">
-                <div class="col-sm">
-                  Phone Number
-                  <p class="pt-1"><%= customer_data[0].phone %></p>
-                </div>
-                <div class="col-sm">
-                  Email
-                  <p class="pt-1"><%= customer_data[0].email %></p>
-                </div>
-                <div class="col-sm pb-5">
-                  Business Address
-                  <p class="pt-1"><%= customer_data[0].street %>, <%= customer_data[0].city %>, <%= customer_data[0].state_code_id %> <%= customer_data[0].zipcode %></p>
-                </div>
-              </div>
-            </div>
-            
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-              Edit
-            </button>
-            <button type="button" class="btn btn-danger">Delete</button>
-            <!-- Modal -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-              <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h4 class="modal-title" id="exampleModalLabel">Edit Customer Information</h4>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body">
-                    <form action="/customers/update" method="post" class="row g-3">
-                      <input class="form-control" name="customer_id" type="hidden" id="customer_id" value=<%=customer_data[0].customer_id%>>
-                      <div class="col-md-6">
-                        <label for="firstname" class="form-label">Business Name</label>
-                        <input type="text" class="form-control" name="business_name" id="business_name"  value=<%= customer_data[0].business_name %>>
-                      </div>
-                      <div class="col-md-6">
-                        <label for="firstname" class="form-label">Business Hours</label>
-                        <input type="text" class="form-control" name="business_hrs" id="business_hrs" value="<%= customer_data[0].business_hrs %>">
-                      </div>
-                      <div class="col-md-6">
-                        <label for="firstname" class="form-label">Account Number</label>
-                        <input type="text" class="form-control" name="cust_acc_num" id="cust_acc_num" value=<%= customer_data[0].cust_acc_num %>>
+  <header>
+    <%- include('../partials/header'); %>
+  </header>
 
-                      </div>
-                      <br>
-                      <div class="col-md-6">
-                        <label for="lastname" class="form-label">Customer First Name</label>
-                        <input type="text" class="form-control" name="first_name" id="first_name" value=<%= customer_data[0].first_name %>>
-                      </div>
-                      <div class="col-md-6">
-                        <label for="lastname" class="form-label">Customer Last Name</label>
-                        <input type="text" class="form-control" name="last_name" id="last_name" value=<%= customer_data[0].last_name %>>
-                      </div>
-                      <div class="col-md-6">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" name="email" id="email" value=<%= customer_data[0].email %>>
-                      </div>
-                      <div class="col-md-6">
-                        <label for="lastname" class="form-label">Phone</label>
-                        <input type="phone" class="form-control" name="phone" id="phone" value=<%= customer_data[0].phone %>>
-                      </div>
-                      <div class="col-12">
-                        <label for="inputAddress" class="form-label">Business Address</label>
-                        <input type="text" class="form-control" name="street" id="street" value="<%= customer_data[0].street %>">
-                      </div>
-      
-                      <div class="col-md-6">
-                        <label for="inputCity" class="form-label">City</label>
-                        <input type="text" class="form-control" name="city" id="city" value="<%= customer_data[0].city %>">
-                      </div>
-                      <div class="col-md-4">
-                        <label for="inputState" class="form-label">State</label>
-                      <select class="form-control" name="states" id="states">
-                        <option value=<%=customer_data[0].state_code_id%>><%=customer_data[0].state_code_id%> </option>
-                          <% states.forEach(function(states) { %>              
-                          <option value="<%=states.state_code_id %>"><%=states.state%></option>
-                        <% }); %>
-                      </select>
-                      </div>
-                      <div class="col-md-2">
-                        <label for="inputZip" class="form-label">Zip</label>
-                        <input type="text" class="form-control" name="zipcode" id="zipcode" value=<%= customer_data[0].zipcode %> >
-                      </div>
-                      
-                    
-                      
-                      
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Update Customer</button>
-                    </form>
+  <main class="container pt-5">
+    <div class="p-5 mb-4 bg-white rounded-3 top-buffer">
+      <h2 class="text-center">
+        Customer Information
+      </h2>
+      <a href="/customers" class="link-primary pb-4">Go Back</a>
+      <h5 class="pb-1 pt-2">General Information</h5>
+      <div class="container pt-2">
+        <div class="row">
+          <div class="col-sm">
+            Customer ID
+            <p class="pt-1">
+              <%= customer_data[0].customer_id %>
+            </p>
 
+          </div>
+          <div class="col-sm">
+            Business Name
+            <p class="pt-1">
+              <%= customer_data[0].business_name %>
+            </p>
+          </div>
+          <div class="col-sm">
+            Customer Name
+            <p class="pt-1">
+              <%= customer_data[0].first_name %>
+                <%= customer_data[0].last_name %>
+            </p>
+          </div>
         </div>
-        
-        </main>
+      </div>
+      <div class="container pt-5">
+
+      </div>
+
+      <hr class="hr hr-blurry" />
+      <h5>Contact Information</h5>
+      <div class="container pt-2">
+        <div class="row">
+          <div class="col-sm">
+            Phone Number
+            <p class="pt-1">
+              <%= customer_data[0].phone %>
+            </p>
+          </div>
+          <div class="col-sm">
+            Email
+            <p class="pt-1">
+              <%= customer_data[0].email %>
+            </p>
+          </div>
+          <div class="col-sm pb-5">
+            Business Address
+            <p class="pt-1">
+              <%= customer_data[0].street %>, <%= customer_data[0].city %>, <%= customer_data[0].state_code_id %>
+                    <%= customer_data[0].zipcode %>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Edit
+      </button>
+      <button type="button" class="btn btn-danger">Delete</button>
+      <!-- Modal -->
+      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title" id="exampleModalLabel">Edit Customer Information</h4>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form action="/customers/update" method="post" class="row g-3">
+                <input class="form-control" name="customer_id" type="hidden" id="customer_id"
+                  value=<%=customer_data[0].customer_id%>>
+                <div class="col-md-6">
+                  <label for="firstname" class="form-label">Business Name</label>
+                  <input type="text" class="form-control" name="business_name" id="business_name"
+                    value=<%=customer_data[0].business_name %>>
+                </div>
+                <div class="col-md-6">
+                  <label for="firstname" class="form-label">Business Hours</label>
+                  <input type="text" class="form-control" name="business_hrs" id="business_hrs"
+                    value="<%= customer_data[0].business_hrs %>">
+                </div>
+                <div class="col-md-6">
+                  <label for="firstname" class="form-label">Account Number</label>
+                  <input type="text" class="form-control" name="cust_acc_num" id="cust_acc_num"
+                    value=<%=customer_data[0].cust_acc_num %>>
+
+                </div>
+                <br>
+                <div class="col-md-6">
+                  <label for="lastname" class="form-label">Customer First Name</label>
+                  <input type="text" class="form-control" name="first_name" id="first_name"
+                    value=<%=customer_data[0].first_name %>>
+                </div>
+                <div class="col-md-6">
+                  <label for="lastname" class="form-label">Customer Last Name</label>
+                  <input type="text" class="form-control" name="last_name" id="last_name"
+                    value=<%=customer_data[0].last_name %>>
+                </div>
+                <div class="col-md-6">
+                  <label for="email" class="form-label">Email</label>
+                  <input type="email" class="form-control" name="email" id="email" value=<%=customer_data[0].email %>>
+                </div>
+                <div class="col-md-6">
+                  <label for="lastname" class="form-label">Phone</label>
+                  <input type="phone" class="form-control" name="Phone" id="Phone" value=<%=customer_data[0].Phone %>>
+                </div>
+                <div class="col-12">
+                  <label for="inputAddress" class="form-label">Business Address</label>
+                  <input type="text" class="form-control" name="Street" id="Street"
+                    value="<%= customer_data[0].Street %>">
+                </div>
+
+                <div class="col-md-6">
+                  <label for="inputCity" class="form-label">City</label>
+                  <input type="text" class="form-control" name="City" id="City" value="<%= customer_data[0].City %>">
+                </div>
+                <div class="col-md-4">
+                  <label for="inputState" class="form-label">State</label>
+                  <select class="form-control" name="states" id="states">
+                    <option value=<%=customer_data[0].state_code_id%>><%=customer_data[0].state_code_id%>
+                    </option>
+                    <% states.forEach(function(states) { %>
+                      <option value="<%=states.state_code_id %>">
+                        <%=states.state%>
+                      </option>
+                      <% }); %>
+                  </select>
+                </div>
+                <div class="col-md-2">
+                  <label for="inputZip" class="form-label">Zip</label>
+                  <input type="text" class="form-control" name="Zipcode" id="Zipcode" value=<%=customer_data[0].Zipcode
+                    %> >
+                </div>
+
+
+
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Update Customer</button>
+              </form>
+
+            </div>
+
+  </main>
 </body>

@@ -264,12 +264,12 @@ app.post('/customers/add', function (req, res) {
             first_name: req.body.first_name,
             cust_acc_num: req.body.cust_acc_num,
             customer_status: req.body.customer_status,
-            phone: req.body.phone,
-            email: req.body.email,
-            street: req.body.street,
-            city: req.body.city,
+            Phone: req.body.Phone,
+            Email: req.body.Email,
+            Street: req.body.Street,
+            City: req.body.City,
             state_code_id: req.body.states,
-            zipcode: req.body.zipcode
+            Zipcode: req.body.Zipcode
 
         }
     )

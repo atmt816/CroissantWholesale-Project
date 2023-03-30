@@ -334,26 +334,27 @@ def get_customer_info(customer_id):
 # Customers Insert Method
 @app.route('/customers/add', methods=['POST'])
 def add_customer():
-    # The user input is gathered in JSON format and stored into an empty variable
-    customer_data = request.get_json()
-    # The JSON object is then separated into variables so that they may be used in a sql query
-    business_name = customer_data['business_name']
-    business_hrs = customer_data['business_hrs']
-    last_name = customer_data['last_name']
-    first_name = customer_data['first_name']
-    cust_acc_num = customer_data['cust_acc_num']
-    customer_status = customer_data['customer_status']
-    phone = customer_data['Phone']
-    email = customer_data['Email']
-    street = customer_data['Street']
-    city = customer_data['City']
-    states = customer_data['state_code_id']
-    zipcode = customer_data['Zipcode']
-
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "INSERT INTO customers(business_name, business_hrs, last_name, first_name, cust_acc_num) VALUES ('%s', '%s', '%s', '%s', %s, '%s')" % (
-        business_name, business_hrs, last_name, first_name, cust_acc_num, customer_status)
+    # The user input is gathered in JSON format and stored into an empty variable
+    request_data = request.get_json()
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    business_name = request_data['business_name']
+    business_hrs = request_data['business_hrs']
+    last_name = request_data['last_name']
+    first_name = request_data['first_name']
+    cust_acc_num = request_data['cust_acc_num']
+    customer_status = request_data['customer_status']
+    Phone = request_data['Phone']
+    Email = request_data['Email']
+    Street = request_data['Street']
+    City = request_data['City']
+    state_code_id = request_data['state_code_id']
+    Zipcode = request_data['Zipcode']
+
+    sql = """
+    INSERT INTO customers (business_name, business_hrs, last_name, first_name, cust_acc_num, customer_status) VALUES ('%s', '%s', '%s', '%s', %s, '%s')
+    """ % (business_name, business_hrs, last_name, first_name, cust_acc_num, customer_status)
 
     execute_query(conn, sql)
 
@@ -361,9 +362,10 @@ def add_customer():
     sql = 'SELECT * FROM customers WHERE customer_id= LAST_INSERT_ID()'
     customer_id = execute_read_query(conn, sql)
     customer_id = customer_id[0]['customer_id']
+    # customer_id = request_data['customer_id']
 
-    sql = "INSERT INTO customer_contact(Phone, Email, Street, City, state_code_id, Zipcode, customer_id ) VALUES (%s, '%s', '%s', '%s', '%s', %s, %s)" % (
-        phone, email, street, city, states, zipcode, customer_id)
+    sql = """INSERT INTO customer_contact(Phone, Email, Street, City, state_code_id, Zipcode, customer_id ) VALUES (%s, %s, '%s', '%s', '%s', '%s', %s)""" % (
+        customer_id, Phone, Email, Street, City, state_code_id, Zipcode)
 
     execute_query(conn, sql)
 
@@ -434,7 +436,7 @@ def update_customer():
 #         """
 #     roles = execute_read_query(conn, sql)
 
-    return jsonify(vendors, states, roles)
+#    return jsonify(vendors, states, roles)
 
 
 # vendors get method working now - Misael
