@@ -345,12 +345,12 @@ def add_customer():
     first_name = request_data['first_name']
     cust_acc_num = request_data['cust_acc_num']
     customer_status = request_data['customer_status']
-    Phone = request_data['Phone']
-    Email = request_data['Email']
-    Street = request_data['Street']
-    City = request_data['City']
+    phone = request_data['Phone']
+    email = request_data['Email']
+    street = request_data['Street']
+    city = request_data['City']
     state_code_id = request_data['state_code_id']
-    Zipcode = request_data['Zipcode']
+    zipcode = request_data['Zipcode']
 
     sql = """
     INSERT INTO customers (business_name, business_hrs, last_name, first_name, cust_acc_num, customer_status) VALUES ('%s', '%s', '%s', '%s', %s, '%s')
@@ -365,7 +365,7 @@ def add_customer():
     # customer_id = request_data['customer_id']
 
     sql = """INSERT INTO customer_contact(customer_id,  Phone, Email, Street, City, state_code_id, Zipcode ) VALUES (%s, %s, '%s', '%s', '%s', '%s', %s)""" % (
-        customer_id, Phone, Email, Street, City, state_code_id, Zipcode)
+        customer_id, phone, email, street, city, state_code_id, zipcode)
 
     execute_query(conn, sql)
 
