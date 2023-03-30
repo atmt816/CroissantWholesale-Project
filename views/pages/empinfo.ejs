@@ -85,7 +85,7 @@
           <div class="col-sm pb-4">
             Address
             <p class="pt-1">
-              <%= employee_data[0].street %>, <%= employee_data[0].city %>, <%= employee_data[0].state_code_id %>
+              <%= employee_data[0].street %> <%= employee_data[0].city %>, <%= employee_data[0].state_code_id %>
                     <%= employee_data[0].zipcode %>
             </p>
           </div>
@@ -183,6 +183,8 @@
 
       </div>
       
-
+      <footer>
+        <%- include('../partials/footer'); %>
+    </footer>
   </main>
 </body>

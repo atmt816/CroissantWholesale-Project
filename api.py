@@ -553,6 +553,7 @@ def add_vendor():
     vendor_id = execute_read_query(conn, sql)
     vendor_id = vendor_id[0]['vendor_id']
     # Stores Customer Contacts Information
+
     sql = """
     INSERT INTO vendor_contacts (vendor_id, phone, email, street, city, state_code_id, zipcode) 
     VALUES (%s, %s, '%s', '%s', '%s','%s', %s)
@@ -624,23 +625,18 @@ def get_invoices():
     return invoices
 
 
-# maintenance get method working now
-# adjust sql as needed - Misael
-@app.route('/maintenance', methods=['GET'])
-def get_maintenance():
-    conn = create_connection(
-        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "SELECT * FROM maintenance_logs"
-    maintenance = execute_read_query(conn, sql)
-    return maintenance
+# # maintenance get method working now
+# # adjust sql as needed - Misael
+# @app.route('/maintenance', methods=['GET'])
+# def get_maintenance():
+#     conn = create_connection(
+#         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+#     sql = "SELECT * FROM maintenance_logs"
+#     maintenance = execute_read_query(conn, sql)
+#     return maintenance
 
-@app.route('/vehicles', methods=['GET'])
-def get_vehicles_info():
-    conn = create_connection(
-        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "SELECT * FROM vehicles"
-    vehicles = execute_read_query(conn, sql)
-    return vehicles
+
+#GARAGE PAGE
 
 @app.route('/garage', methods=['GET'])
 def get_garage():
@@ -724,6 +720,17 @@ def update_garage():
     conn.commit()
     return 'Garage was updated successfully'
 
+# VEHICLES PAGE
+
+
+@app.route('/vehicles', methods=['GET'])
+def get_vehicles():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT * FROM vehicles"
+    vehicles = execute_read_query(conn, sql)
+    return jsonify(vehicles)
+
 @app.route('/addvehicle', methods=['POST'])
 def add_vehicle():
     # The user input is gathered in JSON format and stored into an empty variable
@@ -737,12 +744,23 @@ def add_vehicle():
 
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "INSERT INTO vehicles(license_plate, make, model, vin, status) VALUES ('%s', '%s', '%s', '%s')" % (
-        license_plate, make, model, vin,status)
+    sql = "INSERT INTO vehicles(license_plate, make, model, vin, status) VALUES ('%s', '%s', '%s', '%s', '%s')" % (
+        license_plate, make, model, vin, status)
 
     execute_query(conn, sql)
     return 'Vehicle was added Successfully'
 
+# @app.route('/vehicles/<vehicle_id>', methods=['GET'])
+# def get_vehicles_info(vehicle_id):
+#     conn = create_connection(
+#         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+#     sql = """
+#         SELECT * FROM cid4375.vehicles where vehicle_id = '%s';
+#         """ % (vehicle_id)
+
+#     vehicles = execute_read_query(conn, sql)
+
+#     return jsonify(vehicles)
 
 # PUT method for vehicles
 @app.route('/update_vehicle', methods=['PUT'])
@@ -771,7 +789,7 @@ def update_vehicle():
 
 # Get specific vehicle info with maintenence log data for modal 
 @app.route('/vehicles/<vehicle_id>', methods=['GET'])
-def get_vehicles(vehicle_id):
+def get_vehicles_info(vehicle_id):
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = """SELECT v.vehicle_id, v.license_plate, v.make, v.model, v.vin,v.status, ml.log_id, ml.date, ml.status, ml.note, g.garage_name, g.phone_number, g.street, g.city, s.state_code_id, g.zipcode

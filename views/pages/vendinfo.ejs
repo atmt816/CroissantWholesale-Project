@@ -80,7 +80,7 @@
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
               Edit
             </button>
-            <button type="button" class="btn btn-danger">Delete</button>
+            
             <!-- Modal -->
             <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
               <div class="modal-dialog modal-lg">
@@ -135,6 +135,13 @@
                         <label for="inputZip" class="form-label">Zip code</label>
                         <input type="text" class="form-control" id="zipcode" name="zipcode" value= "<%= vendor_data[0].zipcode %>">
                       </div>
+                      <div class="col-md-6">
+                        <label for="inputstatus" class="form-label">Status</label>
+                        <select id="vendor_status" name="vendor_status" class="form-select">
+                          <option selected>Active</option>
+                          <option>Inactive</option>
+                        </select>
+                      </div>
                       
                       
                   </div>
@@ -144,6 +151,8 @@
                     </form>
 
         </div>
-        
+        <footer>
+          <%- include('../partials/footer'); %>
+      </footer>
         </main>
 </body>

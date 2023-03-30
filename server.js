@@ -424,5 +424,141 @@ app.post('/vendors/update', function (req, res) {
         );
 });
 
+
+//Vehicles PAGE
+
+app.get('/vehicles', function (req, res) {
+    axios.get('http://127.0.0.1:5000/vehicles')
+        .then((response, states) => {
+
+            var vehicles_data = response.data
+
+            res.render('pages/vehicles',
+                {
+                    vehicles_data: vehicles_data
+
+                });
+        });
+});
+
+app.post('/vehicles/add', function (req, res) {
+    axios.post('http://127.0.0.1:5000/addvehicle',
+        {
+            license_plate: req.body.license_plate,
+            make : req.body.make,
+            model : req.body.model,
+            vin : req.body.vin,
+            status : req.body.status
+
+        }
+    )
+        .then((response) => {
+            axios.get('http://127.0.0.1:5000/vehicles')
+                .then((response, states) => {
+                    // console.log(response.data)
+                    var vehicles_data = response.data
+
+                    res.render('pages/vehicles',
+                        {
+                            vehicles_data: vehicles_data
+                         
+                        });
+                });
+        });
+});
+
+app.get('/rolesinfo', function (req, res) {
+
+    res.render('pages/rolesinfo');
+});
+
+app.get('/vehiclesinfo/:id', function (req, res) {
+    const vehicle_id = req.params.id;
+
+    axios.get('http://127.0.0.1:5000/vehicles/' + vehicle_id
+    ).then((response, states) => {
+        var vehicles_data = response.data
+
+        res.render('pages/vehiclesinfo',
+            {
+                vehicles_data: vehicles_data[0]
+            });
+    });
+
+});
+
+//GARAGE PAGE
+
+app.get('/garage', function (req, res) {
+    axios.get('http://127.0.0.1:5000/garage')
+        .then((response, states) => {
+
+            var garage_data = response.data
+
+            res.render('pages/garage',
+                {
+                    garage_data: garage_data[0],
+                    states: garage_data[1]
+                    
+
+                });
+        });
+});
+
+
+app.get('/rolesinfo', function (req, res) {
+
+    res.render('pages/rolesinfo');
+});
+
+app.get('/garageedit/:id', function (req, res) {
+    const garage_id = req.params.id;
+
+    axios.get('http://127.0.0.1:5000/garage/' + garage_id
+    ).then((response, states) => {
+        var garage_data = response.data
+
+        res.render('pages/garageedu=it',
+            {
+                garage_data: garage_data[0]
+            });
+    });
+
+});
+
+
+app.post('/garage/update', function (req, res) {
+    axios.put('http://127.0.0.1:5000/update_garage',
+        {
+            garage_id: req.body.garage_id,
+            garage_name: req.body.garage_name,
+            phone_number: req.body.phone_number,
+            street: req.body.street,
+            city: req.body.city,
+            state_code_id: req.body.states,
+            status: req.body.status,
+            garage_hrs: req.body.garage_hrs
+
+
+        }
+    )
+        .then((response) => {
+            axios.get('http://127.0.0.1:5000/roles')
+                .then((response, states) => {
+                    // console.log(response.data)
+                    var roles_data = response.data
+
+                    res.render('pages/roles',
+                        {
+                            roles_data: roles_data
+
+                        });
+                });
+        }
+
+        );
+});
+
+
 app.listen(3000);
 console.log('3000 is the magic port');

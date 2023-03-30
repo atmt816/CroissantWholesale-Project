@@ -1,0 +1,134 @@
+<head>
+    <%- include('../partials/head'); %>
+  </head>
+  
+  
+  <style>
+    .top-buffer {
+      margin-top: 60px;
+    }
+  </style>
+  
+  <body class="container">
+    <header>
+      <%- include('../partials/header'); %>
+    </header>
+  
+    <main class="container pt-5">
+      <div class="p-5 mb-4 bg-white rounded-3 top-buffer">
+        <h2 class="text-center pb-2">
+          Vehicles
+        </h2>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          Create New Vehicle
+        </button>
+  
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+  
+              <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel">Create New Vehicle Entry</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form action="/vehicles/add" method="post" class="row g-3">
+  
+                  <div class="col-md-6">
+                    <label for="firstname" class="form-label">License Plate</label>
+                    <input class="form-control" type="text" name="license_plate" id="license_plate">
+            
+  
+                  </div>
+                  <div class="col-md-6">
+                    <label for="lastname" class="form-label">Make</label>
+                    <input class="form-control" type="text" name="make" id="make"
+                      placeholder="Car Make">
+                  </div>
+                  <div class="col-md-6">
+                    <label for="inputmodel" class="form-label">Model</label>
+                    <input class="form-control" type="text" name="model" id="model"  placeholder="Car Model">
+                  </div>
+                  <br>
+                  <div class="col-md-6">
+                    <label for="firstname" class="form-label">Vin Number</label>
+                    <input class="form-control" type="text" name="vin" id="vin" placeholder="Ex. John">
+                  </div>
+                  
+                  <div class="col-md-6">
+                    <label for="inputstatus" class="form-label">Status</label>
+                    <select id="status" name="status" class="form-select">
+                      <option selected>Active</option>
+                      <option>Inactive</option>
+                    </select>
+                  </div>
+  
+  
+  
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Create New Vehicle</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">License</th>
+              <th scope="col">Make</th>
+              <th scope="col">Model</th>
+              <th scope="col">Vin</th>
+              <th scope="col">Status</th>
+  
+            </tr>
+          </thead>
+          <tbody>
+            <% vehicles_data.forEach(function(vehicles_data) { %>
+              <tr>
+                <td>
+                  <a style="text-decoration:none" href="/vehiclesinfo/<%= vehicles_data.vehicle_id%>">
+                    <%= vehicles_data.vehicle_id%>
+                  </a>
+                </td>
+                <td>
+                  <a style="text-decoration:none" href="/vehiclesinfo/<%= vehicles_data.vehicle_id%>">
+                    <%= vehicles_data.license_plate%>
+                  </a>
+                </td>
+                <td>
+                  <%= vehicles_data.make%>
+                </td>
+                <td>
+                  <%= vehicles_data.model%>
+                </td>
+                <td>
+                  <%= vehicles_data.vin%>
+                </td>
+                <td>
+                  <%= vehicles_data.status%>
+                </td>
+                
+  
+  
+              </tr>
+              <% }); %>
+  
+          </tbody>
+        </table>
+  
+  
+  
+      </div>
+  
+    </main>
+
+    <footer>
+        <%- include('../partials/footer'); %>
+    </footer>
+  </body>
