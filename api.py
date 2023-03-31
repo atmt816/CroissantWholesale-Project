@@ -912,4 +912,87 @@ def update_maintenance_log():
     conn.commit()
     return 'Maintenance Log was updated successfully'
 
+
+
+############################# PRODUCTS ###################################
+
+# Products Table CRUD
+
+@app.route('/products', methods=['GET'])
+def get_products():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT * FROM products"
+    products = execute_read_query(conn, sql)
+    return jsonify(products)
+
+@app.route('/products/<product_id>', methods=['GET'])
+def get_product_info(product_id):
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = """
+        SELECT * FROM products
+        WHERE product_id = %s;
+        """ % (product_id)
+
+    product = execute_read_query(conn, sql)
+    return jsonify(product)
+
+
+@app.route('/add_product', methods=['POST'])
+def add_product():
+    # The user input is gathered in JSON format and stored into an empty variable
+    product_data = request.get_json()
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    product_name = product_data['product_name']
+    product_status = product_data['product_status']
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "INSERT INTO products(product_name, product_status) VALUES ('%s', '%s')" % (
+        product_name, product_status)
+
+    execute_query(conn, sql)
+    return 'Product was added Successfully'
+
+@app.route('/update_product', methods=['PUT'])
+def update_product():
+    # The user input is gathered in JSON format and stored into an empty variable
+    product_data = request.get_json()
+    
+    product_id = product_data['product_id']
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    product_name = product_data['product_name']
+    product_status = product_data['product_status']
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    cursor = conn.cursor()
+    sql = "UPDATE products SET product_name = %s, product_status = %s WHERE product_id = %s"
+    val = (product_name, product_status, product_id)
+
+    cursor.execute(sql, val)
+    conn.commit()
+    return 'Product was updated successfully'
+
+@app.route('/delete_product', methods=['DELETE'])
+def delete_product():
+    # The user input is gathered in JSON format and stored into an empty variable
+    product_data = request.get_json()
+    
+    product_id = product_data['product_id']
+    
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    sql = "DELETE FROM products WHERE product_id = %s" % (
+        product_id)
+
+    execute_query(conn, sql)
+    return 'Product was deleted successfully'
+
+
+
+
 app.run()
