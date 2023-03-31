@@ -509,7 +509,7 @@ app.post('/maintenance/addlog', function (req, res) {
         }
     )
         .then((response) => {
-            axios.get('http://127.0.0.1:5000/addmaintenancelog')
+            axios.get('http://127.0.0.1:5000/maintenance')
                 .then((response, states) => {
                     // console.log(response.data)
                     var logs_data = response.data

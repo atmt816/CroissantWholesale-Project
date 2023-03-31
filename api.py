@@ -849,7 +849,7 @@ def add_maintenance_log():
 
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "INSERT INTO maintenance_logs(garage_id, vehicle_id, date, status, note) VALUES (%s, %s, %s, '%s', '%s')" % (
+    sql = "INSERT INTO maintenance_logs(garage_id, vehicle_id, date, status, note) VALUES (%s, %s, '%s', '%s', '%s')" % (
         garage_id, vehicle_id, date, status, note)
 
     execute_query(conn, sql)
