@@ -760,81 +760,82 @@ def get_orders():
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "SELECT * FROM orders;"
     orders = execute_read_query(conn, sql)
-    sql = """
-         SELECT * FROM states;
-        """
-    states = execute_read_query(conn, sql)
+
     sql = """
          SELECT * FROM customers;
         """
     customers = execute_read_query(conn, sql)
-    sql = """
-         SELECT * FROM customer_contact;
-        """
-    customer_contact = execute_read_query(conn, sql)
+    
     sql = """
          SELECT * FROM products;
         """
     products = execute_read_query(conn, sql)
 
-    return jsonify(orders, states, customers, customer_contact, products)
-
-
-@app.route('/customerorderinfo/<customer_id>', methods=['GET'])
-def get_customer_order_info(customer_id):
-    conn = create_connection(
-        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = """
-        SELECT * FROM customer_contact
-        WHERE customer_id = '%s';
-        """ % (customer_id)
-
-    customer_order_info = execute_read_query(conn, sql)
-    # print(sql)
-    sql = """
-         SELECT * FROM states;
+         SELECT * FROM line_items;
         """
-    states = execute_read_query(conn, sql)
-
-    sql = """ SELECT * FROM roles;"""
-    roles = execute_read_query(conn, sql)
-
-    return jsonify(customer_order_info, states, roles)
+    line_items = execute_read_query(conn, sql)
 
 
-@app.route('/getcustomerid/<business_name>', methods=['GET'])
-def get_customer_id(business_name):
-    conn = create_connection(
-        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = """
-        SELECT customer_id FROM customers
-        WHERE business_name = '%s';
-        """ % (business_name)
+    return jsonify(orders, customers, products, line_items)
 
-    get_customer_id = execute_read_query(conn, sql)
 
-    return jsonify(get_customer_id)
+# @app.route('/customerorderinfo/<customer_id>', methods=['GET'])
+# def get_customer_order_info(customer_id):
+#     conn = create_connection(
+#         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+#     sql = """
+#         SELECT * FROM customer_contact
+#         WHERE customer_id = '%s';
+#         """ % (customer_id)
+
+#     customer_order_info = execute_read_query(conn, sql)
+#     # print(sql)
+#     sql = """
+#          SELECT * FROM states;
+#         """
+#     states = execute_read_query(conn, sql)
+
+#     sql = """ SELECT * FROM roles;"""
+#     roles = execute_read_query(conn, sql)
+
+#     return jsonify(customer_order_info, states, roles)
+
+
+# @app.route('/getcustomerid/<business_name>', methods=['GET'])
+# def get_customer_id(business_name):
+#     conn = create_connection(
+#         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+#     sql = """
+#         SELECT customer_id FROM customers
+#         WHERE business_name = '%s';
+#         """ % (business_name)
+
+#     get_customer_id = execute_read_query(conn, sql)
+
+#     return jsonify(get_customer_id)
 
 
 @app.route('/addorder', methods=['POST'])
 def add_order():
     # The user input is gathered in JSON format and stored into an empty variable
     order_data = request.get_json()
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
     # The JSON object is then separated into variables so that they may be used in a sql query
     sql = """
-         SELECT CURDATE;
+         SELECT CURDATE();
         """
     date_produced = execute_read_query(conn, sql)
 
     customer_id = order_data['customer_id']
-    delivery_date = order_data['delivery_date']
-    status = order_data['Status']
+    status = order_data['status']
     line_items = order_data['line_items']
+    current_date = date_produced[0]['CURDATE()']
     
-    conn = create_connection(
-        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "INSERT INTO orders(date_produced, delivery_date, status, customer_id) VALUES (%s, %s, '%s', %s)" % (
-        date_produced, delivery_date, status, customer_id)
+    sql = "INSERT INTO orders(date_produced, status, customer_id) VALUES ('%s', '%s', '%s', %s)" % (
+        current_date, status, customer_id)
     execute_query(conn, sql)
 
     # gets the order id from the above execution
@@ -849,9 +850,9 @@ def add_order():
 
     sql = "INSERT INTO line_items (order_id, product_id, quantity, price_per_unit, total) VALUES" 
 
-    list_length = len(line_items.items)-1
+    list_length = len(line_items)-1
     index = 0;
-    for item in line_items.items():
+    for item in line_items:
         product_id = item['product_id']
         quantity = item['quantity']
         price_per_unit = item['price_per_unit']
@@ -859,8 +860,8 @@ def add_order():
         sql += " (%s, %s, %s, %s, %s)" % (order_id, product_id, quantity, price_per_unit, total)
         if index < list_length: 
             sql += ", "
-        else:
             index = index + 1
+
     execute_query(conn, sql)
 
 

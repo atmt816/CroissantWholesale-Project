@@ -345,21 +345,19 @@ app.get('/vendinfo/:id', function (req, res) {
 
     // ORDER PAGE
 
-    app.get('/orders', function (req, res) {
-        axios.get('http://127.0.0.1:5000/orders')
-            .then((response) => {
-                var order_data = response.data
+    // app.get('/orders', function (req, res) {
+    //     axios.get('http://127.0.0.1:5000/orders')
+    //         .then((response) => {
+    //             var order_data = response.data
 
-                res.render('pages/orders',
-                    {
-                        order_data: order_data[0],
-                        states: order_data[1],
-                        customers: order_data[2],
-                        customer_contact: order_data[3],
-                        products: order_data[4]
-                    });
-            });
-    });
+    //             res.render('pages/orders',
+    //                 {
+    //                     order_data: order_data[0],
+    //                     customers: order_data[2],
+    //                     products: order_data[4]
+    //                 });
+    //         });
+    // });
 
 
     app.post('/addorder', function (req, res) {
@@ -472,6 +470,68 @@ app.post('/vendors/update', function (req, res) {
 
         );
 });
+
+
+
+//ORDERS PAGE
+
+app.get('/orders', function (req, res) {
+    axios.get('http://127.0.0.1:5000/orders')
+        .then((response) => {
+            var order_data = response.data
+
+            res.render('pages/orders',
+                {
+                    order_data: order_data[0],
+                    customers: order_data[1],
+                    products: order_data[2]
+                });
+        });
+});
+
+
+app.post('/orders/add', function (req, res) {
+    order : any = new Object();
+    order.customer_id = req.body.customer_id,
+    order.status = req.body.status,
+    order.line_items = [];
+        
+    OrderLineItems = [];
+    console.log(req.body)
+    req.body.line_items.forEach(function(value){
+        L : any = new Object();
+        L.product_id = value.product_id,
+        L.quantity = value.quantity,
+        L.price_per_unit = value.price_per_unit,
+        L.total = value.total
+        OrderLineItems.Push(L)
+    });
+    Order.LineItems = OrderLineItems;
+
+    axios.post('http://127.0.0.1:5000/addorder',
+        {
+               
+        }
+    )
+        .then((response) => {
+            axios.get('http://127.0.0.1:5000/vendors')
+                .then((response, states) => {
+                    // console.log(response.data)
+                    var vendor_data = response.data
+
+                    res.render('pages/vendors',
+                        {
+                            vendor_data: vendor_data[0],
+                            states: vendor_data[1],
+                            roles: vendor_data[2]
+                        });
+                });
+        });
+});
+
+
+
+
 
 app.listen(3000);
 console.log('3000 is the magic port');
