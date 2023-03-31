@@ -34,10 +34,11 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
-                <form class="row g-3">
+                <form action="/orders/add" method="post" class="row g-3"></form>
+                
                   <div class="col-md-4">
-                    <label for="inputState" class="form-label">Select Customer</label>
-                    <select class="form-select" name="customers" id="customers">
+                    <label for="selectcustomer" class="form-label">Select Customer</label>
+                    <select class="form-select" name="customer_id" id="customer_id">
                       
                       <% customers.forEach(function(customers) { %>              
                       <option value=<%=customers.customer_id %>><%=customers.business_name %></option>
@@ -45,21 +46,17 @@
                   </select>
                   </div>
                   <div class="col-md-6">
-                    <label for="inputRole" class="form-label">Role Status</label>
-                    <select id="role_status" name="role_status" id="role_status" class="form-select">
+                    <label for="inputstatus" class="form-label">Order Status</label>
+                    <select name="status" id="status" class="form-select">
                       <option selected>In-Progress</option>
                       <option>Delivered</option>
                       <option>Cancelled</option>
                     </select>
-                  
-                  
-                 
-                  
-                  
+
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Create New Order</button>
+                <button type="submit" class="btn btn-primary">Create New Order</button>
                 </form>
               </div>
             </div>
@@ -71,6 +68,7 @@
             <tr>
               <th scope="col">Order #</th>
               <th scope="col">Order Date</th>
+              <th scope="col">Customer</th>
               <th scope="col">Delivery Date</th>
               <th scope="col">Status</th>
               <th scope="col">Total</th>
@@ -91,18 +89,15 @@
                   </a>
                 </td>
                 <td>
+                  <%= order_data.customer_id%>
+                </td>
+                <td>
                   <%= order_data.delivery_date%>
                 </td>
                 <td>
-                  <%= employee_data.end_date%>
+                  <%= order_data.status%>
                 </td>
-                <td>
-                  <%= employee_data.emp_status%>
-                </td>
-                <td>
-                  <%= employee_data.role_name%>
-                </td>
-  
+                
   
   
               </tr>

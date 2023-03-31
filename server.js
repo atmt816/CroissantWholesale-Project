@@ -484,7 +484,8 @@ app.get('/orders', function (req, res) {
                 {
                     order_data: order_data[0],
                     customers: order_data[1],
-                    products: order_data[2]
+                    products: order_data[2],
+                    line_items: order_data[3]
                 });
         });
 });
@@ -510,20 +511,22 @@ app.post('/orders/add', function (req, res) {
 
     axios.post('http://127.0.0.1:5000/addorder',
         {
-               
+            customer_id : order.customer_id,
+            status : order.status
         }
     )
         .then((response) => {
-            axios.get('http://127.0.0.1:5000/vendors')
+            axios.get('http://127.0.0.1:5000/orders')
                 .then((response, states) => {
                     // console.log(response.data)
-                    var vendor_data = response.data
+                    var order_data = response.data
 
                     res.render('pages/vendors',
                         {
-                            vendor_data: vendor_data[0],
-                            states: vendor_data[1],
-                            roles: vendor_data[2]
+                            order_data: order_data[0],
+                            customers: order_data[1],
+                            products: order_data[2],
+                            line_items: order_data[3]
                         });
                 });
         });
