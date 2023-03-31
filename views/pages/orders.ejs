@@ -1,57 +1,58 @@
 <head>
-    <%- include('../partials/head'); %>
+  <%- include('../partials/head'); %>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-  </head>
-  
-  
-  <style>
-    .top-buffer {
-      margin-top: 60px;
-    }
-  </style>
-  
-  <body class="container">
-    <header>
-      <%- include('../partials/header'); %>
-    </header>
-  
-    <main class="container pt-5">
-      <div class="p-5 mb-4 bg-white rounded-3 top-buffer">
-        <h2 class="text-center pb-2">
-          Orders
-        </h2>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-          Create New Order
-        </button>
-  
-        <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h4 class="modal-title" id="exampleModalLabel">Create New Order</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</head>
+
+
+<style>
+  .top-buffer {
+    margin-top: 60px;
+  }
+</style>
+
+<body class="container">
+  <header>
+    <%- include('../partials/header'); %>
+  </header>
+
+  <main class="container pt-5">
+    <div class="p-5 mb-4 bg-white rounded-3 top-buffer">
+      <h2 class="text-center pb-2">
+        Orders
+      </h2>
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Create New Order
+      </button>
+
+      <!-- Modal -->
+      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title" id="exampleModalLabel">Create New Order</h4>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form action="/orders/add" method="post" class="row g-3"></form>
+
+              <div class="col-md-4">
+                <label for="selectcustomer" class="form-label">Select Customer</label>
+                <select class="form-select" name="customer_id" id="customer_id">
+
+                  <% customers.forEach(function(customers) { %>
+                    <option value=<%=customers.customer_id %>><%=customers.business_name %>
+                    </option>
+                    <% }); %>
+                </select>
               </div>
-              <div class="modal-body">
-                <form action="/orders/add" method="post" class="row g-3"></form>
-                
-                  <div class="col-md-4">
-                    <label for="selectcustomer" class="form-label">Select Customer</label>
-                    <select class="form-select" name="customer_id" id="customer_id">
-                      
-                      <% customers.forEach(function(customers) { %>              
-                      <option value=<%=customers.customer_id %>><%=customers.business_name %></option>
-                      <% }); %>
-                  </select>
-                  </div>
-                  <div class="col-md-6">
-                    <label for="inputstatus" class="form-label">Order Status</label>
-                    <select name="status" id="status" class="form-select">
-                      <option selected>In-Progress</option>
-                      <option>Delivered</option>
-                      <option>Cancelled</option>
-                    </select>
+              <div class="col-md-6">
+                <label for="inputstatus" class="form-label">Order Status</label>
+                <select name="status" id="status" class="form-select">
+                  <option selected>In-Progress</option>
+                  <option>Delivered</option>
+                  <option>Cancelled</option>
+                </select>
 
               </div>
               <div class="modal-footer">
@@ -62,56 +63,58 @@
             </div>
           </div>
         </div>
-  </div>
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th scope="col">Order #</th>
-              <th scope="col">Order Date</th>
-              <th scope="col">Customer</th>
-              <th scope="col">Delivery Date</th>
-              <th scope="col">Status</th>
-              <th scope="col">Total</th>
-              
-            </tr>
-          </thead>
-          <tbody>
-            <% order_data.forEach(function(order_data) { %>
-              <tr>
-                <td>
-                  <a style="text-decoration:none" >
-                    <%= order_data.order_id%>
-                  </a>
-                </td>
-                <td>
-                  <a style="text-decoration:none" >
-                    <%= order_data.date_produced%>
-                  </a>
-                </td>
-                <td>
-                  <%= order_data.customer_id%>
-                </td>
-                <td>
-                  <%= order_data.delivery_date%>
-                </td>
-                <td>
-                  <%= order_data.status%>
-                </td>
-                
-  
-  
-              </tr>
-              <% }); %>
-  
-          </tbody>
-        </table>
-  
-  
-  
       </div>
-  
-    </main>
-    <!-- <script>
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col">Order #</th>
+            <th scope="col">Order Date</th>
+            <th scope="col">Customer</th>
+            <th scope="col">Delivery Date</th>
+            <th scope="col">Status</th>
+            <th scope="col">Total</th>
+
+          </tr>
+        </thead>
+        <tbody>
+          <% order_data.forEach(function(order_data) { %>
+            <tr>
+              <td>
+                <a style="text-decoration:none">
+                  <%= order_data.order_id%>
+                </a>
+              </td>
+              <td>
+                <a style="text-decoration:none">
+                  <%= order_data.date_produced%>
+                </a>
+              </td>
+              <td>
+                <%= order_data.customer_id%>
+              </td>
+              <td>
+                <%= order_data.delivery_date%>
+              </td>
+              <td>
+                <%= order_data.status%>
+              </td>
+              <td>
+                <%= order_data.total%>
+              </td>
+
+
+            </tr>
+            <% }); %>
+
+        </tbody>
+      </table>
+
+
+
+    </div>
+
+  </main>
+  <!-- <script>
       $('#customers').on('click', function() {
          var business_name = $(this).val();
          var customer_id = get_customer_id(business_name);
@@ -139,4 +142,4 @@
        });
      }
       </script>  -->
-  </body>
+</body>
