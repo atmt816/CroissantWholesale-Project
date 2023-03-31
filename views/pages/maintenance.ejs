@@ -1,0 +1,131 @@
+<head>
+    <%- include('../partials/head'); %>
+  </head>
+  
+  
+  <style>
+    .top-buffer {
+      margin-top: 60px;
+    }
+  </style>
+  
+  <body class="container">
+    <header>
+      <%- include('../partials/header'); %>
+    </header>
+  
+    <main class="container pt-5">
+      <div class="p-5 mb-4 bg-white rounded-3 top-buffer">
+        <h2 class="text-center pb-2">
+          Maintenance Logs
+        </h2>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          Create New Maintenance Log
+        </button>
+  
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+  
+              <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel">Create New Maintenance Log</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form action="/maintenance/addlog" method="post" class="row g-3">
+  
+                  <div class="col-md-6">
+                    <label for="firstname" class="form-label">Garage ID</label>
+                    <input class="form-control" type="text" name="garage_id" id="garage_id">
+            
+  
+                  </div>
+                  <div class="col-md-6">
+                    <label for="lastname" class="form-label">Vehicle ID</label>
+                    <input class="form-control" type="text" name="vehicle_id" id="vehicle_id"
+                      placeholder="Car Make">
+                  </div>
+                  <div class="col-md-6">
+                    <label for="inputmodel" class="form-label">Date</label>
+                    <input class="form-control" type="text" name="date" id="date"  placeholder="Date">
+                  </div>
+                  <br>
+                  <div class="col-md-6">
+                    <label for="firstname" class="form-label">Vehicle Status</label>
+                    <input class="form-control" type="text" name="status" id="status" placeholder="Ex. Good condition">
+                  </div>
+                  
+                  <div class="col-md-6">
+                    <label for="firstname" class="form-label">Additional Notes</label>
+                    <input class="form-control" type="text" name="note" id="note" placeholder="Ex. Next oil check in 6 weeks">
+                  </div>
+  
+  
+  
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Create New Maintenance Log</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">License</th>
+              <th scope="col">Garage</th>
+              <th scope="col">Date</th>
+              <th scope="col">Vehicle Status</th>
+              <th scope="col">Additional Notes</th>
+  
+            </tr>
+          </thead>
+          <tbody>
+            <% logs_data.forEach(function(logs_data) { %>
+              <tr>
+                <td>
+                    <a style="text-decoration:none" href="/maintenanceinfo/<%= logs_data.log_id%>">
+                        <%= logs_data.log_id%>
+                      </a>
+                </td>
+                <td>
+                  
+                    <%= logs_data.license_plate%>
+                  
+                </td>
+                <td>
+                  <%= logs_data.garage_name%>
+                </td>
+                <td>
+                  <%= logs_data.date%>
+                </td>
+                <td>
+                  <%= logs_data.status%>
+                </td>
+                <td>
+                  <%= logs_data.note%>
+                </td>
+                
+  
+  
+              </tr>
+              <% }); %>
+  
+          </tbody>
+        </table>
+  
+  
+  
+      </div>
+  
+    </main>
+
+    <footer>
+        <%- include('../partials/footer'); %>
+    </footer>
+  </body>

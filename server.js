@@ -467,11 +467,6 @@ app.post('/vehicles/add', function (req, res) {
         });
 });
 
-app.get('/rolesinfo', function (req, res) {
-
-    res.render('pages/rolesinfo');
-});
-
 app.get('/vehiclesinfo/:id', function (req, res) {
     const vehicle_id = req.params.id;
 
@@ -482,6 +477,63 @@ app.get('/vehiclesinfo/:id', function (req, res) {
         res.render('pages/vehiclesinfo',
             {
                 vehicles_data: vehicles_data[0]
+            });
+    });
+
+});
+
+//Maintenance Page
+app.get('/maintenance', function (req, res) {
+    axios.get('http://127.0.0.1:5000/maintenance')
+        .then((response, states) => {
+
+            var logs_data = response.data
+
+            res.render('pages/maintenance',
+                {
+                    logs_data: logs_data
+
+                });
+        });
+});
+
+app.post('/maintenance/addlog', function (req, res) {
+    axios.post('http://127.0.0.1:5000/addmaintenancelog',
+        {
+            garage_id: req.body.garage_id,
+            vehicle_id : req.body.vehicle_id,
+            date : req.body.date,
+            status : req.body.status,
+            note : req.body.note
+
+        }
+    )
+        .then((response) => {
+            axios.get('http://127.0.0.1:5000/addmaintenancelog')
+                .then((response, states) => {
+                    // console.log(response.data)
+                    var logs_data = response.data
+
+                    res.render('pages/maintenance',
+                        {
+                            logs_data: logs_data
+                         
+                        });
+                });
+        });
+});
+
+
+app.get('/maintenanceinfo/:id', function (req, res) {
+    const log_id = req.params.id;
+
+    axios.get('http://127.0.0.1:5000/maintenance/' + log_id
+    ).then((response, states) => {
+        var logs_data = response.data
+
+        res.render('pages/vehiclesinfo',
+            {
+                logs_data: logs_data[0]
             });
     });
 
