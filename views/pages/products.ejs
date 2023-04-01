@@ -1,0 +1,106 @@
+<head>
+    <%- include('../partials/head'); %>
+  </head>
+  
+  
+  <style>
+    .top-buffer {
+      margin-top: 60px;
+    }
+  </style>
+  
+  <body class="container">
+    <header>
+      <%- include('../partials/header'); %>
+    </header>
+  
+    <main class="container pt-5">
+      <div class="p-5 mb-4 bg-white rounded-3 top-buffer">
+        <h2 class="text-center pb-2">
+          Products
+        </h2>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          Create New Product
+        </button>
+  
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel">Create New Product</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form action="/add_product" method="post" class="row g-3">
+  
+                  <div class="col-md-6">
+                    <label for="product_name" class="form-label">Product Name</label>
+                    <input type="text" class="form-control" name="product_name" id="product_name" placeholder="Croissants">
+                  </div>
+                  <div class="col-md-6">
+                    <label for="product_status" class="form-label">Role Status</label>
+                    <select id="product_status" name="product_status" id="product_status" class="form-select">
+                      <option selected>Active</option>
+                      <option>Inactive</option>
+                    </select>
+                  </div>
+  
+  
+  
+  
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Create New Product</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Product Name</th>
+              <th scope="col">Status</th>
+  
+  
+            </tr>
+          </thead>
+          <tbody>
+            <% products_data.forEach(function(products_data) { %>
+              <tr>
+                <td>
+                  <a>
+                    <%= products_data.product_id%>
+                  </a>
+                </td>
+                <td>
+                  <a>
+                    <%= products_data.product_name%>
+                  </a>
+                </td>
+                <td>
+                  <a>
+                    <%= products_data.product_status%>
+                  </a>
+                </td>
+                <td>
+                  <a style="text-decoration:none" href="/productsinfo/<%= products_data.product_id%>""> Edit</a>
+                  </td>
+                  
+    
+                </tr>
+                <% }); %>
+    
+            </tbody>
+          </table>
+  
+    
+        </div>
+        <footer>
+          <%- include('../partials/footer'); %>
+      </footer>
+      </main>
+    </body>
