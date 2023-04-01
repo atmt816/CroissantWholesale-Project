@@ -758,14 +758,15 @@ def update_line_item():
 def get_orders():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "SELECT * FROM orders;"
+    # sql = "SELECT * FROM orders;"
+    sql = "Select o.order_id, o.date_produced, o.delivery_date, o.status, o.customer_id, l.item_id, l.product_id, l.quantity, l.price_per_unit, l.total FROM orders AS o JOIN line_items AS l ON o.order_id = l.order_id"
     orders = execute_read_query(conn, sql)
 
     sql = """
          SELECT * FROM customers;
         """
     customers = execute_read_query(conn, sql)
-    
+
     sql = """
          SELECT * FROM products;
         """
@@ -775,7 +776,6 @@ def get_orders():
          SELECT * FROM line_items;
         """
     line_items = execute_read_query(conn, sql)
-
 
     return jsonify(orders, customers, products, line_items)
 
@@ -833,7 +833,7 @@ def add_order():
     status = order_data['status']
     line_items = order_data['line_items']
     current_date = date_produced[0]['CURDATE()']
-    
+
     sql = "INSERT INTO orders(date_produced, status, customer_id) VALUES ('%s', '%s', '%s', %s)" % (
         current_date, status, customer_id)
     execute_query(conn, sql)
@@ -848,24 +848,22 @@ def add_order():
         customer_id, order_id)
     execute_query(conn, sql)
 
-    sql = "INSERT INTO line_items (order_id, product_id, quantity, price_per_unit, total) VALUES" 
+    sql = "INSERT INTO line_items (order_id, product_id, quantity, price_per_unit, total) VALUES"
 
     list_length = len(line_items)-1
-    index = 0;
+    index = 0
     for item in line_items:
         product_id = item['product_id']
         quantity = item['quantity']
         price_per_unit = item['price_per_unit']
         total = item['total']
-        sql += " (%s, %s, %s, %s, %s)" % (order_id, product_id, quantity, price_per_unit, total)
-        if index < list_length: 
+        sql += " (%s, %s, %s, %s, %s)" % (order_id,
+                                          product_id, quantity, price_per_unit, total)
+        if index < list_length:
             sql += ", "
             index = index + 1
 
     execute_query(conn, sql)
-
-
-    
 
     return 'Order was added Successfully'
 
