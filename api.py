@@ -857,8 +857,7 @@ def add_order():
         quantity = item['quantity']
         price_per_unit = item['price_per_unit']
         total = item['total']
-        sql += " (%s, %s, %s, %s, %s)" % (order_id,
-                                          product_id, quantity, price_per_unit, total)
+        sql += " (%s, %s, %s, %s, %s)" % (order_id, product_id, quantity, price_per_unit, total)
         if index < list_length:
             sql += ", "
             index = index + 1

@@ -498,7 +498,7 @@ app.post('/orders/add', function (req, res) {
         {
             customer_id : req.body.customer_id,
             status : req.body.status,
-            // line_items: req.body.line_items
+            line_items: req.body.line_items
 
         }
     )

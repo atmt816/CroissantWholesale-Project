@@ -53,11 +53,38 @@
                   <option>Delivered</option>
                   <option>Cancelled</option>
                 </select>
+                
+                <div id="line_items">
+                  <h2>Line Items</h2>
+              
+                  <div class="line_item">
+                    <label for="product_id">Product:</label>
+                    <select class="form-control" id="product_id" name="line_items[0][product_id]">
+                      <% products.forEach(function(products) { %>
+                        <option value=<%=products.product_id %>><%=products.product_name %>
+                        </option>
+                        <% }); %>
+                    </select>
+                     
+                    <label for="quantity">Quantity:</label>
+                    <input type="text" class="form-control"  name="line_items[0][quantity]">
+
+                    <label for="price_per_unit">Price Per Unit:</label>
+                    <input type="text" class="form-control"  name="line_items[0][price_per_unit]">
+                    
+                    <label for="price_per_unit">Price Per Unit:</label>
+                    <input type="text" class="form-control"  name="line_items[0][total]">
+                    
+                  </div>
+                </div>
+              
+                <button type="button" class="btn btn-primary" id="add_line_item">Add Line Item</button>
 
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="submit" class="btn btn-primary">Create New Order</button>
+
                 </form>
               </div>
             </div>
@@ -114,32 +141,43 @@
     </div>
 
   </main>
-  <!-- <script>
-      $('#customers').on('click', function() {
-         var business_name = $(this).val();
-         var customer_id = get_customer_id(business_name);
-         get_customer_email(customer_id);
-      });
+  <script>
+  //gets the element object by id(add_line_item), to be used as an event listener so that you can add new line items
+  const addLineItemButton = document.getElementById('add_line_item');
+  //gets the line item id element 
+  const lineItemsContainer = document.getElementById('line_items');
+  
+  //this is the start of counter after the first one that is originally on the modal
+  let lineItemCount = 1;
+  //event on click listener to add a new line item
+  addLineItemButton.addEventListener('click', () => {
+    //Add a div for the line items
+    const lineItemDiv = document.createElement('div');
+    //classList returns a live collection 
+    lineItemDiv.classList.add('line_item');
 
-      function get_customer_id(business_name) {
-        axios.get('/getcustomerid/' + business_name)
-          .then(function(response) {
-           console.log(business_name)
-         })
-       .catch(function(error) {
-           console.log(error);
-       });
-     }
- 
-      function get_customer_email(customer_id) {
-        axios.get('/customerorderinfo/' + customer_id)
-          .then(function(response) {
-           console.log(customer_id)
-           $('#email').val(response.data.email);
-         })
-       .catch(function(error) {
-           console.log(error);
-       });
-     }
-      </script>  -->
+    lineItemDiv.innerHTML = `
+      <label for="product_id">Product:</label>
+      <select class="form-control" id="product_id" name="line_items[${lineItemCount}][product_id]">
+        <% products.forEach(function(products) { %>
+          <option value=<%=products.product_id %>><%=products.product_name %>
+          </option>
+          <% }); %>
+      </select>
+
+      <label for="quantity">Quantity:</label>
+      <input type="text" class="form-control"  name="line_items[${lineItemCount}][quantity]">
+
+      <label for="price_per_unit">Price Per Unit:</label>
+      <input type="text" class="form-control"  name="line_items[${lineItemCount}][price_per_unit]">
+
+      <label for="price_per_unit">Price Per Unit:</label>
+      <input type="text" class="form-control"  name="line_items[${lineItemCount}][total]">
+    `;
+
+    lineItemsContainer.appendChild(lineItemDiv);
+    lineItemCount++;
+  });
+    </script>
+    
 </body>
