@@ -824,7 +824,7 @@ def get_maintenance():
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "SELECT logs.log_id, v.license_plate, g.garage_name ,logs.date, logs.status, logs.note FROM maintenance_logs AS logs INNER JOIN vehicles AS v ON logs.vehicle_id = v.vehicle_id INNER JOIN garage AS g ON logs.garage_id = g.garage_id ORDER BY date DESC;"
     maintenance = execute_read_query(conn, sql)
-    return maintenance
+    return jsonify(maintenance)
 
 #Specific maintenance log details for selected row
 @app.route('/maintenance/<log_id>', methods=['GET'])
@@ -833,7 +833,7 @@ def get_maintenance_info(log_id):
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "SELECT v.license_plate AS 'License Plate', g.garage_name AS 'Garage Name',logs.date AS 'Date', logs.status AS 'Status', logs.note AS 'note' FROM maintenance_logs AS logs INNER JOIN vehicles AS v ON logs.vehicle_id = v.vehicle_id INNER JOIN garage AS g ON logs.garage_id = g.garage_id ORDER BY date DESC WHERE logs.log_id = %s;" % (log_id)
     maintenance = execute_read_query(conn, sql)
-    return maintenance
+    return jsonify(maintenance)
 
 
 @app.route('/addmaintenancelog', methods=['POST'])
@@ -867,7 +867,7 @@ def get_vehicle_main_log(vehicle_id):
     sql = "SELECT g.garage_name AS 'Garage Name', logs.date AS 'Date', logs.status AS 'Status', logs.note AS 'note' FROM maintenance_logs AS logs INNER JOIN vehicles AS v ON logs.vehicle_id = v.vehicle_id INNER JOIN garage AS g ON logs.garage_id = g.garage_id WHERE v.vehicle_id = %s ORDER BY date DESC;  " % (
         vehicle_id)
     vehicle_main_log = execute_read_query(conn, sql)
-    return vehicle_main_log
+    return jsonify(vehicle_main_log)
 
 
 # Maintenance Log by Garage - Generates a report for all maintenance logs under a specified garage id.
@@ -881,7 +881,7 @@ def get_garagemain_log(garage_id):
     sql = "SELECT v.license_plate AS 'License Plate', logs.date AS 'Date', logs.status AS 'Status', logs.note AS 'note' FROM maintenance_logs AS logs INNER JOIN vehicles AS v ON logs.vehicle_id = v.vehicle_id INNER JOIN garage AS g ON logs.garage_id = g.garage_id WHERE g.garage_id = %s ORDER BY date DESC" % (
         garage_id)
     garage_main_log = execute_read_query(conn, sql)
-    return garage_main_log
+    return jsonify(garage_main_log)
 
 
 # PUT method for maintenance_logs
