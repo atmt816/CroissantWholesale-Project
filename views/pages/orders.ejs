@@ -34,8 +34,8 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <form action="/orders/add" method="post" class="row g-3"></form>
-
+              <form action="/orders/add" method="post" class="row g-3">
+                
               <div class="col-md-4">
                 <label for="selectcustomer" class="form-label">Select Customer</label>
                 <select class="form-select" name="customer_id" id="customer_id">
@@ -99,7 +99,7 @@
             <th scope="col">Customer</th>
             <th scope="col">Delivery Date</th>
             <th scope="col">Status</th>
-            <th scope="col">Total</th>
+            
 
           </tr>
         </thead>
@@ -125,11 +125,7 @@
               <td>
                 <%= order_data.status%>
               </td>
-              <td>
-                <%= order_data.total%>
-              </td>
-
-
+              
             </tr>
             <% }); %>
 
@@ -153,7 +149,8 @@
   addLineItemButton.addEventListener('click', () => {
     //Add a div for the line items
     const lineItemDiv = document.createElement('div');
-    //classList returns a live collection 
+    //classList returns a live collection of css
+    //add(line_item) is a method that inserts new element with a specified value 
     lineItemDiv.classList.add('line_item');
 
     lineItemDiv.innerHTML = `

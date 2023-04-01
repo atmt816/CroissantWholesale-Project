@@ -759,7 +759,7 @@ def get_orders():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     # sql = "SELECT * FROM orders;"
-    sql = "Select o.order_id, o.date_produced, o.delivery_date, o.status, o.customer_id, l.item_id, l.product_id, l.quantity, l.price_per_unit, l.total FROM orders AS o JOIN line_items AS l ON o.order_id = l.order_id"
+    sql = "SELECT * FROM orders;"
     orders = execute_read_query(conn, sql)
 
     sql = """
@@ -834,7 +834,7 @@ def add_order():
     line_items = order_data['line_items']
     current_date = date_produced[0]['CURDATE()']
 
-    sql = "INSERT INTO orders(date_produced, status, customer_id) VALUES ('%s', '%s', '%s', %s)" % (
+    sql = "INSERT INTO orders(date_produced, status, customer_id) VALUES ('%s', '%s', %s)" % (
         current_date, status, customer_id)
     execute_query(conn, sql)
 
