@@ -568,7 +568,8 @@ app.get('/garageedit/:id', function (req, res) {
 
         res.render('pages/garageedit',
             {
-                garage_data: garage_data[0]
+                garage_data: garage_data[0],
+                states: garage_data[1]
             });
     });
 
@@ -583,6 +584,7 @@ app.post('/garage/add', function (req, res) {
             street: req.body.street,
             city: req.body.city,
             state_code_id: req.body.states,
+            zipcode: req.body.zipcode,
             status: req.body.status,
             garage_hrs: req.body.garage_hrs
 
@@ -615,6 +617,7 @@ app.post('/garage/update', function (req, res) {
             street: req.body.street,
             city: req.body.city,
             state_code_id: req.body.states,
+            zipcode: req.body.zipcode,
             status: req.body.status,
             garage_hrs: req.body.garage_hrs
 

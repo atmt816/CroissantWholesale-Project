@@ -716,7 +716,7 @@ def update_garage():
     cursor = conn.cursor()
     sql = "UPDATE garage SET garage_name = %s, phone_number = %s, street = %s, city = %s, state_code_id = %s, zipcode = %s, status = %s WHERE garage_id = %s"
     val = (garage_name, phone_number, street,
-           city, state_code_id, zipcode,status, garage_id)
+           city, state_code_id, zipcode ,status , garage_id)
 
     cursor.execute(sql, val)
     conn.commit()
