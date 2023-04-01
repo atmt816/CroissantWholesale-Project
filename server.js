@@ -568,7 +568,8 @@ app.get('/garageedit/:id', function (req, res) {
 
         res.render('pages/garageedit',
             {
-                garage_data: garage_data[0]
+                garage_data: garage_data[0],
+                states: garage_data[1]
             });
     });
 
@@ -576,13 +577,14 @@ app.get('/garageedit/:id', function (req, res) {
 
 
 app.post('/garage/add', function (req, res) {
-    axios.put('http://127.0.0.1:5000/addgarage',
+    axios.post('http://127.0.0.1:5000/addgarage',
         {
             garage_name: req.body.garage_name,
-            phone_number: req.body.phone_number,
+            phone: req.body.phone,
             street: req.body.street,
             city: req.body.city,
             state_code_id: req.body.states,
+            zipcode: req.body.zipcode,
             status: req.body.status,
             garage_hrs: req.body.garage_hrs
 
@@ -597,7 +599,8 @@ app.post('/garage/add', function (req, res) {
 
                     res.render('pages/garage',
                         {
-                            garage_data: garage_data
+                            garage_data: garage_data[0],
+                            states: garage_data[1]
 
                         });
                 });
@@ -611,10 +614,11 @@ app.post('/garage/update', function (req, res) {
         {
             garage_id: req.body.garage_id,
             garage_name: req.body.garage_name,
-            phone_number: req.body.phone_number,
+            phone: req.body.phone,
             street: req.body.street,
             city: req.body.city,
             state_code_id: req.body.states,
+            zipcode: req.body.zipcode,
             status: req.body.status,
             garage_hrs: req.body.garage_hrs
 
@@ -629,7 +633,8 @@ app.post('/garage/update', function (req, res) {
 
                     res.render('pages/garage',
                         {
-                            garage_data: garage_data
+                            garage_data: garage_data[0],
+                            states: garage_data[1]
 
                         });
                 });
