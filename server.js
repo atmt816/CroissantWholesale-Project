@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const axios = require('axios');
 const { response } = require('express');
 const req = require('express/lib/request');
+const { type } = require('express/lib/response');
 var selectedID = "";
 app.use(bodyParser.urlencoded());
 app.set('view engine', 'ejs');
@@ -491,28 +492,14 @@ app.get('/orders', function (req, res) {
 });
 
 
-app.post('/orders/add', function (req, res) {
-    order : any = new Object();
-    order.customer_id = req.body.customer_id,
-    order.status = req.body.status,
-    order.line_items = [];
-        
-    OrderLineItems = [];
-    console.log(req.body)
-    req.body.line_items.forEach(function(value){
-        L : any = new Object();
-        L.product_id = value.product_id,
-        L.quantity = value.quantity,
-        L.price_per_unit = value.price_per_unit,
-        L.total = value.total
-        OrderLineItems.Push(L)
-    });
-    Order.LineItems = OrderLineItems;
 
+app.post('/orders/add', function (req, res) { 
     axios.post('http://127.0.0.1:5000/addorder',
         {
-            customer_id : order.customer_id,
-            status : order.status
+            customer_id : req.body.customer_id,
+            status : req.body.status,
+            // line_items: req.body.line_items
+
         }
     )
         .then((response) => {
@@ -521,7 +508,7 @@ app.post('/orders/add', function (req, res) {
                     // console.log(response.data)
                     var order_data = response.data
 
-                    res.render('pages/vendors',
+                    res.render('pages/orders',
                         {
                             order_data: order_data[0],
                             customers: order_data[1],

@@ -2,6 +2,7 @@
     <%- include('../partials/head'); %>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    
   </head>
   
   
@@ -34,7 +35,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
-                <form action="/orders/add" method="post" class="row g-3"></form>
+                <form action="/orders/add" method="post" class="row g-3">
                 
                   <div class="col-md-4">
                     <label for="selectcustomer" class="form-label">Select Customer</label>
@@ -111,6 +112,9 @@
       </div>
   
     </main>
+    <script>
+      
+    </script>
     <!-- <script>
       $('#customers').on('click', function() {
          var business_name = $(this).val();
