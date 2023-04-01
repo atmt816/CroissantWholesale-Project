@@ -682,14 +682,14 @@ app.get('/productsinfo', function (req, res) {
     res.render('pages/productsinfo');
 });
 
-app.get('/productsinfo/:id', function (req, res) {
+app.get('/products/:id', function (req, res) {
     const product_id = req.params.id;
 
     axios.get('http://127.0.0.1:5000/products/' + product_id
     ).then((response) => {
         var products_data = response.data
 
-        res.render('pages/rolesinfo',
+        res.render('pages/productsinfo',
             {
                 products_data: products_data[0]
             });

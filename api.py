@@ -976,21 +976,6 @@ def update_product():
     conn.commit()
     return 'Product was updated successfully'
 
-@app.route('/delete_product', methods=['DELETE'])
-def delete_product():
-    # The user input is gathered in JSON format and stored into an empty variable
-    product_data = request.get_json()
-    
-    product_id = product_data['product_id']
-    
-    conn = create_connection(
-        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-
-    sql = "DELETE FROM products WHERE product_id = %s" % (
-        product_id)
-
-    execute_query(conn, sql)
-    return 'Product was deleted successfully'
 
 
 
