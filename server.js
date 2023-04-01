@@ -638,6 +638,93 @@ app.post('/garage/update', function (req, res) {
         );
 });
 
+// PRODUCTS PAGE
+app.get('/products', function (req, res) {
+    axios.get('http://127.0.0.1:5000/products')
+        .then((response) => {
+
+            var products_data = response.data
+
+            res.render('pages/products',
+                {
+                    products_data: products_data
+
+                });
+        });
+});
+
+
+app.post('/add_product', function (req, res) {
+    axios.post('http://127.0.0.1:5000/add_product',
+        {
+            product_name: req.body.product_name,
+            product_status: req.body.product_status
+
+        }
+    )
+        .then((response) => {
+            axios.get('http://127.0.0.1:5000/products')
+                .then((response, states) => {
+                    // console.log(response.data)
+                    var products_data = response.data
+
+                    res.render('pages/products',
+                        {
+                            products_data: products_data
+
+                        });
+                });
+        });
+});
+
+app.get('/productsinfo', function (req, res) {
+
+    res.render('pages/productsinfo');
+});
+
+app.get('/productsinfo/:id', function (req, res) {
+    const product_id = req.params.id;
+
+    axios.get('http://127.0.0.1:5000/products/' + product_id
+    ).then((response) => {
+        var products_data = response.data
+
+        res.render('pages/rolesinfo',
+            {
+                products_data: products_data[0]
+            });
+    });
+
+});
+
+
+app.post('/products/update', function (req, res) {
+    axios.put('http://127.0.0.1:5000/update_product',
+        {
+            product_id: req.body.product_id,
+            product_name: req.body.product_name,
+            product_status: req.body.product_status
+
+        }
+    )
+        .then((response) => {
+            axios.get('http://127.0.0.1:5000/products')
+                .then((response) => {
+                    // console.log(response.data)
+                    var products_data = response.data
+
+                    res.render('pages/products',
+                        {
+                            products_data: products_data
+
+                        });
+                });
+        }
+
+        );
+});
+
+
 
 app.listen(3000);
 console.log('3000 is the magic port');
