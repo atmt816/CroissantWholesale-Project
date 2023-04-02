@@ -14,9 +14,14 @@ app.set('view engine', 'ejs');
 // set the view engine to ejs
 
 app.set('view engine', 'ejs');
+app.get('/home', function (req, res) {
+
+    res.render('pages/home');
+});
+
 app.get('/', function (req, res) {
 
-    res.render('pages/index');
+    res.render('pages/login');
 });
 
 app.get('/login', function (req, res) {
@@ -24,6 +29,10 @@ app.get('/login', function (req, res) {
     res.render('pages/login');
 });
 
+app.get('/logged_out', function (req, res) {
+
+    res.render('pages/logged_out');
+});
 
 // EMPLOYEE PAGE 
 
@@ -493,11 +502,11 @@ app.get('/orders', function (req, res) {
 
 
 
-app.post('/orders/add', function (req, res) { 
+app.post('/orders/add', function (req, res) {
     axios.post('http://127.0.0.1:5000/addorder',
         {
-            customer_id : req.body.customer_id,
-            status : req.body.status,
+            customer_id: req.body.customer_id,
+            status: req.body.status,
             line_items: req.body.line_items
 
         }
