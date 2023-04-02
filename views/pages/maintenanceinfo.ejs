@@ -1,0 +1,123 @@
+<head>
+    <%- include('../partials/head'); %>
+</head>
+
+
+<style>
+    .top-buffer { margin-top: 60px;}
+</style>
+
+<body class="container">
+    <header>
+        <%- include('../partials/header'); %> 
+    </header>
+    
+    <main class="container pt-5"> 
+        <div class="p-5 mb-4 bg-white rounded-3 top-buffer">
+            <h2 class="text-center">
+              Maintenance Logs
+            </h2>
+            <a href="/maintenance" class="link-primary pb-4">Go Back</a>
+            <h5 class= "pb-1 pt-2">Maintenance Information</h5>
+            <div class="container pt-2">
+              <div class="row">
+                <div class="col-sm">
+                  Maintenance Log ID
+                  <p class="pt-1"><%= logs_data[0].log_id %></p>
+                </div>
+                <div class="col-sm">
+                  License Plate
+                  <p class="pt-1">
+                    <%= logs_data[0].license_plate %>
+                  </p>
+                </div>
+                <div class="col-sm">
+                  Date
+                  <p class="pt-1">
+                    <%= logs_data[0].date %>
+                  </p>
+                </div>
+              </div>
+            
+            </div>
+            
+            <hr class="hr hr-blurry" />
+            <h5>Contact Information</h5>
+            <div class="container pt-2">
+              <div class="row">
+                <div class="col-sm">
+                  Auto Shop: <%= logs_data[0].garage_name %>
+                  <p class="pt-1">
+                    Phone Number: <%= logs_data[0].phone %>
+                  </p>
+                  <p class="pt-1">
+                    Address: <%= logs_data[0].street %>
+                  </p>
+                  <p class="pt-1">
+                    <%= logs_data[0].city %>, <%= logs_data[0].state_code_id %> <%= logs_data[0].zipcode %>
+                  </p>
+                </div>
+                <div class="col-sm">
+                  Maintenance Status
+                  <p class="pt-1">
+                    <%= logs_data[0].status %>
+                  </p>
+                </div>
+                <div class="col-sm pb-5">
+                  Additional Notes
+                  <p class="pt-1">
+                    <%= logs_data[0].note %>
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+              Edit
+            </button>
+            
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title" id="exampleModalLabel">Edit Maintenance Log</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <form action="/maintenance/update" method="post" class="row g-3">
+                      <input class="form-control" name="log_id" id="log_id" type="hidden" value=<%=logs_data[0].log_id %>> 
+                      <div class="col-md-6">
+                        <label for="firstname" class="form-label">Garage ID</label>
+                        <input type="text" class="form-control" name="garage_id" id="garage_id" value= "<%= logs_data[0].garage_id %>">
+                      </div>
+                      <div class="col-md-6">
+                        <label for="firstname" class="form-label">Vehicle ID</label>
+                        <input type="text" class="form-control" name="vehicle_id" id="vehicle_id" value= "<%= logs_data[0].vehicle_id %>">
+                      </div>
+                      <div class="col-md-6 pb-2">
+                        <label for="firstname" class="form-label">Date</label>
+                        <input type="text" class="form-control" name="date" id="date" value= "<%= logs_data[0].date %>">
+                      </div>
+                      <hr class="hr" />
+                      <div class="col-md-6">
+                        <label for="email" class="form-label">Maintenance Status</label>
+                        <input type="email" class="form-control" id="status" name="status" value= "<%= logs_data[0].status %>">
+                      </div>
+                      <div class="col-md-6">
+                        <label for="lastname" class="form-label">Additional Notes</label>
+                        <input type="phone" class="form-control" id="note" name="note" value= <%= logs_data[0].note %>>
+                      </div>
+                      
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Update Log</button>
+                    </form>
+
+        </div>
+        <footer>
+          <%- include('../partials/footer'); %>
+      </footer>
+        </main>
+</body>
