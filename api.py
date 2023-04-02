@@ -872,6 +872,42 @@ def add_order():
 # User can then ensure all items have been made to fulfill these orders, or plan accordingly if more ingredients must be ordered.
 
 # Daily
+@app.route('/updateorder', methods=['PUT'])
+def update_order():
+    # The user input is gathered in JSON format and stored into an empty variable
+    order_data = request.get_json()
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    order_id = order_data['order_id']
+    customer_id = order_data['customer_id']
+    status = order_data['status']
+    line_items = order_data['line_items']
+
+    sql = "UPDATE orders SET customer_id=%s, status=%s WHERE order_id=%s"
+    execute_query(conn, sql, (customer_id, status, order_id))
+
+    sql = "DELETE FROM line_items WHERE order_id=%s"
+    execute_query(conn, sql, (order_id,))
+
+    sql = "INSERT INTO line_items (order_id, product_id, quantity, price_per_unit, total) VALUES"
+
+    list_length = len(line_items)-1
+    index = 0
+    for item in line_items:
+        product_id = item['product_id']
+        quantity = item['quantity']
+        price_per_unit = item['price_per_unit']
+        total = item['total']
+        sql += " (%s, %s, %s, %s, %s)" % (order_id, product_id, quantity, price_per_unit, total)
+        if index < list_length:
+            sql += ", "
+            index = index + 1
+
+    execute_query(conn, sql)
+
+    return 'Order was updated Successfully'
 
 
 @app.route('/dailyfulfillmentreport', methods=['GET'])
