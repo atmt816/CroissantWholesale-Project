@@ -678,7 +678,7 @@ def add_garage():
     garage_data = request.get_json()
     # The JSON object is then separated into variables so that they may be used in a sql query
     garage_name = garage_data['garage_name']
-    phone_number = garage_data['phone_number']
+    phone = garage_data['phone']
     street = garage_data['street']
     city = garage_data['city']
     state = garage_data['state_code_id']
@@ -687,8 +687,8 @@ def add_garage():
 
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "INSERT INTO garage(garage_name, phone_number, street, city, state, zipcode, status) VALUES ('%s', %s, '%s', '%s', '%s', %s,'%s')" % (
-        garage_name, phone_number, street, city, state, zipcode, status)
+    sql = "INSERT INTO garage(garage_name, phone, street, city, state, zipcode, status) VALUES ('%s', %s, '%s', '%s', '%s', %s,'%s')" % (
+        garage_name, phone, street, city, state, zipcode, status)
 
     execute_query(conn, sql)
     return 'Garage was added Successfully'
@@ -703,10 +703,10 @@ def update_garage():
     garage_id = garage_data['garage_id']
     # The JSON object is then separated into variables so that they may be used in a sql query
     garage_name = garage_data['garage_name']
-    phone_number = garage_data['phone_number']
+    phone = garage_data['phone']
     street = garage_data['street']
     city = garage_data['city']
-    state_code_id = garage_data['state_code_id']
+    state= garage_data['state_code_id']
     zipcode = garage_data['zipcode']
     status = garage_data['status']
 
@@ -714,9 +714,8 @@ def update_garage():
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
 
     cursor = conn.cursor()
-    sql = "UPDATE garage SET garage_name = %s, phone_number = %s, street = %s, city = %s, state_code_id = %s, zipcode = %s, status = %s WHERE garage_id = %s"
-    val = (garage_name, phone_number, street,
-           city, state_code_id, zipcode,status, garage_id)
+    sql = "UPDATE garage SET garage_name = %s, phone = %s, street = %s, city = %s, state_code_id = %s, zipcode = %s, status = %s WHERE garage_id = %s"
+    val = (garage_name, phone, street, city, state, zipcode ,status , garage_id)
 
     cursor.execute(sql, val)
     conn.commit()
@@ -794,7 +793,7 @@ def update_vehicle():
 def get_vehicles_info(vehicle_id):
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = """SELECT v.vehicle_id, v.license_plate, v.make, v.model, v.vin,v.status, ml.log_id, ml.date, ml.status, ml.note, g.garage_name, g.phone_number, g.street, g.city, s.state_code_id, g.zipcode
+    sql = """SELECT v.vehicle_id, v.license_plate, v.make, v.model, v.vin,v.status, ml.log_id, ml.date, ml.status, ml.note, g.garage_name, g.phone, g.street, g.city, s.state_code_id, g.zipcode
             FROM vehicles v
             JOIN maintenance_logs ml
             ON v.vehicle_id = ml.vehicle_id
@@ -824,7 +823,7 @@ def get_maintenance():
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "SELECT logs.log_id, v.license_plate, g.garage_name ,logs.date, logs.status, logs.note FROM maintenance_logs AS logs INNER JOIN vehicles AS v ON logs.vehicle_id = v.vehicle_id INNER JOIN garage AS g ON logs.garage_id = g.garage_id ORDER BY date DESC;"
     maintenance = execute_read_query(conn, sql)
-    return maintenance
+    return jsonify(maintenance)
 
 #Specific maintenance log details for selected row
 @app.route('/maintenance/<log_id>', methods=['GET'])
@@ -833,7 +832,7 @@ def get_maintenance_info(log_id):
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "SELECT logs.log_id, v.license_plate , g.garage_name ,g.phone,g.street,g.city,g.state_code_id,g.zipcode, logs.date , logs.status , logs.note  FROM maintenance_logs AS logs INNER JOIN vehicles AS v ON logs.vehicle_id = v.vehicle_id INNER JOIN garage AS g ON logs.garage_id = g.garage_id WHERE logs.log_id = %s;" % (log_id)
     maintenance = execute_read_query(conn, sql)
-    return maintenance
+    return jsonify(maintenance)
 
 
 @app.route('/addmaintenancelog', methods=['POST'])
@@ -867,7 +866,7 @@ def get_vehicle_main_log(vehicle_id):
     sql = "SELECT g.garage_name AS 'Garage Name', logs.date AS 'Date', logs.status AS 'Status', logs.note AS 'note' FROM maintenance_logs AS logs INNER JOIN vehicles AS v ON logs.vehicle_id = v.vehicle_id INNER JOIN garage AS g ON logs.garage_id = g.garage_id WHERE v.vehicle_id = %s ORDER BY date DESC;  " % (
         vehicle_id)
     vehicle_main_log = execute_read_query(conn, sql)
-    return vehicle_main_log
+    return jsonify(vehicle_main_log)
 
 
 # Maintenance Log by Garage - Generates a report for all maintenance logs under a specified garage id.
@@ -881,7 +880,7 @@ def get_garagemain_log(garage_id):
     sql = "SELECT v.license_plate AS 'License Plate', logs.date AS 'Date', logs.status AS 'Status', logs.note AS 'note' FROM maintenance_logs AS logs INNER JOIN vehicles AS v ON logs.vehicle_id = v.vehicle_id INNER JOIN garage AS g ON logs.garage_id = g.garage_id WHERE g.garage_id = %s ORDER BY date DESC" % (
         garage_id)
     garage_main_log = execute_read_query(conn, sql)
-    return garage_main_log
+    return jsonify(garage_main_log)
 
 
 # PUT method for maintenance_logs

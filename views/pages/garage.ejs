@@ -46,7 +46,7 @@
                   </div>
                   <div class="col-md-6">
                     <label for="lastname" class="form-label">Phone</label>
-                    <input class="form-control" type="phone" name="phone_number" id="phone_number"
+                    <input class="form-control" type="phone" name="phone" id="phone"
                       placeholder="0000000000">
                   </div>
                   <div class="col-md-6">
@@ -64,6 +64,10 @@
                     <option value=<%=states.state_code_id %>><%=states.state %></option>
                     <% }); %>
                 </select>
+                <div class="col-md-6">
+                  <label for="inputmodel" class="form-label">Zipcode</label>
+                  <input class="form-control" type="text" name="zipcode" id="zipcode"  placeholder="00000">
+                </div>
                   <div class="col-md-6">
                     <label for="inputstatus" class="form-label">Status</label>
                     <select id="status" name="status" class="form-select">
