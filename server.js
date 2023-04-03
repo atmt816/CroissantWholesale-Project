@@ -350,69 +350,7 @@ app.get('/vendors', function (req, res) {
         });
 });
 
-app.get('/vendinfo/:id', function (req, res) {
-    const vendor_id = req.params.id;
 
-    // ORDER PAGE
-
-    // app.get('/orders', function (req, res) {
-    //     axios.get('http://127.0.0.1:5000/orders')
-    //         .then((response) => {
-    //             var order_data = response.data
-
-    //             res.render('pages/orders',
-    //                 {
-    //                     order_data: order_data[0],
-    //                     customers: order_data[2],
-    //                     products: order_data[4]
-    //                 });
-    //         });
-    // });
-
-
-    app.post('/addorder', function (req, res) {
-        axios.post('http://127.0.0.1:5000/addorder',
-            {
-                first_name: req.body.first_name,
-                customer_id: req.body.customer_id,
-                delivery_date: req.body.delivery_date,
-                delivery_phone: req.body.delivery_phone,
-                delivery_street: req.body.delivery_street,
-                delivery_city: req.body.delivery_city,
-                state_code_id: req.body.state_code_id,
-                zipcode: req.body.zipcode,
-                line_items: req.body.line_items
-            }
-        )
-            .then((response) => {
-                axios.get('http://127.0.0.1:5000/orders')
-                    .then((response, states) => {
-                        var order_data = response.data
-
-                        res.render('pages/orders',
-                            {
-                                order_data: order_data[0],
-                                states: order_data[1],
-                                customers: order_data[2],
-                                products: order_data[3]
-                            });
-                    });
-            });
-    });
-
-
-    axios.get('http://127.0.0.1:5000/vendors/' + vendor_id
-    ).then((response, states) => {
-        var vendor_data = response.data
-
-        res.render('pages/vendinfo',
-            {
-                vendor_data: vendor_data[0],
-                states: vendor_data[1]
-            });
-    });
-
-});
 
 app.post('/vendors/add', function (req, res) {
     axios.post('http://127.0.0.1:5000/vendors/add',
@@ -528,7 +466,25 @@ app.post('/orders/add', function (req, res) {
         });
 });
 
+app.get('/ordersinfo/:id', function (req, res) {
+    const order_id = req.params.id;
 
+
+    axios.get('http://127.0.0.1:5000/orders/' + order_id
+    ).then((response, states) => {
+        var order_data = response.data
+
+        res.render('pages/ordersinfo',
+            {
+                order_data: order_data[0],
+                customer_data: order_data[1],
+                product_data: order_data[2],
+                states: order_data[3]
+
+            });
+    });
+
+});
 
 
 

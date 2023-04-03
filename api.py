@@ -725,32 +725,32 @@ def add_line_item():
 
 
 # PUT method for products
-@app.route('/update_line_item', methods=['PUT'])
-def update_line_item():
-    # The user input is gathered in JSON format and stored into an empty variable
-    line_item_data = request.get_json()
-    # we will be using item_id to reference the entry to update
-    item_id = line_item_data['item_id']
-    # The JSON object is then separated into variables so that they may be used in a sql query
-    order_id = line_item_data['order_id']
-    product_id = line_item_data['product_id']
-    quantity = line_item_data['quantity']
-    price_per_unit = line_item_data['price_per_unit']
-    total = line_item_data['total']
+# @app.route('/update_line_item', methods=['PUT'])
+# def update_line_item():
+#     # The user input is gathered in JSON format and stored into an empty variable
+#     line_item_data = request.get_json()
+#     # we will be using item_id to reference the entry to update
+#     item_id = line_item_data['item_id']
+#     # The JSON object is then separated into variables so that they may be used in a sql query
+#     order_id = line_item_data['order_id']
+#     product_id = line_item_data['product_id']
+#     quantity = line_item_data['quantity']
+#     price_per_unit = line_item_data['price_per_unit']
+#     total = line_item_data['total']
 
-    conn = create_connection(
-        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+#     conn = create_connection(
+#         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
 
-    cursor = conn.cursor()
-    sql = "UPDATE line_items SET order_id = %s, product_id = %s, quantity = %s, price_per_unit = %s, total = %s WHERE item_id = %s"
-    val = (order_id, product_id, quantity, price_per_unit, total, item_id)
+#     cursor = conn.cursor()
+#     sql = "UPDATE line_items SET order_id = %s, product_id = %s, quantity = %s, price_per_unit = %s, total = %s WHERE item_id = %s"
+#     val = (order_id, product_id, quantity, price_per_unit, total, item_id)
 
-    cursor.execute(sql, val)
-    conn.commit()
-    return 'Line Item was updated successfully'
+#     cursor.execute(sql, val)
+#     conn.commit()
+#     return 'Line Item was updated successfully'
 
 
-############################# ORDERS ########################################
+############################# ORDERS PAGE ########################################
 
 # Orders Table CRUD
 
@@ -867,11 +867,50 @@ def add_order():
     return 'Order was added Successfully'
 
 
-# Fulfillment Report
-# Fulfillment check per line item. Report generates all orders within a timeframe that are scheduled for delivery.
-# User can then ensure all items have been made to fulfill these orders, or plan accordingly if more ingredients must be ordered.
 
-# Daily
+@app.route('/orders/<order_id>', methods=['GET'])
+def order_info(order_id):
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    # customer_data = request.get_json()
+
+    # customer_id = customer_data['customer_id']
+
+    sql = """
+        SELECT o.order_id, o.date_produced, o.delivery_date, o.status, o.customer_id, l.product_id, p.product_name, l.quantity, l.price_per_unit, l.total
+        FROM orders o 
+        JOIN line_items l ON o.order_id = l.order_id
+        JOIN products p ON l.product_id = p.product_id
+        WHERE o.order_id ='%s';
+        """ % (order_id)
+    order = execute_read_query(conn, sql)
+
+
+    customer_id = order[0]['customer_id']
+
+    sql = """
+        select c.customer_id, c.business_name, cc.phone, cc.email, cc.street, cc.city, cc.state_code_id, cc.zipcode
+        FROM customers c JOIN customer_contact cc 
+        ON c.customer_id = cc.customer_id 
+        WHERE c.customer_id ='%s';
+        """ % (customer_id)
+    customer = execute_read_query(conn, sql)
+
+    sql = """
+        SELECT * FROM products;
+        """
+    products = execute_read_query(conn, sql)
+
+    sql = """
+        SELECT * FROM states;
+        """
+    states = execute_read_query(conn, sql)
+
+    return jsonify(order, customer, products, states)
+
+
+    
 @app.route('/updateorder', methods=['PUT'])
 def update_order():
     # The user input is gathered in JSON format and stored into an empty variable
@@ -885,11 +924,11 @@ def update_order():
     status = order_data['status']
     line_items = order_data['line_items']
 
-    sql = "UPDATE orders SET customer_id=%s, status=%s WHERE order_id=%s"
-    execute_query(conn, sql, (customer_id, status, order_id))
+    sql = "UPDATE orders SET customer_id= %s, status= '%s' WHERE order_id= %s" %(customer_id, status, order_id)
+    execute_query(conn, sql)
 
-    sql = "DELETE FROM line_items WHERE order_id=%s"
-    execute_query(conn, sql, (order_id,))
+    sql = "DELETE FROM line_items WHERE order_id= %s" %(order_id)
+    execute_query(conn, sql)
 
     sql = "INSERT INTO line_items (order_id, product_id, quantity, price_per_unit, total) VALUES"
 
@@ -909,6 +948,14 @@ def update_order():
 
     return 'Order was updated Successfully'
 
+
+    
+
+# Fulfillment Report
+# Fulfillment check per line item. Report generates all orders within a timeframe that are scheduled for delivery.
+# User can then ensure all items have been made to fulfill these orders, or plan accordingly if more ingredients must be ordered.
+
+# Daily
 
 @app.route('/dailyfulfillmentreport', methods=['GET'])
 def get_daily_ful_report():
@@ -1011,34 +1058,7 @@ def get_delivery_sheet():
 # PUT method for orders
 
 
-@app.route('/update_order', methods=['PUT'])
-def update_order():
-    # The user input is gathered in JSON format and stored into an empty variable
-    order_data = request.get_json()
-    # we will be using order_id to reference the entry to update
-    order_id = order_data['order_id']
-    # The JSON object is then separated into variables so that they may be used in a sql query
-    invoice_id = order_data['invoice_id']
-    date_produced = order_data['date_produced']
-    delivery_date = order_data['delivery_date']
 
-    # date format as yyyy-mm-dd(2022-03-04) or mm-dd-yyyy(03-04-2022)
-    fmt_date_produced = str(datetime.strptime(
-        date_produced, '%m-%d-%Y').date())
-    # date format as yyyy-mm-dd(2022-03-04) or mm-dd-yyyy(03-04-2022)
-    fmt_delivery_date = str(datetime.strptime(
-        delivery_date, '%m-%d-%Y').date())
-
-    conn = create_connection(
-        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-
-    cursor = conn.cursor()
-    sql = "UPDATE orders SET invoice_id = %s, date_produced = %s, delivery_date = %s WHERE order_id = %s"
-    val = (invoice_id, fmt_date_produced, fmt_delivery_date, order_id)
-
-    cursor.execute(sql, val)
-    conn.commit()
-    return 'Order was updated successfully'
 
 ############################# INVOICES ######################################
 
