@@ -473,13 +473,18 @@ app.get('/ordersinfo/:id', function (req, res) {
     axios.get('http://127.0.0.1:5000/orders/' + order_id
     ).then((response, states) => {
         var order_data = response.data
+        var obj = order_data[4]
+        var sumtotal = parseInt(obj[0]["sum(total)"]);
+        console.log(sumtotal); // Output: total
 
         res.render('pages/ordersinfo',
             {
                 order_data: order_data[0],
                 customer_data: order_data[1],
                 product_data: order_data[2],
-                states: order_data[3]
+                states: order_data[3],
+                total: order_data[4],
+                sumtotal: sumtotal
 
             });
     });
