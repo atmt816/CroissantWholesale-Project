@@ -482,7 +482,7 @@ app.get('/ordersinfo/:id', function (req, res) {
                 order_data: order_data[0],
                 customer_data: order_data[1],
                 product_data: order_data[2],
-                states: order_data[3],
+                customers_data: order_data[3],
                 total: order_data[4],
                 sumtotal: sumtotal
 
@@ -492,6 +492,33 @@ app.get('/ordersinfo/:id', function (req, res) {
 });
 
 
+app.post('/orders/update', function (req, res) {
+    axios.put('http://127.0.0.1:5000/update_order',
+        {
+            customer_id: req.body.customer_id,
+            status: req.body.status,
+            delivery_date: req.body.delivery_date,
+            line_items: req.body.line_items
+
+        }
+    )
+        .then((response) => {
+            axios.get('http://127.0.0.1:5000/vendors')
+                .then((response, states) => {
+                    // console.log(response.data)
+                    var vendor_data = response.data
+
+                    res.render('pages/vendors',
+                        {
+                            vendor_data: vendor_data[0],
+                            states: vendor_data[1]
+
+                        });
+                });
+        }
+
+        );
+});
 
 app.listen(3000);
 console.log('3000 is the magic port');
