@@ -780,42 +780,6 @@ def get_orders():
     return jsonify(orders, customers, products, line_items)
 
 
-# @app.route('/customerorderinfo/<customer_id>', methods=['GET'])
-# def get_customer_order_info(customer_id):
-#     conn = create_connection(
-#         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-#     sql = """
-#         SELECT * FROM customer_contact
-#         WHERE customer_id = '%s';
-#         """ % (customer_id)
-
-#     customer_order_info = execute_read_query(conn, sql)
-#     # print(sql)
-#     sql = """
-#          SELECT * FROM states;
-#         """
-#     states = execute_read_query(conn, sql)
-
-#     sql = """ SELECT * FROM roles;"""
-#     roles = execute_read_query(conn, sql)
-
-#     return jsonify(customer_order_info, states, roles)
-
-
-# @app.route('/getcustomerid/<business_name>', methods=['GET'])
-# def get_customer_id(business_name):
-#     conn = create_connection(
-#         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-#     sql = """
-#         SELECT customer_id FROM customers
-#         WHERE business_name = '%s';
-#         """ % (business_name)
-
-#     get_customer_id = execute_read_query(conn, sql)
-
-#     return jsonify(get_customer_id)
-
-
 @app.route('/addorder', methods=['POST'])
 def add_order():
     # The user input is gathered in JSON format and stored into an empty variable
@@ -873,9 +837,6 @@ def order_info(order_id):
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
 
-    # customer_data = request.get_json()
-
-    # customer_id = customer_data['customer_id']
 
     sql = """
         SELECT o.order_id, o.date_produced, o.delivery_date, o.status, o.customer_id, l.product_id, p.product_name, l.quantity, l.price_per_unit, l.total
@@ -885,7 +846,6 @@ def order_info(order_id):
         WHERE o.order_id ='%s';
         """ % (order_id)
     order = execute_read_query(conn, sql)
-
 
     customer_id = order[0]['customer_id']
 
@@ -902,16 +862,14 @@ def order_info(order_id):
         """
     products = execute_read_query(conn, sql)
 
-    sql = """
-        SELECT * FROM states;
-        """
-    states = execute_read_query(conn, sql)
+    sql = """SELECT * FROM customers;"""
+    customers = execute_read_query(conn, sql)
 
-    return jsonify(order, customer, products, states)
+    return jsonify(order, customer, products, customers)
 
 
     
-@app.route('/updateorder', methods=['PUT'])
+@app.route('/update_order', methods=['PUT'])
 def update_order():
     # The user input is gathered in JSON format and stored into an empty variable
     order_data = request.get_json()
@@ -922,9 +880,10 @@ def update_order():
     order_id = order_data['order_id']
     customer_id = order_data['customer_id']
     status = order_data['status']
+    delivery_date = order_data['delivery_date']
     line_items = order_data['line_items']
 
-    sql = "UPDATE orders SET customer_id= %s, status= '%s' WHERE order_id= %s" %(customer_id, status, order_id)
+    sql = "UPDATE orders SET customer_id= %s, delivery_date= '%s', status= '%s' WHERE order_id= %s" %(customer_id, status, order_id)
     execute_query(conn, sql)
 
     sql = "DELETE FROM line_items WHERE order_id= %s" %(order_id)
