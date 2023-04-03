@@ -490,7 +490,10 @@ app.get('/ordersinfo/:id', function (req, res) {
 app.post('/orders/update', function (req, res) {
     axios.put('http://127.0.0.1:5000/update_order',
         {
-           
+            customer_id: req.body.customer_id,
+            status: req.body.status,
+            delivery_date: req.body.delivery_date,
+            line_items: req.body.line_items
 
         }
     )

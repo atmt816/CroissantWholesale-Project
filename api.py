@@ -837,7 +837,7 @@ def order_info(order_id):
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
 
-
+    #order information
     sql = """
         SELECT o.order_id, o.date_produced, o.delivery_date, o.status, o.customer_id, l.product_id, p.product_name, l.quantity, l.price_per_unit, l.total
         FROM orders o 
@@ -847,6 +847,7 @@ def order_info(order_id):
         """ % (order_id)
     order = execute_read_query(conn, sql)
 
+    #get customer id from order so customer query selection gets the right customer id
     customer_id = order[0]['customer_id']
 
     sql = """
@@ -876,14 +877,14 @@ def update_order():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
 
-    # The JSON object is then separated into variables so that they may be used in a sql query
+
     order_id = order_data['order_id']
     customer_id = order_data['customer_id']
     status = order_data['status']
     delivery_date = order_data['delivery_date']
     line_items = order_data['line_items']
 
-    sql = "UPDATE orders SET customer_id= %s, delivery_date= '%s', status= '%s' WHERE order_id= %s" %(customer_id, status, order_id)
+    sql = "UPDATE orders SET customer_id= %s, delivery_date= '%s', status= '%s' WHERE order_id= %s" %(customer_id, delivery_date, status, order_id)
     execute_query(conn, sql)
 
     sql = "DELETE FROM line_items WHERE order_id= %s" %(order_id)
