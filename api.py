@@ -857,7 +857,8 @@ def add_order():
         quantity = item['quantity']
         price_per_unit = item['price_per_unit']
         total = item['total']
-        sql += " (%s, %s, %s, %s, %s)" % (order_id, product_id, quantity, price_per_unit, total)
+        sql += " (%s, %s, %s, %s, %s)" % (order_id,
+                                          product_id, quantity, price_per_unit, total)
         if index < list_length:
             sql += ", "
             index = index + 1
@@ -865,7 +866,6 @@ def add_order():
     execute_query(conn, sql)
 
     return 'Order was added Successfully'
-
 
 
 @app.route('/orders/<order_id>', methods=['GET'])
@@ -885,7 +885,6 @@ def order_info(order_id):
         WHERE o.order_id ='%s';
         """ % (order_id)
     order = execute_read_query(conn, sql)
-
 
     customer_id = order[0]['customer_id']
 
@@ -907,10 +906,13 @@ def order_info(order_id):
         """
     states = execute_read_query(conn, sql)
 
-    return jsonify(order, customer, products, states)
+    sql = """SELECT sum(total) FROM line_items WHERE order_id ='%s';""" % (
+        order_id)
+    total = execute_read_query(conn, sql)
+
+    return jsonify(order, customer, products, states, total)
 
 
-    
 @app.route('/updateorder', methods=['PUT'])
 def update_order():
     # The user input is gathered in JSON format and stored into an empty variable
@@ -924,10 +926,11 @@ def update_order():
     status = order_data['status']
     line_items = order_data['line_items']
 
-    sql = "UPDATE orders SET customer_id= %s, status= '%s' WHERE order_id= %s" %(customer_id, status, order_id)
+    sql = "UPDATE orders SET customer_id= %s, status= '%s' WHERE order_id= %s" % (
+        customer_id, status, order_id)
     execute_query(conn, sql)
 
-    sql = "DELETE FROM line_items WHERE order_id= %s" %(order_id)
+    sql = "DELETE FROM line_items WHERE order_id= %s" % (order_id)
     execute_query(conn, sql)
 
     sql = "INSERT INTO line_items (order_id, product_id, quantity, price_per_unit, total) VALUES"
@@ -939,7 +942,8 @@ def update_order():
         quantity = item['quantity']
         price_per_unit = item['price_per_unit']
         total = item['total']
-        sql += " (%s, %s, %s, %s, %s)" % (order_id, product_id, quantity, price_per_unit, total)
+        sql += " (%s, %s, %s, %s, %s)" % (order_id,
+                                          product_id, quantity, price_per_unit, total)
         if index < list_length:
             sql += ", "
             index = index + 1
@@ -948,8 +952,6 @@ def update_order():
 
     return 'Order was updated Successfully'
 
-
-    
 
 # Fulfillment Report
 # Fulfillment check per line item. Report generates all orders within a timeframe that are scheduled for delivery.
@@ -1056,8 +1058,6 @@ def get_delivery_sheet():
     return delivery_sheet
 
 # PUT method for orders
-
-
 
 
 ############################# INVOICES ######################################
