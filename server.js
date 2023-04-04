@@ -493,15 +493,16 @@ app.get('/ordersinfo/:id', function (req, res) {
 
 
 app.post('/orders/update', function (req, res) { 
-    lineItems = Object.values(req.body.line_items).map((item) => {
+    const lineItems = Object.values(req.body.line_items).map((item) => {
         return {
-            product_id: parseInt(item.product_id),
-            quantity: parseInt(item.quantity),
-            price_per_unit: parseFloat(item.price_per_unit),
-            total: parseFloat(item.total)
-
+          order_id: req.body.order_id,
+          product_id: parseInt(item.product_id),
+          quantity: parseInt(item.quantity),
+          price_per_unit: parseFloat(item.price_per_unit),
+          total: parseFloat(item.total)
         };
-    });
+      });
+      console.log(lineItems)
     axios.put('http://127.0.0.1:5000/update_order',
         {
             order_id: req.body.order_id,
@@ -517,7 +518,7 @@ app.post('/orders/update', function (req, res) {
             .then((response, states) => {
                 // console.log(response.data)
                 var order_data = response.data
-
+                console.log(lineItems)
                 res.render('pages/orders',
                     {
                         order_data: order_data[0],
