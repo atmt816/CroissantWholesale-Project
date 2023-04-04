@@ -520,5 +520,19 @@ app.post('/orders/update', function (req, res) {
         );
 });
 
+
+app.get('/inventory', function (req, res) {
+    axios.get('http://127.0.0.1:5000/inventory')
+        .then((response) => {
+            var inventory_data = response.data
+
+            res.render('pages/inventory',
+                {
+                    inventory_data: inventory_data[0],
+                });
+        });
+});
+
+
 app.listen(3000);
 console.log('3000 is the magic port');
