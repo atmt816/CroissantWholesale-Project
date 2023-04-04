@@ -17,28 +17,28 @@
     <main class="container pt-5">
       <div class="p-5 mb-4 bg-white rounded-3 top-buffer">
         <h2 class="text-center">
-          Employee Information
+          Vehicle Information
         </h2>
         <a href="/employees" class="link-primary pb-4">Go Back</a>
         <h5 class="pb-1 pt-2">General Information</h5>
         <div class="container pt-2">
           <div class="row">
             <div class="col-sm">
-              Employee ID
+              Vehicle ID
               <p class="pt-1">
-                <%= employee_data[0].emp_id %>
+                <%= vehicles_data[0].vehicle_id %>
               </p>
             </div>
             <div class="col-sm">
-              Employee Name
+              License Plate
               <p class="pt-1">
-                <%= employee_data[0].first_name %>&nbsp;<%= employee_data.last_name %>
+                <%= vehicles_data[0].license_plate %>
               </p>
             </div>
             <div class="col-sm">
-              Employee Status
+              Make
               <p class="pt-1">
-                <%= employee_data[0].emp_status %>
+                <%= vehicles_data[0].make %>
               </p>
             </div>
           </div>
@@ -46,140 +46,28 @@
         <div class="container pt-4">
           <div class="row">
             <div class="col-sm">
-              Role
+              Model
               <p class="pt-1">
-                <%= employee_data[0].role_name %>
+                <%= vehicles_data[0].model %>
               </p>
             </div>
             <div class="col-sm">
-              Start Date
+              Vin
               <p class="pt-1">
-                <%= employee_data[0].start_date %>
+                <%= vehicles_data[0].vin %>
               </p>
             </div>
             <div class="col-sm">
-              End Date
+              Status
               <p class="pt-1">
-                <%= employee_data[0].end_name %>
+                <%= vehicles_data[0].status %>
               </p>
             </div>
           </div>
         </div>
   
-        <hr class="hr hr-blurry" />
-        <h5>Contact Information</h5>
-        <div class="container pt-2">
-          <div class="row">
-            <div class="col-sm">
-              Phone Number
-              <p class="pt-1">
-                <%= employee_data[0].phone %>
-              </p>
-            </div>
-            <div class="col-sm">
-              Email
-              <p class="pt-1">
-                <%= employee_data[0].email %>
-              </p>
-            </div>
-            <div class="col-sm pb-4">
-              Address
-              <p class="pt-1">
-                <%= employee_data[0].street %>, <%= employee_data[0].city %>, <%= employee_data[0].state_code_id %>
-                      <%= employee_data[0].zipcode %>
-              </p>
-            </div>
-          </div>
-  
-          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-            Edit
-          </button>
-          <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h4 class="modal-title" id="exampleModalLabel">Update Current Employee</h4>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  <form action="/employees/update" method="post" class="row g-3">
-                    <input class="form-control" name="emp_id" type="hidden" id="emp_id" value=<%=employee_data[0].emp_id%>>
-                    <div class="col-md-6">
-                      <label for="firstname" class="form-label">First Name</label>
-                      <input type="text" class="form-control" name="first_name" id="firstname" value=<%= employee_data[0].first_name %>>
-                    </div>
-                    <div class="col-md-6">
-                      <label for="lastname" class="form-label">Last Name</label>
-                      <input type="text" class="form-control" name="last_name" id="lastname" value=<%= employee_data[0].last_name %>>
-                    </div>
-                    <hr class="hr" />
-                    <div class="col-md-6">
-                      <label for="email" class="form-label">Email</label>
-                      <input type="email" class="form-control" name="email" id="email" value=<%= employee_data[0].email %>>
-                    </div>
-                    <div class="col-md-6">
-                      <label for="lastname" class="form-label">Phone</label>
-                      <input type="phone" class="form-control" name="phone" id="phone" value=<%= employee_data[0].phone %>>
-                    </div>
-                    <div class="col-12">
-                      <label for="inputAddress" class="form-label">Address</label>
-                      <input type="text" class="form-control" name="street" id="street" value="<%= employee_data[0].street %>">
-                    </div>
-    
-                    <div class="col-md-6">
-                      <label for="inputCity" class="form-label">City</label>
-                      <input type="text" class="form-control" name="city" id="city" value=<%= employee_data[0].city %>>
-                    </div>
-                    <div class="col-md-4">
-                      <label for="inputState" class="form-label">State</label>
-                      <select class="form-control" name="states" id="states">
-                        <option value=<%=employee_data[0].state_code_id%>><%=employee_data[0].state_code_id%> </option>
-                        <% states.forEach(function(states) { %>              
-                        <option value="<%=states.state_code_id %>"><%=states.state%></option>
-                        <% }); %>
-                      </select>
-                    </div>
-                    <div class="col-md-2">
-                      <label for="inputZip" class="form-label">Zip</label>
-                      <input type="text" class="form-control" name="zipcode" id="zipcode" name="zipcode" value=<%= employee_data[0].zipcode %>>
-                    </div>
-                    <div class="col-md-6">
-                      <label for="inputRole" class="form-label">Role</label>
-                      <select class="form-select" name="role_id" id="role_id">
-                        <option value=<%=employee_data[0].role_id%>><%=employee_data[0].role_name%> </option>
-                        <% roles.forEach(function(roles) { %>
-                          <option value=<%=roles.Role_ID %>><%=roles.Role_Name %>
-                          </option>
-                          <% }); %>
-                      </select>
-                    </div>
-                    <div class="col-md-6">
-                      <label for="inputstatus" class="form-label">Status</label>
-                      <select id="emp_status" name="emp_status" class="form-select">                  
-                        <option selected>Active</option>
-                        <option>Terminated</option>
-                      </select>
-                    </div>
-                    <div class="col-md-6">
-                      <label for="inputCity" class="form-label">Start Date</label>
-                      <input type="text" class="form-control" name="start_date" id="start_date" value="<%= employee_data[0].start_date %>">
-                    </div>
-                    <div class="col-md-6">
-                      <label for="inputCity" class="form-label">End Date</label>
-                      <input type="text" class="form-control" name="end_date" id="end_date" value="<%= employee_data[0].end_date %>">
-                    </div>
-                    
-    
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <button type="submit" type="button" class="btn btn-primary">Update Employee</button>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
-  
+        
+          
   
         </div>
         
