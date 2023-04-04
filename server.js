@@ -471,7 +471,7 @@ app.get('/vehiclesinfo/:id', function (req, res) {
     const vehicle_id = req.params.id;
 
     axios.get('http://127.0.0.1:5000/vehicles/' + vehicle_id
-    ).then((response, states) => {
+    ).then((response) => {
         var vehicles_data = response.data
 
         res.render('pages/vehiclesinfo',
@@ -481,6 +481,37 @@ app.get('/vehiclesinfo/:id', function (req, res) {
     });
 
 });
+
+app.post('/vehicles/update', function (req, res) {
+    axios.put('http://127.0.0.1:5000/update_vehicle',
+        {
+            vehicle_id: req.body.vehicle_id,
+            license_plate: req.body.license_plate,
+            make : req.body.make,
+            model : req.body.model,
+            vin : req.body.vin,
+            status : req.body.status
+
+        }
+    )
+        .then((response) => {
+            axios.get('http://127.0.0.1:5000/vehicles')
+                .then((response) => {
+                    // console.log(response.data)
+                    var vehicles_data = response.data
+
+                    res.render('pages/vehicles',
+                        {
+                            vehicles_data: vehicles_data
+
+                        });
+                });
+        }
+
+        );
+});
+
+
 
 //Maintenance Page
 app.get('/maintenance', function (req, res) {

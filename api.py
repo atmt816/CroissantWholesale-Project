@@ -721,7 +721,7 @@ def update_garage():
     conn.commit()
     return 'Garage was updated successfully'
 
-# VEHICLES PAGE
+############################# VEHICLES ###################################
 
 
 @app.route('/vehicles', methods=['GET'])
@@ -750,18 +750,6 @@ def add_vehicle():
 
     execute_query(conn, sql)
     return 'Vehicle was added Successfully'
-
-# @app.route('/vehicles/<vehicle_id>', methods=['GET'])
-# def get_vehicles_info(vehicle_id):
-#     conn = create_connection(
-#         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-#     sql = """
-#         SELECT * FROM cid4375.vehicles where vehicle_id = '%s';
-#         """ % (vehicle_id)
-
-#     vehicles = execute_read_query(conn, sql)
-
-#     return jsonify(vehicles)
 
 # PUT method for vehicles
 @app.route('/update_vehicle', methods=['PUT'])
@@ -793,7 +781,16 @@ def update_vehicle():
 def get_vehicles_info(vehicle_id):
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = """SELECT v.vehicle_id, v.license_plate, v.make, v.model, v.vin,v.status, ml.log_id, ml.date, ml.status, ml.note, g.garage_name, g.phone, g.street, g.city, s.state_code_id, g.zipcode
+    sql = """SELECT * FROM vehicles
+        WHERE vehicle_id = '%s';""" % (vehicle_id)
+    vehicles = execute_read_query(conn, sql)
+
+    sql = """
+         SELECT * FROM states;
+        """
+    states = execute_read_query(conn, sql)
+
+    sql = """SELECT v.vehicle_id, ml.log_id, ml.date, ml.status, ml.note, g.garage_name, g.phone, g.street, g.city, s.state_code_id, g.zipcode
             FROM vehicles v
             JOIN maintenance_logs ml
             ON v.vehicle_id = ml.vehicle_id
@@ -802,14 +799,9 @@ def get_vehicles_info(vehicle_id):
             JOIN states s
             ON g.state_code_id = s.state_code_id
         WHERE v.vehicle_id = '%s';""" % (vehicle_id)
-    vehicles = execute_read_query(conn, sql)
+    maintenance_info = execute_read_query(conn, sql)
 
-    sql = """
-         SELECT * FROM states;
-        """
-    states = execute_read_query(conn, sql)
-
-    return jsonify(vehicles, states)
+    return jsonify(vehicles, states, maintenance_info)
 
 
 # Maintenance_Logs Table CRUD
