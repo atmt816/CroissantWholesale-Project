@@ -872,7 +872,7 @@ def order_info(order_id):
     return jsonify(order, customer, products, customers_data, total)
 
 
-@app.route('/updateorder', methods=['PUT'])
+@app.route('/update_order', methods=['PUT'])
 def update_order():
     # The user input is gathered in JSON format and stored into an empty variable
     order_data = request.get_json()
@@ -897,12 +897,12 @@ def update_order():
     list_length = len(line_items)-1
     index = 0
     for item in line_items:
+        print(item)
         product_id = item['product_id']
         quantity = item['quantity']
         price_per_unit = item['price_per_unit']
         total = item['total']
-        sql += " (%s, %s, %s, %s, %s)" % (order_id,
-                                          product_id, quantity, price_per_unit, total)
+        sql += " (%s, %s, %s, %s, %s)" % (order_id,product_id, quantity, price_per_unit, total)
         if index < list_length:
             sql += ", "
             index = index + 1

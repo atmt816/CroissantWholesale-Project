@@ -78,9 +78,10 @@
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                  <form id="updateOrderForm">
+                  <form action="/orders/update" method="post" class="row g-3">
                     <div class="col-md-6 mb-1">
-
+                      <input class="form-control" name="order_id" type="hidden" id="order_id"
+                      value=<%=order_data.order_id%>>
                       <label for="customer" class="form-label">Customer</label>
                       <select class="form-select" name="customer_id" id="customer_id">
                         <option value=<%=order_data.customer_id%>><%=customer_data[0].business_name%>
@@ -110,8 +111,8 @@
                     <% order_data.forEach(function(order_data) { %>
                       <div class="col-md-6">
                         <label for="product" class="form-label">Product</label>
-                        <select class="form-select" name="product_id" id="product_id">
-                          <option value=<%=order_data.product_id%>><%=order_data.product_name%>
+                        <select class="form-select" name="line_items[product_id]" id="line_items[product_id]">
+                          <option value=<%=parseInt(order_data.product_id)%>><%=order_data.product_name%>
                           </option>
                           <% product_data.forEach(function(product_data) { %>
                             <option value=<%=product_data.product_id %>><%=product_data.product_name %>
@@ -121,26 +122,27 @@
                       </div>
                       <div class="col-md-6">
                         <label for="quantity">Quantity:</label>
-                        <input type="text" class="form-control" id="quantity" name="quantity"
+                        <input type="text" class="form-control" id="line_items[quantity]" name="line_items[quantity]"
                           value="<%= order_data.quantity %>">
                       </div>
                       <div class="col-md-6">
                         <label for="price_per_unit">Price Per Unit:</label>
-                        <input type="text" class="form-control" id="price_per_unit" name="price_per_unit"
+                        <input type="text" class="form-control" id="line_items[price_per_unit]" name="line_items[price_per_unit]"
                           value="<%= order_data.price_per_unit %>">
                       </div>
                       <div class="col-md-6">
                         <label for="total">Total:</label>
-                        <input type="text" class="form-control" id="total" name="total" value="<%= order_data.total %>">
+                        <input type="text" class="form-control" id="line_items[total]" name="line_items[total]" value="<%= order_data.total %>">
                       </div>
                       <hr>
                       <% }); %>
-                  </form>
+                  
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary">Update Order</button>
+                  <button type="submit" class="btn btn-primary">Update Order</button>
                 </div>
+              </form>
               </div>
             </div>
           </div>
