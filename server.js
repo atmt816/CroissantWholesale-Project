@@ -523,6 +523,21 @@ app.post('/maintenance/addlog', function (req, res) {
         });
 });
 
+/*app.delete('/deletemaintenance/:id', function (req, res) {
+    const log_id = req.params.id;
+
+    axios.delete('http://127.0.0.1:5000/deletemaintenance/' + log_id
+    ).then((response, states) => {
+        var logs_data = response.data
+
+        res.render('pages/maintenance',
+            {
+                logs_data: logs_data
+            });
+    });
+
+});*/
+
 
 app.get('/maintenanceinfo/:id', function (req, res) {
     const log_id = req.params.id;
@@ -539,12 +554,34 @@ app.get('/maintenanceinfo/:id', function (req, res) {
 
 });
 
+app.post('/maintenance/delete', function (req, res) {
+    axios.put('http://127.0.0.1:5000/deletemaintenance',
+        {
+            log_id:req.body.log_id
+
+        }
+    )
+        .then((response) => {
+            axios.get('http://127.0.0.1:5000/maintenance')
+                .then((response, states) => {
+                    // console.log(response.data)
+                    var logs_data = response.data
+
+                    res.render('pages/maintenance',
+                        {
+                            logs_data: logs_data,
+
+                        });
+                });
+        }
+
+        );
+});
+
 app.post('/maintenance/update', function (req, res) {
     axios.put('http://127.0.0.1:5000/update_maintenance_log',
         {
-            log_id: req.body.log_id,
-            garage_id: req.body.garage_id,
-            vehicle_id: req.body.vehicle_id,
+            log_id:req.body.log_id,
             date: req.body.date,
             status: req.body.status,
             note: req.body.note
@@ -559,7 +596,7 @@ app.post('/maintenance/update', function (req, res) {
 
                     res.render('pages/maintenance',
                         {
-                            logs_data: logs_data[0],
+                            logs_data: logs_data,
 
                         });
                 });

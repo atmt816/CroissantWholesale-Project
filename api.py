@@ -834,6 +834,40 @@ def get_maintenance_info(log_id):
     maintenance = execute_read_query(conn, sql)
     return jsonify(maintenance)
 
+# PUT method for maintenance_logs
+@app.route('/update_maintenance_log', methods=['PUT'])
+def update_maintenance_log():
+    # The user input is gathered in JSON format and stored into an empty variable
+    maintenance_data = request.get_json()
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    log_id = maintenance_data['log_id']
+    date = maintenance_data['date']
+    status = maintenance_data['status']
+    note = maintenance_data['note']
+
+    # date format as yyyy-mm-dd(2022-03-04) or mm-dd-yyyy(03-04-2022)
+    #fmt_date = str(datetime.strptime(date, '%m-%d-%Y').date())
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    cursor = conn.cursor()
+    sql = "UPDATE maintenance_logs SET date = %s, status = %s, note = %s WHERE log_id = %s"
+    val = (date, status, note, log_id)
+
+    cursor.execute(sql, val)
+    conn.commit()
+    return 'Maintenance Log was updated successfully'
+
+@app.route('/deletemaintenance', methods=['PUT'])
+def delete_maintenance_info():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    maintenance_data = request.get_json()
+    log_id = maintenance_data['log_id']
+    sql = "DELETE FROM maintenance_logs WHERE log_id = %s" % (log_id)
+    execute_query(conn,sql)
+    return 'Maintenance log was successfully deleted'
 
 @app.route('/addmaintenancelog', methods=['POST'])
 def add_maintenance_log():
@@ -881,36 +915,6 @@ def get_garagemain_log(garage_id):
         garage_id)
     garage_main_log = execute_read_query(conn, sql)
     return jsonify(garage_main_log)
-
-
-# PUT method for maintenance_logs
-@app.route('/update_maintenance_log', methods=['PUT'])
-def update_maintenance_log():
-    # The user input is gathered in JSON format and stored into an empty variable
-    maintenance_data = request.get_json()
-    # we will be using log_id to reference the entry to update
-    log_id = maintenance_data['log_id']
-    # The JSON object is then separated into variables so that they may be used in a sql query
-    garage_id = maintenance_data['garage_id']
-    vehicle_id = maintenance_data['vehicle_id']
-    date = maintenance_data['date']
-    status = maintenance_data['status']
-    note = maintenance_data['note']
-
-    # date format as yyyy-mm-dd(2022-03-04) or mm-dd-yyyy(03-04-2022)
-    fmt_date = str(datetime.strptime(date, '%m-%d-%Y').date())
-
-    conn = create_connection(
-        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-
-    cursor = conn.cursor()
-    sql = "UPDATE maintenance_logs SET garage_id = %s, vehicle_id = %s, date = %s, status = %s, note = %s WHERE log_id = %s"
-    val = (garage_id, vehicle_id, fmt_date, status, note, log_id)
-
-    cursor.execute(sql, val)
-    conn.commit()
-    return 'Maintenance Log was updated successfully'
-
 
 
 ############################# PRODUCTS ###################################

@@ -75,6 +75,9 @@
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
               Edit
             </button>
+            <p><form method="post" action="/deletemaintenance">
+              <button type="submit" value=<%=logs_data[0].log_id %>>Delete</button>
+          </form></p>
             
             <!-- Modal -->
             <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -87,26 +90,18 @@
                   <div class="modal-body">
                     <form action="/maintenance/update" method="post" class="row g-3">
                       <input class="form-control" name="log_id" id="log_id" type="hidden" value=<%=logs_data[0].log_id %>> 
-                      <div class="col-md-6">
-                        <label for="firstname" class="form-label">Garage ID</label>
-                        <input type="text" class="form-control" name="garage_id" id="garage_id" value= "<%= logs_data[0].garage_id %>">
-                      </div>
-                      <div class="col-md-6">
-                        <label for="firstname" class="form-label">Vehicle ID</label>
-                        <input type="text" class="form-control" name="vehicle_id" id="vehicle_id" value= "<%= logs_data[0].vehicle_id %>">
-                      </div>
                       <div class="col-md-6 pb-2">
-                        <label for="firstname" class="form-label">Date</label>
+                        <label for="date" class="form-label">Date</label>
                         <input type="text" class="form-control" name="date" id="date" value= "<%= logs_data[0].date %>">
                       </div>
                       <hr class="hr" />
                       <div class="col-md-6">
-                        <label for="email" class="form-label">Maintenance Status</label>
-                        <input type="email" class="form-control" id="status" name="status" value= "<%= logs_data[0].status %>">
+                        <label for="status" class="form-label">Maintenance Status</label>
+                        <input type="text" class="form-control" id="status" name="status" value= "<%= logs_data[0].status %>">
                       </div>
                       <div class="col-md-6">
-                        <label for="lastname" class="form-label">Additional Notes</label>
-                        <input type="phone" class="form-control" id="note" name="note" value= <%= logs_data[0].note %>>
+                        <label for="note" class="form-label">Additional Notes</label>
+                        <input type="note" class="form-control" id="note" name="note" value= <%= logs_data[0].note %>>
                       </div>
                       
                   </div>
