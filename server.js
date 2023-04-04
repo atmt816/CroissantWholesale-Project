@@ -492,29 +492,39 @@ app.get('/ordersinfo/:id', function (req, res) {
 });
 
 
-app.post('/orders/update', function (req, res) {
+app.post('/orders/update', function (req, res) { 
+    lineItems = Object.values(req.body.line_items).map((item) => {
+        return {
+            product_id: parseInt(item.product_id),
+            quantity: parseInt(item.quantity),
+            price_per_unit: parseFloat(item.price_per_unit),
+            total: parseFloat(item.total)
+
+        };
+    });
     axios.put('http://127.0.0.1:5000/update_order',
         {
             order_id: req.body.order_id,
             customer_id: req.body.customer_id,
             status: req.body.status,
             delivery_date: req.body.delivery_date,
-            line_items: req.body.line_items
+            line_items: lineItems
 
         }
     )
-        .then((response) => {
-            axios.get('http://127.0.0.1:5000/vendors')
-                .then((response, states) => {
-                    // console.log(response.data)
-                    var vendor_data = response.data
+    .then((response) => {
+        axios.get('http://127.0.0.1:5000/orders')
+            .then((response, states) => {
+                // console.log(response.data)
+                var order_data = response.data
 
-                    res.render('pages/vendors',
-                        {
-                            vendor_data: vendor_data[0],
-                            states: vendor_data[1]
-
-                        });
+                res.render('pages/orders',
+                    {
+                        order_data: order_data[0],
+                        customers: order_data[1],
+                        products: order_data[2],
+                        line_items: order_data[3]
+                    });
                 });
         }
 

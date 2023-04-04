@@ -908,7 +908,7 @@ def update_order():
             index = index + 1
 
     execute_query(conn, sql)
-
+    print(line_items)
     return 'Order was updated Successfully'
 
 

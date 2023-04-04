@@ -18,7 +18,7 @@
     <div class="p-5 mb-4 bg-white rounded-3 top-buffer">
       <h2 class="text-center">
         Order Information
-
+        
       </h2>
       <a href="/orders" class="link-primary pb-4">Go Back</a>
       <h5 class="pb-1 pt-2">Order</h5>
@@ -28,6 +28,66 @@
             Order ID
             <p class="pt-1">
               <%= order_data[0].order_id %>
+            </p>
+          </div>
+          <div class="col-sm">
+            Business Name
+            <p class="pt-1">
+              <%= customer_data[0].customer_id %>
+            </p>
+          </div>
+          <div class="col-sm">
+            Business Name
+            <p class="pt-1">
+              <%= customer_data[0].business_name %>
+            </p>
+          </div>
+          
+        </div>
+      </div>
+      <div class="container pt-4">
+        <div class="row">
+          <div class="col-sm">
+            Date Produced
+            <p class="pt-1">
+              <%= order_data[0].date_produced %>
+            </p>
+          </div>
+          <div class="col-sm">
+            Delivery Date
+            <p class="pt-1">
+              <%= order_data[0].delivery_date %>
+            </p>
+          </div>
+          <div class="col-sm">
+            Order Status
+            <p class="pt-1">
+              <%= order_data[0].status %>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="hr hr-blurry" />
+      <h5>Customer Information</h5>
+      <div class="container pt-2">
+        <div class="row">
+          <div class="col-sm">
+            Phone Number
+            <p class="pt-1">
+              <%= customer_data[0].phone %>
+            </p>
+          </div>
+          <div class="col-sm">
+            Email
+            <p class="pt-1">
+              <%= customer_data[0].email %>
+            </p>
+          </div>
+          <div class="col-sm pb-4">
+            Address
+            <p class="pt-1">
+              <%= customer_data[0].street %> <%= customer_data[0].city %>,  <%= customer_data[0].state_code_id %>,  <%= customer_data[0].zipcode %>
             </p>
           </div>
           <hr class="hr hr-blurry" />
@@ -66,6 +126,8 @@
               <%= sumtotal %>
             </p>
           </div>
+          </div>
+          
           <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
             Edit
           </button>
@@ -111,11 +173,11 @@
                     <% order_data.forEach(function(order_data) { %>
                       <div class="col-md-6">
                         <label for="product" class="form-label">Product</label>
-                        <select class="form-select" name="line_items[product_id]" id="line_items[product_id]">
+                        <select class="form-select" type="number" name="line_items[product_id]" id="line_items[product_id]">
                           <option value=<%=parseInt(order_data.product_id)%>><%=order_data.product_name%>
                           </option>
                           <% product_data.forEach(function(product_data) { %>
-                            <option value=<%=product_data.product_id %>><%=product_data.product_name %>
+                            <option value=<%=parseInt(product_data.product_id) %>><%=product_data.product_name %>
                             </option>
                             <% }); %>
                         </select>
@@ -132,7 +194,7 @@
                       </div>
                       <div class="col-md-6">
                         <label for="total">Total:</label>
-                        <input type="text" class="form-control" id="line_items[total]" name="line_items[total]" value="<%= order_data.total %>">
+                        <input type="number" class="form-control" id="line_items[total]" name="line_items[total]" value="<%= order_data.total %>">
                       </div>
                       <hr>
                       <% }); %>
