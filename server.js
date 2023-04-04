@@ -476,7 +476,8 @@ app.get('/vehiclesinfo/:id', function (req, res) {
 
         res.render('pages/vehiclesinfo',
             {
-                vehicles_data: vehicles_data[0]
+                vehicles_data: vehicles_data[0],
+                maintenance_data: vehicles_data[1]
             });
     });
 
