@@ -350,7 +350,22 @@ app.get('/vendors', function (req, res) {
         });
 });
 
+app.get('/vendinfo/:id', function (req, res) {
+    const vendor_id = req.params.id;
 
+
+    axios.get('http://127.0.0.1:5000/vendors/' + vendor_id
+    ).then((response, states) => {
+        var vendor_data = response.data
+
+        res.render('pages/vendinfo',
+            {
+                vendor_data: vendor_data[0],
+                states: vendor_data[1]
+            });
+    });
+
+});
 
 app.post('/vendors/add', function (req, res) {
     axios.post('http://127.0.0.1:5000/vendors/add',
@@ -492,17 +507,17 @@ app.get('/ordersinfo/:id', function (req, res) {
 });
 
 
-app.post('/orders/update', function (req, res) { 
+app.post('/orders/update', function (req, res) {
     const lineItems = Object.values(req.body.line_items).map((item) => {
         return {
-          order_id: req.body.order_id,
-          product_id: parseInt(item.product_id),
-          quantity: parseInt(item.quantity),
-          price_per_unit: parseFloat(item.price_per_unit),
-          total: parseFloat(item.total)
+            order_id: req.body.order_id,
+            product_id: parseInt(item.product_id),
+            quantity: parseInt(item.quantity),
+            price_per_unit: parseFloat(item.price_per_unit),
+            total: parseFloat(item.total)
         };
-      });
-      console.log(lineItems)
+    });
+    console.log(lineItems)
     axios.put('http://127.0.0.1:5000/update_order',
         {
             order_id: req.body.order_id,
@@ -513,19 +528,19 @@ app.post('/orders/update', function (req, res) {
 
         }
     )
-    .then((response) => {
-        axios.get('http://127.0.0.1:5000/orders')
-            .then((response, states) => {
-                // console.log(response.data)
-                var order_data = response.data
-                console.log(lineItems)
-                res.render('pages/orders',
-                    {
-                        order_data: order_data[0],
-                        customers: order_data[1],
-                        products: order_data[2],
-                        line_items: order_data[3]
-                    });
+        .then((response) => {
+            axios.get('http://127.0.0.1:5000/orders')
+                .then((response, states) => {
+                    // console.log(response.data)
+                    var order_data = response.data
+                    console.log(lineItems)
+                    res.render('pages/orders',
+                        {
+                            order_data: order_data[0],
+                            customers: order_data[1],
+                            products: order_data[2],
+                            line_items: order_data[3]
+                        });
                 });
         }
 
