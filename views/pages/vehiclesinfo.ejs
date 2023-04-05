@@ -1,78 +1,170 @@
 <head>
-    <%- include('../partials/head'); %>
-  </head>
+  <%- include('../partials/head'); %>
+</head>
+
+
+<style>
+  .top-buffer {
+    margin-top: 60px;
+  }
+</style>
+
+<body class="container">
+  <header>
+    <%- include('../partials/header'); %>
+  </header>
+
+  <main class="container pt-5">
+    <div class="p-5 mb-4 bg-white rounded-3 top-buffer">
+      <h2 class="text-center">
+        Vehicle Information
+      </h2>
+      <a href="/vehicles" class="link-primary pb-4">Go Back</a>
+      <h5 class="pb-1 pt-2">General Information</h5>
+      <div class="container pt-2">
+        <div class="row">
+          <div class="col-sm">
+            Vehicle ID
+            <p class="pt-1">
+              <%= vehicles_data[0].vehicle_id %>
+            </p>
+          </div>
+          <div class="col-sm">
+            License Plate
+            <p class="pt-1">
+              <%= vehicles_data[0].license_plate %>
+            </p>
+          </div>
+          <div class="col-sm">
+            Make
+            <p class="pt-1">
+              <%= vehicles_data[0].make %>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="container pt-4">
+        <div class="row">
+          <div class="col-sm">
+            Model
+            <p class="pt-1">
+              <%= vehicles_data[0].model %>
+            </p>
+          </div>
+          <div class="col-sm">
+            Vin
+            <p class="pt-1">
+              <%= vehicles_data[0].vin %>
+            </p>
+          </div>
+          <div class="col-sm">
+            Status
+            <p class="pt-1">
+              <%= vehicles_data[0].status %>
+            </p>
+          </div>
+        </div>
+      </div>
+      
+      <hr class="hr hr-blurry" />
+        <h5>Vehicle Maintenance Information</h5>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Log ID</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Note</th>
+              <th>Garage</th>
+              <th>Phone</th>
+              <th>Hours</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% maintenance_info.forEach(function(maintenance_info, log) { %>
+              <tr>
+                <td>
+                  <%= maintenance_info.log_id %>
+                </td>
+                <td>
+                  <%= maintenance_info.date %>
+                </td>
+                <td>
+                  <%= maintenance_info.status %>
+                </td>
+                <td>
+                  <%= maintenance_info.note %>
+                </td>
+                <td>
+                  <%= maintenance_info.garage %>
+                </td>
+                <td>
+                  <%= maintenance_info.phone %>
+                </td>
+                <td>
+                  <%= maintenance_info.garage_hrs %>
+                </td>
+               
+              </tr>
+              <% }); %>
+          </tbody>
+        </table>
+
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          Edit
+        </button>
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel">Update Current Vehicle</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form action="/vehicles/update" method="post" class="row g-3">
+                  <input class="form-control" name="emp_id" type="hidden" id="emp_id" value=<%=vehicles_data.vehicle_id%>>
+                  <div class="col-md-6">
+                    <label for="license_plate" class="form-label">License Plate</label>
+                    <input type="text" class="form-control" name="license_plate" id="license_plate" value=<%= vehicles_data.license_plate %>>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="make" class="form-label">Make</label>
+                    <input type="text" class="form-control" name="make" id="make" value=<%= vehicles_data.make %>>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="model" class="form-label">Model</label>
+                    <input type="text" class="form-control" name="model" id="model" value=<%= vehicles_data.model %>>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="vin" class="form-label">Vin</label>
+                    <input type="text" class="form-control" name="model" id="model" value=<%= vehicles_data.vin %>>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="status" class="form-label">Status</label>
+                    <select id="status" name="status" class="form-select">                  
+                      <option selected>Active</option>
+                      <option>Terminated</option>
+                    </select>
+                  </div>
+                 
+                  
   
-  
-  <style>
-    .top-buffer {
-      margin-top: 60px;
-    }
-  </style>
-  
-  <body class="container">
-    <header>
-      <%- include('../partials/header'); %>
-    </header>
-  
-    <main class="container pt-5">
-      <div class="p-5 mb-4 bg-white rounded-3 top-buffer">
-        <h2 class="text-center">
-          Vehicle Information
-        </h2>
-        <a href="/employees" class="link-primary pb-4">Go Back</a>
-        <h5 class="pb-1 pt-2">General Information</h5>
-        <div class="container pt-2">
-          <div class="row">
-            <div class="col-sm">
-              Vehicle ID
-              <p class="pt-1">
-                <%= vehicles_data[0].vehicle_id %>
-              </p>
-            </div>
-            <div class="col-sm">
-              License Plate
-              <p class="pt-1">
-                <%= vehicles_data[0].license_plate %>
-              </p>
-            </div>
-            <div class="col-sm">
-              Make
-              <p class="pt-1">
-                <%= vehicles_data[0].make %>
-              </p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" type="button" class="btn btn-primary">Update Vehicle</button>
+                </form>
+              </div>
             </div>
           </div>
         </div>
-        <div class="container pt-4">
-          <div class="row">
-            <div class="col-sm">
-              Model
-              <p class="pt-1">
-                <%= vehicles_data[0].model %>
-              </p>
-            </div>
-            <div class="col-sm">
-              Vin
-              <p class="pt-1">
-                <%= vehicles_data[0].vin %>
-              </p>
-            </div>
-            <div class="col-sm">
-              Status
-              <p class="pt-1">
-                <%= vehicles_data[0].status %>
-              </p>
-            </div>
-          </div>
-        </div>
-  
+      
         
-          
-  
-        </div>
-        
-        <footer>
-          <%- include('../partials/footer'); %>
-      </footer>
-    </main>
-  </body>
+
+      </div>
+      
+      <footer>
+        <%- include('../partials/footer'); %>
+    </footer>
+  </main>
+</body>
