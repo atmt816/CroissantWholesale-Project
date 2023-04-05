@@ -785,7 +785,7 @@ def get_vehicles_info(vehicle_id):
         WHERE vehicle_id = '%s';""" % (vehicle_id)
     vehicles = execute_read_query(conn, sql)
 
-    sql = """SELECT v.vehicle_id, ml.log_id, ml.date, ml.status, ml.note, g.garage_name, g.phone,
+    sql = """SELECT v.vehicle_id, ml.log_id, ml.date, ml.status, ml.note, g.garage_name, g.phone, g.garage_hrs
             FROM vehicles v
             JOIN maintenance_logs ml
             ON v.vehicle_id = ml.vehicle_id
@@ -808,9 +808,27 @@ def get_vehicles_info(vehicle_id):
 def get_maintenance():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "SELECT logs.log_id, v.license_plate, g.garage_name ,logs.date, logs.status, logs.note FROM maintenance_logs AS logs INNER JOIN vehicles AS v ON logs.vehicle_id = v.vehicle_id INNER JOIN garage AS g ON logs.garage_id = g.garage_id ORDER BY date DESC;"
+    # sql = "SELECT * FROM employees"
+    sql = """
+        SELECT logs.log_id, v.license_plate, g.garage_name ,logs.date, logs.status, logs.note 
+        FROM maintenance_logs AS logs 
+        INNER JOIN vehicles AS v ON logs.vehicle_id = v.vehicle_id 
+        INNER JOIN garage AS g ON logs.garage_id = g.garage_id 
+        ORDER BY date DESC;
+        """
     maintenance = execute_read_query(conn, sql)
-    return jsonify(maintenance)
+
+    sql = """
+        SELECT * FROM garage;
+        """
+    garage = execute_read_query(conn, sql)
+
+    sql = """
+        SELECT * FROM vehicles;
+        """
+    vehicles = execute_read_query(conn, sql)
+
+    return jsonify(maintenance, garage, vehicles)
 
 #Specific maintenance log details for selected row
 @app.route('/maintenance/<log_id>', methods=['GET'])
@@ -854,6 +872,7 @@ def delete_maintenance_info():
     log_id = maintenance_data['log_id']
     sql = "DELETE FROM maintenance_logs WHERE log_id = %s" % (log_id)
     execute_query(conn,sql)
+    print(log_id)
     return 'Maintenance log was successfully deleted'
 
 @app.route('/addmaintenancelog', methods=['POST'])

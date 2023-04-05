@@ -96,7 +96,7 @@
                   <%= maintenance_info.note %>
                 </td>
                 <td>
-                  <%= maintenance_info.garage %>
+                  <%= maintenance_info.garage_name %>
                 </td>
                 <td>
                   <%= maintenance_info.phone %>
@@ -122,22 +122,22 @@
               </div>
               <div class="modal-body">
                 <form action="/vehicles/update" method="post" class="row g-3">
-                  <input class="form-control" name="emp_id" type="hidden" id="emp_id" value=<%=vehicles_data.vehicle_id%>>
+                  <input class="form-control" name="vehicle_id" type="hidden" id="vehicle_id" value="<%=vehicles_data[0].vehicle_id%>">
                   <div class="col-md-6">
                     <label for="license_plate" class="form-label">License Plate</label>
-                    <input type="text" class="form-control" name="license_plate" id="license_plate" value=<%= vehicles_data.license_plate %>>
+                    <input type="text" class="form-control" name="license_plate" id="license_plate" value="<%= vehicles_data[0].license_plate %>">
                   </div>
                   <div class="col-md-6">
                     <label for="make" class="form-label">Make</label>
-                    <input type="text" class="form-control" name="make" id="make" value=<%= vehicles_data.make %>>
+                    <input type="text" class="form-control" name="make" id="make" value=<%= vehicles_data[0].make %>>
                   </div>
                   <div class="col-md-6">
                     <label for="model" class="form-label">Model</label>
-                    <input type="text" class="form-control" name="model" id="model" value=<%= vehicles_data.model %>>
+                    <input type="text" class="form-control" name="model" id="model" value=<%= vehicles_data[0].model %>>
                   </div>
                   <div class="col-md-6">
                     <label for="vin" class="form-label">Vin</label>
-                    <input type="text" class="form-control" name="model" id="model" value=<%= vehicles_data.vin %>>
+                    <input type="text" class="form-control" name="vin" id="vin" value=<%= vehicles_data[0].vin %>>
                   </div>
                   <div class="col-md-6">
                     <label for="status" class="form-label">Status</label>

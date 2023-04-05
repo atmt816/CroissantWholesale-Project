@@ -1,5 +1,7 @@
 <head>
   <%- include('../partials/head'); %>
+ 
+
 </head>
 
 
@@ -160,13 +162,14 @@
                       <option>Terminated</option>
                     </select>
                   </div>
-                  <div class="col-md-6">
+                  <div class="col-md-6"> 
                     <label for="inputCity" class="form-label">Start Date</label>
-                    <input type="text" class="form-control" name="start_date" id="start_date" value="<%= employee_data[0].start_date %>">
+                    <!-- https://stackoverflow.com/questions/12794860/how-to-use-node-modules-like-momentjs-in-ejs-views -->
+                    <input type="text" class="form-control" name="start_date" id="start_date" value="<%= moment(employee_data[0].start_date).format('YYYY-MM-DD') %>">
                   </div>
                   <div class="col-md-6">
                     <label for="inputCity" class="form-label">End Date</label>
-                    <input type="text" class="form-control" name="end_date" id="end_date" value="<%= employee_data[0].end_date %>">
+                    <input type="text" class="form-control" name="end_date" id="end_date" value="<%= moment(employee_data[0].end_date).format('YYYY-MM-DD') %>">
                   </div>
                   
   

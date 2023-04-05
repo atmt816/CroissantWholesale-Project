@@ -9,6 +9,9 @@ const req = require('express/lib/request');
 var selectedID = "";
 app.use(bodyParser.urlencoded());
 app.set('view engine', 'ejs');
+var moment = require('moment');
+app.locals.moment = moment;
+
 
 // set the view engine to ejs
 
@@ -48,6 +51,11 @@ app.get('/empinfo/:id', function (req, res) {
     axios.get('http://127.0.0.1:5000/employees/' + emp_id
     ).then((response, states) => {
         var employee_data = response.data
+
+        // // https://stackoverflow.com/questions/23593052/format-javascript-date-as-yyyy-mm-dd
+        // const formatted_startdate = moment(employee_data.start_date).format('YYYY-MM-DD');
+        
+        // employee_data.start_date = formatted_startdate;
 
         res.render('pages/empinfo',
             {
@@ -160,12 +168,13 @@ app.post('/roles/add', function (req, res) {
             axios.get('http://127.0.0.1:5000/roles')
                 .then((response, states) => {
                     // console.log(response.data)
+                    
                     var roles_data = response.data
 
                     res.render('pages/roles',
                         {
-                            roles_data: roles_data
-
+                            roles_data: roles_data,
+                            success: 'The new role has been added.'
                         });
                 });
         });
@@ -210,8 +219,8 @@ app.post('/roles/update', function (req, res) {
 
                     res.render('pages/roles',
                         {
-                            roles_data: roles_data
-
+                            roles_data: roles_data,
+                            success: 'The role has been updated.'
                         });
                 });
         }
@@ -507,9 +516,7 @@ app.post('/vehicles/update', function (req, res) {
 
                         });
                 });
-        }
-
-        );
+        });
 });
 
 
@@ -523,7 +530,9 @@ app.get('/maintenance', function (req, res) {
 
             res.render('pages/maintenance',
                 {
-                    logs_data: logs_data
+                    logs_data: logs_data[0],
+                    garage: logs_data[1],
+                    vehicles: logs_data[2]
 
                 });
         });
@@ -540,35 +549,22 @@ app.post('/maintenance/addlog', function (req, res) {
 
         }
     )
+    .then((response, states) => {
+        axios.get('http://127.0.0.1:5000/maintenance')
         .then((response) => {
-            axios.get('http://127.0.0.1:5000/maintenance')
-                .then((response, states) => {
-                    // console.log(response.data)
-                    var logs_data = response.data
-
-                    res.render('pages/maintenance',
-                        {
-                            logs_data: logs_data
-                         
-                        });
-                });
-        });
-});
-
-/*app.delete('/deletemaintenance/:id', function (req, res) {
-    const log_id = req.params.id;
-
-    axios.delete('http://127.0.0.1:5000/deletemaintenance/' + log_id
-    ).then((response, states) => {
         var logs_data = response.data
 
-        res.render('pages/maintenance',
-            {
-                logs_data: logs_data
-            });
-    });
+            res.render('pages/maintenance',
+                {
+                    logs_data: logs_data[0],
+                    garage: logs_data[1],
+                    vehicles: logs_data[2]
+                });
+                });
+        
+});
+});
 
-});*/
 
 
 app.get('/maintenanceinfo/:id', function (req, res) {
@@ -601,9 +597,11 @@ app.post('/maintenance/delete', function (req, res) {
 
                     res.render('pages/maintenance',
                         {
-                            logs_data: logs_data,
-
+                            logs_data: logs_data[0],
+                            garage: logs_data[1],
+                            vehicles: logs_data[2]
                         });
+                        
                 });
         }
 
@@ -628,8 +626,9 @@ app.post('/maintenance/update', function (req, res) {
 
                     res.render('pages/maintenance',
                         {
-                            logs_data: logs_data,
-
+                            logs_data: logs_data[0],
+                            garage: logs_data[1],
+                            vehicles: logs_data[2]
                         });
                 });
         }

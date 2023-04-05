@@ -71,15 +71,19 @@
                 </div>
               </div>
             </div>
-            
+            <div class="btn-group" role="group" >
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
               Edit
             </button>
-            <p><form method="post" action="/deletemaintenance">
-              <button type="submit" value=<%=logs_data[0].log_id %>>Delete</button>
-          </form></p>
             
-            <!-- Modal -->
+            
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+              Delete
+            </button>
+            
+            
+          </div>
+            <!-- Edit Modal -->
             <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
               <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -101,7 +105,7 @@
                       </div>
                       <div class="col-md-6">
                         <label for="note" class="form-label">Additional Notes</label>
-                        <input type="note" class="form-control" id="note" name="note" value= <%= logs_data[0].note %>>
+                        <input type="note" class="form-control" id="note" name="note" value= "<%= logs_data[0].note %>">
                       </div>
                       
                   </div>
@@ -111,6 +115,34 @@
                     </form>
 
         </div>
+        </div>
+        </div>
+        </div>
+         <!-- Edit Modal -->
+         <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form action="/maintenance/delete" method="post" class="row g-3">
+                  <input class="form-control" name="log_id" id="log_id" type="hidden"  value="<%=logs_data[0].log_id %>"> 
+                  <h3 class="text-center">Are you sure you want to delete?</h3>
+                  
+              </div>
+                
+                  <div class="text-center pb-5">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                  <button type="submit" class="btn btn-danger">Confirm</button>
+                  </div>
+                
+                </form>
+
+    </div>
+    </div>
+    </div>
         <footer>
           <%- include('../partials/footer'); %>
       </footer>

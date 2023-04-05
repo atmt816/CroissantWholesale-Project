@@ -36,32 +36,41 @@
                 <form action="/maintenance/addlog" method="post" class="row g-3">
   
                   <div class="col-md-6">
-                    <label for="firstname" class="form-label">Garage ID</label>
-                    <input class="form-control" type="text" name="garage_id" id="garage_id">
-            
+                  <label for="inputGarage" class="form-label">Garage</label>
+                  <select class="form-select" name="garage_id" id="garage_id">
+                    <% garage.forEach(function(garage) { %>
+                      <option value=<%=garage.garage_id %>><%=garage.garage_name %>
+                      </option>
+                      <% }); %>
+                  </select>
   
                   </div>
                   <div class="col-md-6">
-                    <label for="lastname" class="form-label">Vehicle ID</label>
-                    <input class="form-control" type="text" name="vehicle_id" id="vehicle_id"
-                      placeholder="Car Make">
-                  </div>
+                    <label for="lastname" class="form-label">Vehicle</label>
+                    <select class="form-select" name="vehicle_id" id="vehicle_id">
+                      <% vehicles.forEach(function(vehicles) { %>
+                        <option value=<%=vehicles.vehicle_id %>><%=vehicles.make %> <%=vehicles.model %>
+                        </option>
+                        <% }); %>
+                    </select>
+                    </div>
                   <div class="col-md-6">
                     <label for="inputmodel" class="form-label">Date</label>
-                    <input class="form-control" type="text" name="date" id="date"  placeholder="Date">
+                    <input class="form-control" type="text" name="date" id="date" placeholder="Date">
                   </div>
                   <br>
                   <div class="col-md-6">
-                    <label for="firstname" class="form-label">Vehicle Status</label>
-                    <input class="form-control" type="text" name="status" id="status" placeholder="Ex. Good condition">
+                    <label for="status" class="form-label">Maintenance Status</label>
+                    <select id="status" name="status" class="form-select">
+                      <option selected>In-Progress</option>
+                      <option>Completed</option>
+                    </select>
                   </div>
                   
                   <div class="col-md-6">
                     <label for="firstname" class="form-label">Additional Notes</label>
                     <input class="form-control" type="text" name="note" id="note" placeholder="Ex. Next oil check in 6 weeks">
                   </div>
-  
-  
   
               </div>
               <div class="modal-footer">
