@@ -785,12 +785,7 @@ def get_vehicles_info(vehicle_id):
         WHERE vehicle_id = '%s';""" % (vehicle_id)
     vehicles = execute_read_query(conn, sql)
 
-    sql = """
-         SELECT * FROM states;
-        """
-    states = execute_read_query(conn, sql)
-
-    sql = """SELECT v.vehicle_id, ml.log_id, ml.date, ml.status, ml.note, g.garage_name, g.phone, g.street, g.city, s.state_code_id, g.zipcode
+    sql = """SELECT v.vehicle_id, ml.log_id, ml.date, ml.status, ml.note, g.garage_name, g.phone,
             FROM vehicles v
             JOIN maintenance_logs ml
             ON v.vehicle_id = ml.vehicle_id
@@ -801,7 +796,7 @@ def get_vehicles_info(vehicle_id):
         WHERE v.vehicle_id = '%s';""" % (vehicle_id)
     maintenance_info = execute_read_query(conn, sql)
 
-    return jsonify(vehicles, states, maintenance_info)
+    return jsonify(vehicles, maintenance_info)
 
 
 # Maintenance_Logs Table CRUD

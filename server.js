@@ -477,7 +477,7 @@ app.get('/vehiclesinfo/:id', function (req, res) {
         res.render('pages/vehiclesinfo',
             {
                 vehicles_data: vehicles_data[0],
-                maintenance_data: vehicles_data[1]
+                maintenance_info: vehicles_data[1]
             });
     });
 
@@ -488,9 +488,9 @@ app.post('/vehicles/update', function (req, res) {
         {
             vehicle_id: req.body.vehicle_id,
             license_plate: req.body.license_plate,
-            make : req.body.make,
-            model : req.body.model,
-            vin : req.body.vin,
+            make: req.body.make,
+            model: req.body.model,
+            vin: req.body.vin,
             status : req.body.status
 
         }
