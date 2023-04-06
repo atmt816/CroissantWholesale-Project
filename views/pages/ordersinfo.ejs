@@ -171,14 +171,15 @@
                     </div>
                     <hr>
                     <h4>Line Items</h4>
+
+                    <% let lineItemCount = 0; %>
+                      
                     <% order_data.forEach(function(order_data) { %>
-                      <input class="form-control" name="order_id"  id="order_id"
-                      value=<%=order_data.order_id%>>
                       <div class="col-md-6">
                         <label for="product" class="form-label">Product</label>
-                        <select class="form-select" name="line_items[product_id]" id="line_items[product_id]">
+                        <select class="form-select" name="line_items[<%= lineItemCount%>][product_id]" id="line_items[<%= lineItemCount %>][product_id]">
                           <option value=<%=order_data.product_id %>><%=order_data.product_name%>
-                          </option>
+                          </option>               
                           <% product_data.forEach(function(product_data) { %>
                             <option value=<%=product_data.product_id %>><%=product_data.product_name %>
                             </option>
@@ -187,19 +188,20 @@
                       </div>
                       <div class="col-md-6">
                         <label for="quantity">Quantity:</label>
-                        <input type="text" class="form-control" id="line_items[quantity]" name="line_items[quantity]"
+                        <input type="text" class="form-control" id="line_items[<%= lineItemCount%>][quantity]" name="line_items[<%= lineItemCount%>][quantity]"
                           value="<%= order_data.quantity %>">
                       </div>
                       <div class="col-md-6">
                         <label for="price_per_unit">Price Per Unit:</label>
-                        <input type="text" class="form-control" id="line_items[price_per_unit]" name="line_items[price_per_unit]"
+                        <input type="text" class="form-control" id="line_items[<%= lineItemCount%>][price_per_unit]" name="line_items[<%= lineItemCount%>][price_per_unit]"
                           value="<%= order_data.price_per_unit %>">
                       </div>
                       <div class="col-md-6">
                         <label for="total">Total:</label>
-                        <input type="number" class="form-control" id="line_items[total]" name="line_items[total]" value="<%= order_data.total %>">
+                        <input type="number" class="form-control" id="line_items[total]" name="line_items[<%= lineItemCount%>][total]" value="<%= order_data.total %>">
                       </div>
                       <hr>
+                      <% lineItemCount++; %>
                       <% }); %>
                   
                 </div>
