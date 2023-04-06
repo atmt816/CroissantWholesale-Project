@@ -490,7 +490,7 @@ app.get('/ordersinfo/:id', function (req, res) {
         var order_data = response.data
         var obj = order_data[4]
         var sumtotal = parseInt(obj[0]["sum(total)"]);
-        console.log(sumtotal); // Output: total
+       
 
         res.render('pages/ordersinfo',
             {
@@ -508,23 +508,13 @@ app.get('/ordersinfo/:id', function (req, res) {
 
 
 app.post('/orders/update', function (req, res) {
-    const lineItems = Object.values(req.body.line_items).map((item) => {
-        return {
-            order_id: req.body.order_id,
-            product_id: parseInt(item.product_id),
-            quantity: parseInt(item.quantity),
-            price_per_unit: parseFloat(item.price_per_unit),
-            total: parseFloat(item.total)
-        };
-    });
-    console.log(lineItems)
     axios.put('http://127.0.0.1:5000/update_order',
         {
             order_id: req.body.order_id,
             customer_id: req.body.customer_id,
             status: req.body.status,
             delivery_date: req.body.delivery_date,
-            line_items: lineItems
+            line_items: req.body.line_items
 
         }
     )
@@ -533,7 +523,7 @@ app.post('/orders/update', function (req, res) {
                 .then((response, states) => {
                     // console.log(response.data)
                     var order_data = response.data
-                    console.log(lineItems)
+                    
                     res.render('pages/orders',
                         {
                             order_data: order_data[0],

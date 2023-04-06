@@ -897,7 +897,7 @@ def update_order():
     list_length = len(line_items)-1
     index = 0
     for item in line_items:
-        print(item)
+        
         product_id = item['product_id']
         quantity = item['quantity']
         price_per_unit = item['price_per_unit']
@@ -908,7 +908,7 @@ def update_order():
             index = index + 1
 
     execute_query(conn, sql)
-    print(line_items)
+    
     return 'Order was updated Successfully'
 
 
