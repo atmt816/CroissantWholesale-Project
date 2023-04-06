@@ -34,6 +34,10 @@
                   Customer Name
                   <p class="pt-1"><%= customer_data[0].first_name %> <%= customer_data[0].last_name %></p>
                 </div>
+                <div class="col-sm">
+                  Customer Status
+                  <p class="pt-1"><%= customer_data[0].customer_status %></p>
+                </div>
               </div>
             </div>
             <div class="container pt-5">
@@ -87,7 +91,14 @@
                         <input type="text" class="form-control" name="cust_acc_num" id="cust_acc_num" value=<%= customer_data[0].cust_acc_num %>>
 
                       </div>
-                      <br>
+                      <div class="col-md-6">
+                        <label for="inputstatus" class="form-label">Status</label>
+                        <select id="customer_status" name="customer_status" class="form-select">
+                          <option selected>Active</option>
+                          <option>Inactive</option>
+                        </select>
+                      </div>
+                      <hr>
                       <div class="col-md-6">
                         <label for="lastname" class="form-label">Customer First Name</label>
                         <input type="text" class="form-control" name="first_name" id="first_name" value=<%= customer_data[0].first_name %>>

@@ -52,11 +52,6 @@ app.get('/empinfo/:id', function (req, res) {
     ).then((response, states) => {
         var employee_data = response.data
 
-        // // https://stackoverflow.com/questions/23593052/format-javascript-date-as-yyyy-mm-dd
-        // const formatted_startdate = moment(employee_data.start_date).format('YYYY-MM-DD');
-        
-        // employee_data.start_date = formatted_startdate;
-
         res.render('pages/empinfo',
             {
                 employee_data: employee_data[0],
@@ -95,7 +90,8 @@ app.post('/employees/add', function (req, res) {
                         {
                             employee_data: employee_data[0],
                             states: employee_data[1],
-                            roles: employee_data[2]
+                            roles: employee_data[2],
+                            success: 'The new employee has been added.'
                         });
                 });
         });
@@ -128,9 +124,11 @@ app.post('/employees/update', function (req, res) {
 
                     res.render('pages/employees',
                         {
+                            success: 'The employee has been updated.',
                             employee_data: employee_data[0],
                             states: employee_data[1],
                             roles: employee_data[2]
+                            
                         });
                 });
         }
@@ -174,7 +172,7 @@ app.post('/roles/add', function (req, res) {
                     res.render('pages/roles',
                         {
                             roles_data: roles_data,
-                            success: 'The new role has been added.'
+                            sucess: "The new role has been added."
                         });
                 });
         });
@@ -291,7 +289,8 @@ app.post('/customers/add', function (req, res) {
                     res.render('pages/customers',
                         {
                             customer_data: customer_data[0],
-                            states: customer_data[1]
+                            states: customer_data[1],
+                            success: 'The new customer has been added.'
                         });
                 });
         });
@@ -325,7 +324,8 @@ app.post('/customers/update', function (req, res) {
                     res.render('pages/customers',
                         {
                             customer_data: customer_data[0],
-                            states: customer_data[1]
+                            states: customer_data[1],
+                            success: 'The customer has been updated.'
 
                         });
                 });
@@ -392,7 +392,8 @@ app.post('/vendors/add', function (req, res) {
                         {
                             vendor_data: vendor_data[0],
                             states: vendor_data[1],
-                            roles: vendor_data[2]
+                            roles: vendor_data[2],
+                            success: 'The new vendor has been added.'
                         });
                 });
         });
@@ -424,7 +425,8 @@ app.post('/vendors/update', function (req, res) {
                     res.render('pages/vendors',
                         {
                             vendor_data: vendor_data[0],
-                            states: vendor_data[1]
+                            states: vendor_data[1],
+                            success: 'The vendor has been updated.'
 
                         });
                 });

@@ -108,16 +108,16 @@
                   <input class="form-control" name="emp_id" type="hidden" id="emp_id" value=<%=employee_data[0].emp_id%>>
                   <div class="col-md-6">
                     <label for="firstname" class="form-label">First Name</label>
-                    <input type="text" class="form-control" name="first_name" id="firstname" value=<%= employee_data[0].first_name %>>
+                    <input type="text" class="form-control" name="first_name" id="firstname" value="<%= employee_data[0].first_name %>">
                   </div>
                   <div class="col-md-6">
                     <label for="lastname" class="form-label">Last Name</label>
-                    <input type="text" class="form-control" name="last_name" id="lastname" value=<%= employee_data[0].last_name %>>
+                    <input type="text" class="form-control" name="last_name" id="lastname" value="<%= employee_data[0].last_name %>">
                   </div>
                   <hr class="hr" />
                   <div class="col-md-6">
                     <label for="email" class="form-label">Email</label>
-                    <input type="email" class="form-control" name="email" id="email" value=<%= employee_data[0].email %>>
+                    <input type="email" class="form-control" name="email" id="email" value="<%= employee_data[0].email %>">
                   </div>
                   <div class="col-md-6">
                     <label for="lastname" class="form-label">Phone</label>
@@ -130,7 +130,7 @@
   
                   <div class="col-md-6">
                     <label for="inputCity" class="form-label">City</label>
-                    <input type="text" class="form-control" name="city" id="city" value=<%= employee_data[0].city %>>
+                    <input type="text" class="form-control" name="city" id="city" value="<%= employee_data[0].city %>">
                   </div>
                   <div class="col-md-4">
                     <label for="inputState" class="form-label">State</label>
@@ -150,7 +150,7 @@
                     <select class="form-select" name="role_id" id="role_id">
                       <option value=<%=employee_data[0].role_id%>><%=employee_data[0].role_name%> </option>
                       <% roles.forEach(function(roles) { %>
-                        <option value=<%=roles.Role_ID %>><%=roles.Role_Name %>
+                        <option value=<%=roles.role_id %>><%=roles.role_name %>
                         </option>
                         <% }); %>
                     </select>
@@ -169,7 +169,10 @@
                   </div>
                   <div class="col-md-6">
                     <label for="inputCity" class="form-label">End Date</label>
-                    <input type="text" class="form-control" name="end_date" id="end_date" value="<%= moment(employee_data[0].end_date).format('YYYY-MM-DD') %>">
+                    <input type="text" class="form-control" name="end_date" id="end_date" 
+                    value="<%if (employee_data[0].end_date) { %>
+                            <%= moment(employee_data[0].end_date).format('YYYY-MM-DD') %> 
+                            <% } else { %><% } %>">
                   </div>
                   
   

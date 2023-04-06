@@ -93,34 +93,6 @@ def employee_info():
     return jsonify(employees, states, roles)
 
 
-# employee_contact get method working now
-# adjust sql as needed - Misael
-# @app.route('/emp_info', methods=['GET'])
-# def get_employee_contact():
-#     conn = create_connection(
-#         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-#     sql = """SELECT e.emp_id, e.first_name, e.last_name, e.start_date, e.end_date, e.emp_status, r.role_name, ec.phone, ec.email, ec.street, ec.city, s.state_code_id, ec.zipcode
-#             FROM employees e
-#             JOIN employee_contact ec
-#             ON e.emp_id = ec.emp_id
-#             JOIN roles AS r
-# 			ON e.role_id = r.role_id
-#             JOIN states s
-#             ON ec.state_code_id = s.state_code_id;"""
-#     employee_info = execute_read_query(conn, sql)
-
-#     sql = """
-#         SELECT * FROM states;
-#         """
-#     states = execute_read_query(conn, sql)
-
-#     sql = """
-#         SELECT * FROM roles;
-#         """
-#     roles = execute_read_query(conn, sql)
-
-#     # sql = """SELECT * FROM states"""
-#     return jsonify(employee_info, states, roles)
 
 @app.route('/employees/<emp_id>', methods=['GET'])
 def get_employee_info(emp_id):
@@ -207,11 +179,11 @@ def update_employee():
     zipcode = update_data['zipcode']
 
     # date format as yyyy-mm-dd(2022-03-04) or mm-dd-yyyy(03-04-2022)
-    fmt_start_date = str(datetime.strptime(start_date, '%m-%d-%Y').date())
+    # fmt_start_date = str(datetime.strptime(start_date, '%m-%d-%Y').date())
 
-    fmt_end_date = "null"
-    if end_date != "null" and end_date != "NULL":
-        fmt_end_date = str(datetime.strptime(end_date, '%m-%d-%Y').date())
+    # fmt_end_date = "null"
+    # if end_date != "null" and end_date != "NULL":
+    #     fmt_end_date = str(datetime.strptime(end_date, '%m-%d-%Y').date())
 
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
@@ -219,7 +191,7 @@ def update_employee():
     cursor = conn.cursor()
     sql = "UPDATE employees SET first_name = %s, last_name = %s, start_date = %s, end_date = %s, emp_status = %s, role_id = %s WHERE emp_id = %s"
     val = (first_name, last_name,
-           fmt_start_date, fmt_end_date, emp_status, role_id, emp_id)
+           start_date, end_date, emp_status, role_id, emp_id)
     cursor.execute(sql, val)
 
     # update employee contacts table
@@ -230,55 +202,7 @@ def update_employee():
     conn.commit()
     return 'Employee was updated successfully'
 
-# CUSTOMER PAGE
 
-# @app.route('/addemployeecontact', methods=['POST'])
-# def add_employee_contact():
-#     # The user input is gathered in JSON format and stored into an empty variable
-#     employee_contact_data = request.get_json()
-#     # The JSON object is then separated into variables so that they may be used in a sql query
-#     phone = employee_contact_data['phone']
-#     email = employee_contact_data['email']
-#     street = employee_contact_data['street']
-#     city = employee_contact_data['city']
-#     state = employee_contact_data['state_code_id']
-#     zipcode = employee_contact_data['zipcode']
-#     emp_id = employee_contact_data['emp_id']
-
-#     conn = create_connection(
-#         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-#     sql = "INSERT INTO employee_contact(phone, email, street, city, state_code_id, zipcode, emp_id ) VALUES (%s, '%s', '%s', '%s', '%s', %s, %s)" % (
-#         phone, email, street, city, state, zipcode, emp_id)
-
-#     execute_query(conn, sql)
-#     return 'Employee Contact was added Successfully'
-
-
-# # PUT method for employees_contact
-# @app.route('/update_employee_contact', methods=['PUT'])
-# def update_employee_contact():
-#     # The user input is gathered in JSON format and stored into an empty variable
-#     employee_contact_data = request.get_json()
-#     # we will be using emp_id to reference the entry to update
-#     emp_id = employee_contact_data['emp_id']
-#     # The JSON object is then separated into variables so that they may be used in a sql query
-#     phone = employee_contact_data['phone']
-#     email = employee_contact_data['email']
-#     street = employee_contact_data['street']
-#     city = employee_contact_data['city']
-#     state_code_id = employee_contact_data['state_code_id']
-#     zipcode = employee_contact_data['zipcode']
-
-#     conn = create_connection(
-#         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-
-#     cursor = conn.cursor()
-#     sql = "UPDATE employee_contact SET phone = %s, email = %s, street = %s, city = %s, state_code_id = %s, zipcode = %s WHERE emp_id = %s"
-#     val = (phone, email, street, city, state_code_id, zipcode, emp_id)
-
-#     cursor.execute(sql, val)
-#     conn.commit()
-#     return 'Employee Contact was updated successfully'
 
 
 ############################# ROLES PAGE #######################################

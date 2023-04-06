@@ -19,6 +19,14 @@
       <h2 class="text-center pb-2">
         Customers
       </h2>
+
+      <% if (typeof success !== 'undefined') { %>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <%= success %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      <% } %>
+
       <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
         Create New Customer
       </button>
