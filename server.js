@@ -14,10 +14,10 @@ app.set('view engine', 'ejs');
 // set the view engine to ejs
 
 app.set('view engine', 'ejs');
-app.get('/home', function (req, res) {
+/*app.get('/home', function (req, res) {
 
     res.render('pages/home');
-});
+});*/
 
 app.get('/', function (req, res) {
 
@@ -558,6 +558,26 @@ app.get('/inventory', function (req, res) {
                     inventory_data: inventory_data[0],
                 });
         });
+});
+
+app.get("/home", async (req, res, next) => {
+
+    let chartApi;
+    let weekly_data;
+
+    try {
+        chartApi = await axios.get("http://127.0.0.1:5000/monthlyordercount")
+        weekly_data = await axios.get('http://127.0.0.1:5000/weeklyfulfillmentreport')
+        
+    } catch(err) {
+        console.error(err);
+        return res.end('err');
+    }
+
+    res.render('pages/chart',
+    {chartApi: chartApi.data,
+    weekly_data:weekly_data.data});
+
 });
 
 
