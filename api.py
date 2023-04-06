@@ -615,16 +615,6 @@ def get_inventory():
     return inventory
 
 
-# invoices get method working now
-# no data in invoices for now
-# adjust sql as needed - Misael
-@app.route('/invoices', methods=['GET'])
-def get_invoices():
-    conn = create_connection(
-        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "SELECT * FROM inventory"
-    invoices = execute_read_query(conn, sql)
-    return invoices
 
 
 # # maintenance get method working now
@@ -921,6 +911,66 @@ def get_garagemain_log(garage_id):
         garage_id)
     garage_main_log = execute_read_query(conn, sql)
     return jsonify(garage_main_log)
+
+
+############################# INVOICES ######################################
+
+# Invoices Table CRUD
+
+#Return all invoices 
+@app.route('/invoices', methods=['GET'])
+def get_invoices():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT * FROM invoices"
+    invoices = execute_read_query(conn, sql)
+    return jsonify(invoices)
+
+#Retrieve specific invoice data
+@app.route('/invoices/<invoice_id>', methods=['GET'])
+def get_invoice_info(invoice_id):
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = """
+        SELECT * FROM invoices
+        WHERE invoice_id = %s;
+        """ % (invoice_id)
+
+    invoices = execute_read_query(conn, sql)
+    return jsonify(invoices)
+
+# PUT method for invoices
+@app.route('/update_invoices', methods=['PUT'])
+def update_invoices():
+    # The user input is gathered in JSON format and stored into an empty variable
+    invoice_data = request.get_json()
+    # we will be using invoice_id to reference the entry to update
+    invoice_id = invoice_data['invoice_id']
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    customer_id = invoice_data['customer_id']
+    invoice_date = invoice_data['invoice_date']
+    invoice_total = invoice_data['invoice_total']
+    payment_status = invoice_data['payment_status']
+    date_paid = invoice_data['date_paid']
+
+    # date format as yyyy-mm-dd(2022-03-04) or mm-dd-yyyy(03-04-2022)
+    fmt_invoice_date = str(datetime.strptime(
+        invoice_date, '%m-%d-%Y').date())
+    # date format as yyyy-mm-dd(2022-03-04) or mm-dd-yyyy(03-04-2022)
+    fmt_date_paid = str(datetime.strptime(
+        date_paid, '%m-%d-%Y').date())
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    cursor = conn.cursor()
+    sql = "UPDATE invoices SET vendor_id = %s, customer_id = %s, invoice_number = %s, invoice_date = %s, invoice_total = %s, payment_status = %s, date_paid = %s WHERE invoice_id = %s"
+    val = (customer_id, fmt_invoice_date,
+           invoice_total, payment_status, fmt_date_paid, invoice_id)
+
+    cursor.execute(sql, val)
+    conn.commit()
+    return 'Invoice was updated successfully'
 
 
 ############################# PRODUCTS ###################################

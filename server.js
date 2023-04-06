@@ -740,6 +740,73 @@ app.post('/garage/update', function (req, res) {
         );
 });
 
+// INVOICES PAGE
+app.get('/invoices', function (req, res) {
+    axios.get('http://127.0.0.1:5000/invoices')
+        .then((response) => {
+
+            var invoice_data = response.data
+
+            res.render('pages/invoices',
+                {
+                    invoice_data: invoice_data
+
+                });
+        });
+});
+
+app.get('/invoicesinfo', function (req, res) {
+
+    res.render('pages/invoicesinfo');
+});
+
+
+app.get('/invoices/:id', function (req, res) {
+    const invoice_id = req.params.id;
+
+    axios.get('http://127.0.0.1:5000/invoices/' + invoice_id
+    ).then((response) => {
+        var invoice_data = response.data
+
+        res.render('pages/productsinfo',
+            {
+                invoice_data: invoice_data[0]
+            });
+    });
+
+});
+
+
+app.post('/invoices/update', function (req, res) {
+    axios.put('http://127.0.0.1:5000/update_invoices',
+        {
+            invoice_id: req.body.invoice_id,
+            customer_id: req.body.customer_id,
+            invoice_date: req.body.invoice_date,
+            invoice_total: req.body.invoice_total,
+            payment_status: req.body.payment_status,
+            date_paid: req.body.date_paid
+
+        }
+    )
+        .then((response) => {
+            axios.get('http://127.0.0.1:5000/invoices')
+                .then((response) => {
+                    // console.log(response.data)
+                    var invoice_data = response.data
+
+                    res.render('pages/invoices',
+                        {
+                            invoice_data: invoice_data
+
+                        });
+                });
+        }
+
+        );
+});
+
+
 // PRODUCTS PAGE
 app.get('/products', function (req, res) {
     axios.get('http://127.0.0.1:5000/products')
