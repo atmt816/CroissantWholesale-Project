@@ -768,7 +768,7 @@ app.get('/invoices/:id', function (req, res) {
     ).then((response) => {
         var invoice_data = response.data
 
-        res.render('pages/productsinfo',
+        res.render('pages/invoiceinfo',
             {
                 invoice_data: invoice_data[0]
             });

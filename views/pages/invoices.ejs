@@ -36,12 +36,12 @@
             <% invoice_data.forEach(function(invoice_data) { %>
               <tr>
                 <td>
-                  <a style="text-decoration:none" href="/invoicesinfo/<%= invoice_data.invoice_id%>">
+                  <a style="text-decoration:none" href="/invoices/<%= invoice_data.invoice_id%>">
                     <%= invoice_data.invoice_id%>
                   </a>
                 </td>
                 <td>
-                  <a style="text-decoration:none" href="/invoicesinfo/<%= invoice_data.invoice_id%>">
+                  <a style="text-decoration:none" href="/invoices/<%= invoice_data.invoice_id%>">
                     <%= invoice_data.customer_id%>
                   </a>
                 </td>
