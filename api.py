@@ -583,46 +583,78 @@ def get_vendor_inv_sheet():
 def get_inventory():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "SELECT * FROM inventory"
+    # sql = "SELECT * FROM inventory"
+
+    sql = """
+        SELECT i.inventory_id, v.vendor_id, v.vendor_name, i.item_name, i.item_amount, i.unit_cost, i.total_inv_cost, i.date_bought
+        FROM inventory AS i JOIN vendors AS v ON i.vendor_id = v.vendor_id;
+        """
     inventory = execute_read_query(conn, sql)
-    return inventory
+
+    sql = """
+        SELECT * FROM vendors;
+    """
+    vendors = execute_read_query(conn, sql)
+    return jsonify(inventory, vendors)
 
 
-@app.route('/addinventory', methods=['POST'])
+@app.route('/inveninfo/<inventory_id>', methods=['GET'])
+def get_inv_info(inventory_id):
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = """
+        SELECT i.inventory_id, v.vendor_id, v.vendor_name, i.item_name, i.item_amount, i.unit_cost, i.total_inv_cost, i.date_bought
+        FROM inventory AS i JOIN vendors AS v ON i.vendor_id = v.vendor_id where inventory_id = %s;
+        """ % (inventory_id)
+
+    inventory = execute_read_query(conn, sql)
+
+    sql = """
+        SELECT * FROM vendors;
+    """
+    vendors = execute_read_query(conn, sql)
+
+    return jsonify(inventory, vendors)
+
+
+@app.route('/inventory/add', methods=['POST'])
 def add_inventory():
     # The user input is gathered in JSON format and stored into an empty variable
     inventory_data = request.get_json()
     # The JSON object is then separated into variables so that they may be used in a sql query
     vendor_id = inventory_data['vendor_id']
     item_name = inventory_data['item_name']
-    item_amount = inventory_data['item_amount']
-    unit_cost = inventory_data['unit_cost']
+    item_amount = int(inventory_data['item_amount'])
+    unit_cost = int(inventory_data['unit_cost'])
+    # total = unit_cost * item_amount
     total_inv_cost = inventory_data['total_inv_cost']
     date_bought = inventory_data['date_bought']
+    fmt_date_bought = str(datetime.strptime(date_bought, '%m-%d-%Y').date())
 
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "INSERT INTO inventory(vendor_id, item_name, item_amount, unit_cost, total_inv_cost, date_bought) VALUES (%s, '%s', %s, %s, %s, %s)" % (
-        vendor_id, item_name, item_amount, unit_cost, total_inv_cost, date_bought)
+        vendor_id, item_name, item_amount, unit_cost, unit_cost*item_amount, fmt_date_bought)
 
     execute_query(conn, sql)
     return 'Inventory was added Successfully'
 
-
 # PUT method for inventory
+
+
 @app.route('/update_inventory', methods=['PUT'])
 def update_inventory():
     # The user input is gathered in JSON format and stored into an empty variable
-    inventory_contact_data = request.get_json()
+    inventory_data = request.get_json()
     # we will be using inventory_id to reference the entry to update
-    inventory_id = inventory_contact_data['inventory_id']
+    inventory_id = inventory_data['inventory_id']
     # The JSON object is then separated into variables so that they may be used in a sql query
-    vendor_id = inventory_contact_data['vendor_id']
-    item_name = inventory_contact_data['item_name']
-    item_amount = inventory_contact_data['item_amount']
-    unit_cost = inventory_contact_data['unit_cost']
-    total_inv_cost = inventory_contact_data['total_inv_cost']
-    date_bought = inventory_contact_data['date_bought']
+    vendor_id = inventory_data['vendor_id']
+    item_name = inventory_data['item_name']
+    item_amount = int(inventory_data['item_amount'])
+    unit_cost = int(inventory_data['unit_cost'])
+    # total_inv_cost = inventory_data['total_inv_cost']
+    date_bought = inventory_data['date_bought']
 
     # date format as yyyy-mm-dd(2022-03-04) or mm-dd-yyyy(03-04-2022)
     fmt_date_bought = str(datetime.strptime(date_bought, '%m-%d-%Y').date())
@@ -633,7 +665,7 @@ def update_inventory():
     cursor = conn.cursor()
     sql = "UPDATE inventory SET vendor_id = %s, item_name = %s, item_amount = %s, unit_cost = %s, total_inv_cost = %s, date_bought = %s WHERE inventory_id = %s"
     val = (vendor_id, item_name, item_amount, unit_cost,
-           total_inv_cost, fmt_date_bought, inventory_id)
+           item_amount*unit_cost, fmt_date_bought, inventory_id)
 
     cursor.execute(sql, val)
     conn.commit()
@@ -897,18 +929,19 @@ def update_order():
     list_length = len(line_items)-1
     index = 0
     for item in line_items:
-        
+
         product_id = item['product_id']
         quantity = item['quantity']
         price_per_unit = item['price_per_unit']
         total = item['total']
-        sql += " (%s, %s, %s, %s, %s)" % (order_id,product_id, quantity, price_per_unit, total)
+        sql += " (%s, %s, %s, %s, %s)" % (order_id,
+                                          product_id, quantity, price_per_unit, total)
         if index < list_length:
             sql += ", "
             index = index + 1
 
     execute_query(conn, sql)
-    
+
     return 'Order was updated Successfully'
 
 
@@ -948,7 +981,9 @@ def get_monthly_ful_report():
     monthly_ful_report = execute_read_query(conn, sql)
     return monthly_ful_report
 
-#counts the orders by month of the current year
+# counts the orders by month of the current year
+
+
 @app.route('/monthlyordercount', methods=['GET'])
 def get_monthly_countt():
     conn = create_connection(
@@ -957,7 +992,9 @@ def get_monthly_countt():
     order_count = execute_read_query(conn, sql)
     return order_count
 
-#counts all products that have been delivered
+# counts all products that have been delivered
+
+
 @app.route('/productcounter', methods=['GET'])
 def get_count_product():
     conn = create_connection(
@@ -970,6 +1007,8 @@ def get_count_product():
 # This report generates a count for each specific line item's frequency across all orders.
 
 # Daily Best Sellers - Determine most popular items amongst all orders scheduled for delivery on current date.
+
+
 @app.route('/dailybestsellers', methods=['GET'])
 def get_daily_best_sell_report():
     conn = create_connection(
@@ -1012,7 +1051,6 @@ def get_lifetime_best_sell_report():
     return lifetime_best_sell_report
 
 # Orders-Invoice Report- View payment status of all orders with their corresponding invoice.
-
 
 
 @app.route('/paymentstatus', methods=['GET'])
