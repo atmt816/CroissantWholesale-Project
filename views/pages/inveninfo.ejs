@@ -1,0 +1,67 @@
+<head>
+    <%- include('../partials/head'); %>
+</head>
+
+<style>
+    .top-buffer {
+        margin-top: 60px;
+    }
+</style>
+
+<body class="container">
+    <header>
+        <%- include('../partials/header'); %>
+    </header>
+
+    <main class="container pt-5">
+        <div class="p-5 mb-4 bg-white rounded-3 top-buffer">
+            <h2 class="text-center pb-2">
+                Edit Inventory
+            </h2>
+            <form action="/inventory/update" method="post">
+
+                <div class="col-md-6">
+                    <label for="vendor_id" class="form-label">Vendor</label>
+                    <select class="form-select" name="vendor_id" id="vendor_id">
+                        <% vendors.forEach(function(vendors) { %>
+                            <option value=<%=vendors.vendor_id %>><%=vendors.vendor_name %>
+                            </option>
+                            <% }); %>
+                    </select>
+                </div>
+                <div class="col-md-6 mb-3">
+
+                    <label for="item_name" class="form-label">Item Name</label>
+                    <input type="text" class="form-control" name="item_name" id="item_name"
+                        value="<%= inventory_data[0].item_name %>">
+
+                </div>
+                <div class="col-md-6 mb-3">
+
+                    <label for="item_amount" class="form-label">Item Amount</label>
+                    <input type="text" class="form-control" name="item_amount" id="item_amount"
+                        value="<%= inventory_data[0].item_amount %>">
+
+                </div>
+                <div class="col-md-6 mb-3">
+
+                    <label for="unit_cost" class="form-label">Unit Cost</label>
+                    <input type="text" class="form-control" name="unit_cost" id="unit_cost"
+                        value="<%= inventory_data[0].unit_cost %>">
+
+                </div>
+                <div class="col-md-6 mb-3">
+
+                    <label for="date_bought" class="form-label">Date Bought</label>
+                    <input type="text" class="form-control" name="date_bought" id="date_bought"
+                        value="<%= inventory_data[0].date_bought %>">
+
+                </div>
+                <button type="submit" class="btn btn-primary">Update</button>
+                <a class="btn btn-secondary" href="/inventory" role="button">Cancel</a>
+            </form>
+
+        </div>
+
+    </main>
+</body>
