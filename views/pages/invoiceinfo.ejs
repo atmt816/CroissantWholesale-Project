@@ -1,113 +1,78 @@
 <head>
-    <%- include('../partials/head'); %>
-  </head>
-  
-  
-  <style>
-    .top-buffer {
-      margin-top: 60px;
-    }
-  </style>
-  
-  <body class="container">
-    <header>
-      <%- include('../partials/header'); %>
-    </header>
-  
-    <main class="container pt-5">
-      <div class="p-5 mb-4 bg-white rounded-3 top-buffer">
-        <h2 class="text-center">
-          Invoice Information
-        </h2>
-        <a href="/invoices" class="link-primary pb-4">Go Back</a>
-        <h5 class="pb-1 pt-2">Invoice Information</h5>
+  <%- include('../partials/head'); %>
+</head>
+
+
+<style>
+  .top-buffer {
+    margin-top: 60px;
+  }
+</style>
+
+<body class="container">
+  <header>
+    <%- include('../partials/header'); %>
+  </header>
+
+  <main class="container pt-5">
+    <div class="p-5 mb-4 bg-white rounded-3 top-buffer">
+      <h2 class="text-center pb-2">
+        Edit Invoice
+      </h2>
+      <form action="/invoices/update" method="post">
         <div class="container pt-2">
           <div class="row">
             <div class="col-sm">
-              Invoice ID
+              Invoice Number
               <p class="pt-1">
-                <%= invoice_data[0].invoice_id%>
+                <%= invoice_data.invoice_id%>
               </p>
             </div>
             <div class="col-sm">
               Customer
               <p class="pt-1">
-                <%= invoice_data[0].customer_id %>
+                <%= invoice_data.customer_id %>
               </p>
             </div>
             <div class="col-sm">
               Date Generated
               <p class="pt-1">
-                <%= invoice_data[0].invoice_date %>
+                <%= invoice_data.invoice_date %>
               </p>
             </div>
-          </div>
-        </div>
-        <div class="container pt-4">
-          <div class="row">
             <div class="col-sm">
               Total
               <p class="pt-1">
-                <%= invoice_data[0].invoice_total %>
-              </p>
-            </div>
-            <div class="col-sm">
-              Payment Status
-              <p class="pt-1">
-                <%= invoice_data[0].payment_status %>
-              </p>
-            </div>
-            <div class="col-sm">
-              Date Paid
-              <p class="pt-1">
-                <%= invoice_data[0].date_paid %>
+                <%= invoice_data.invoice_total %>
               </p>
             </div>
           </div>
         </div>
+        <div class="col-md-6 mb-3">
+          <label for="payment_status" class="form-label">Payment Status</label>
+          <select id="payment_status" name="payment_status" class="form-select">                  
+            <option selected>In Process</option>
+            <option>Payment Pending</option>
+            <option>Paid</option>
+          </select>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label for="date_paid" class="form-label">Date Paid</label>
+            <input type="date" class="form-control" name="date_paid" id="date_paid" value=<%= invoice_data.date_paid %>>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <button type="submit" class="btn btn-primary">Update</button>
+          <a class="btn btn-secondary" href="/invoices" role="button">Cancel</a>
+      </div>
         
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-            Edit
-          </button>
-          <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h4 class="modal-title" id="exampleModalLabel">Update Current Invoice</h4>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  <form action="/invoices/update" method="post" class="row g-3">
-                    <input class="form-control" name="invoice_id" type="hidden" id="invoice_id" value="<%=invoice_data[0].invoice_id%>">
-                    <input class="form-control" name="customer_id" type="hidden" id="customer_id" value="<%=invoice_data[0].customer_id%>">
-                    <input class="form-control" name="invoice_date" type="hidden" id="invoice_id" value="<%=invoice_data[0].invoice_date%>">
-                    <input class="form-control" name="invoice_total" type="hidden" id="invoice_total" value="<%=invoice_data[0].invoice_total%>">
-                    <div class="col-md-6">
-                      <label for="payment_status" class="form-label">Payment Status</label>
-                      <select id="payment_status" name="payment_status" class="form-select">                  
-                        <option selected>Active</option>
-                        <option>Terminated</option>
-                      </select>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="date_paid" class="form-label">Date Paid</label>
-                        <input type="date" class="form-control" name="date_paid" id="date_paid" value=<%= invoice_data[0].date_paid %>>
-                      </div>
-                   
-                    
-    
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <button type="submit" type="button" class="btn btn-primary">Update Invoice</button>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
-        
-        <footer>
-          <%- include('../partials/footer'); %>
-      </footer>
-    </main>
-  </body>
+      </form>
+
+
+    </div>
+    <footer>
+      <%- include('../partials/footer'); %>
+  </footer>
+  </main>
+
+</body>
