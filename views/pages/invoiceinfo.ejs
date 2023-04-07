@@ -26,25 +26,25 @@
             <div class="col-sm">
               Invoice Number
               <p class="pt-1">
-                <%= invoice_data.invoice_id%>
+                <%= invoice_data[0].invoice_id%>
               </p>
             </div>
             <div class="col-sm">
               Customer
               <p class="pt-1">
-                <%= invoice_data.customer_id %>
+                <%= customer_info[0].business_name %>
               </p>
             </div>
             <div class="col-sm">
               Date Generated
               <p class="pt-1">
-                <%= invoice_data.invoice_date %>
+                <%= invoice_data[0].invoice_date %>
               </p>
             </div>
             <div class="col-sm">
               Total
               <p class="pt-1">
-                <%= invoice_data.invoice_total %>
+                <%= invoice_data[0].invoice_total %>
               </p>
             </div>
           </div>

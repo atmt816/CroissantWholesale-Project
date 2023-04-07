@@ -846,8 +846,9 @@ def get_garagemain_log(garage_id):
 def get_invoices():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "SELECT * FROM invoices"
+    sql = "SELECT i.invoice_id, i.customer_id, i.invoice_date, i.invoice_total, i.payment_status, i.date_paid, i.order_id, c.business_name FROM invoices as i INNER JOIN customers as c on i.customer_id = c.customer_id;"
     invoices = execute_read_query(conn, sql)
+
     return jsonify(invoices)
 
 #Retrieve specific invoice data
@@ -859,9 +860,32 @@ def get_invoice_info(invoice_id):
         SELECT * FROM invoices
         WHERE invoice_id = %s;
         """ % (invoice_id)
-
+    
     invoices = execute_read_query(conn, sql)
-    return jsonify(invoices)
+
+    sql = """SELECT i.invoice_id, c.business_name, cc.phone, cc.email, cc.street, cc.city, cc.state_code_id, cc.zipcode
+            FROM invoices i
+            JOIN customers c
+            ON i.customer_id = c.customer_id
+            JOIN customer_contact AS cc
+            ON cc.customer_id = c.customer_id
+            JOIN states s
+            ON s.state_code_id = cc.state_code_id
+        WHERE i.invoice_id = '%s';""" % (invoice_id)
+    
+    customer_info = execute_read_query(conn, sql)
+
+    sql = """SELECT li.product_id, li.quantity, li.price_per_unit, li.total, p.product_name
+            FROM invoices i
+            JOIN line_items AS li
+            ON i.order_id = i.order_id
+            JOIN products p
+            ON li.product_id = p.product_id
+        WHERE i.invoice_id = '%s';""" % (invoice_id)
+    
+    order_info = execute_read_query(conn, sql)
+
+    return jsonify(invoices, customer_info, order_info)
 
 # PUT method for invoices
 @app.route('/update_invoices', methods=['PUT'])

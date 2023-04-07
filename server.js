@@ -772,7 +772,9 @@ app.get('/invoices/:id', function (req, res) {
 
         res.render('pages/invoiceinfo',
             {
-                invoice_data: invoice_data[0]
+                invoice_data: invoice_data[0],
+                customer_info: invoice_data[1],
+                order_info: invoice_data[2]
             });
     });
 
