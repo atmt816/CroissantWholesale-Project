@@ -567,7 +567,7 @@ def get_vendor_inv_sheet():
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "SELECT v.vendor_id, ii.inventory_id, v.vendor_name, ii.item_name, ii.item_amount, ii.unit_cost, ii.total_inv_cost, ii.date_bought FROM vendors AS v JOIN inventory AS ii ON v.vendor_id = ii.vendor_id order by ii.date_bought desc limit 5;"
     vendor_inv_sheet = execute_read_query(conn, sql)
-    return vendor_inv_sheet
+    return jsonify(vendor_inv_sheet)
 
 
 ############################# INVENTORY ###################################
@@ -968,7 +968,7 @@ def get_weekly_ful_report():
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "SELECT O.Order_ID, O.Date_Produced, O.Delivery_Date, P.Product_ID, Product_Name, LI.Quantity FROM products AS P INNER JOIN line_items AS LI ON P.Product_ID = LI.Product_ID INNER JOIN orders as O ON O.Order_ID = LI.Order_ID WHERE O.Delivery_Date BETWEEN curdate() AND curdate()+8 GROUP BY O.Order_ID, O.Date_Produced, O.Delivery_Date"
     weekly_ful_report = execute_read_query(conn, sql)
-    return weekly_ful_report
+    return jsonify(weekly_ful_report)
 
 # Monthly
 
@@ -990,7 +990,7 @@ def get_monthly_countt():
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "SELECT DATE_FORMAT(date_produced, '%M') AS date_produced,COUNT(order_id) AS count FROM orders where Year(date_produced) = year(current_date()) GROUP BY MONTH(date_produced);"
     order_count = execute_read_query(conn, sql)
-    return order_count
+    return jsonify(order_count)
 
 # counts all products that have been delivered
 
@@ -1001,7 +1001,7 @@ def get_count_product():
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "select i.product_id,p.product_name,sum(i.quantity) as total_quantity from line_items as i join products as p on i.product_id = p.product_id join orders as o on i.order_id =o.order_id where o.status='Delivered' group by i.product_id;"
     prod_count = execute_read_query(conn, sql)
-    return prod_count
+    return jsonify(prod_count)
 
 # Best Selling Items Report
 # This report generates a count for each specific line item's frequency across all orders.
@@ -1026,7 +1026,7 @@ def get_weekly_best_sell_report():
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "SELECT P.Product_ID, P.Product_Name, LI.Item_ID, LI.Price_Per_Unit, O.Order_ID, LI.Quantity, COUNT(O.Order_ID) AS Order_Frequency FROM orders AS O INNER JOIN line_items AS LI ON LI.Order_ID = O.Order_ID INNER JOIN products as P ON P.Product_ID = LI.Product_ID WHERE O.Delivery_Date BETWEEN curdate() AND curdate()+8 GROUP BY P.Product_ID, P.Product_Name, LI.Item_ID, LI.Price_Per_Unit"
     weekly_best_sell_report = execute_read_query(conn, sql)
-    return weekly_best_sell_report
+    return jsonify(weekly_best_sell_report)
 
 # Monthly Best Sellers - Determine most popular items amongst all orders scheduled for delivery within a month from the current date.
 

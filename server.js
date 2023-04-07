@@ -627,6 +627,33 @@ app.post('/inventory/update', function (req, res) {
 });
 
 
+/*app.get("/home", async (req, res, next) => {
+
+    let chartApi;
+    let weekly_data;
+    let vendinv_data;
+    let prodcount_data;
+
+    try {
+        chartApi = await axios.get("http://127.0.0.1:5000/monthlyordercount");
+        weekly_data = await axios.get('http://127.0.0.1:5000/weeklyfulfillmentreport');
+        vendinv_data = await axios.get('http://127.0.0.1:5000/vendorinventoryreport');
+        prodcount_data = await axios.get('http://127.0.0.1:5000/productcounter');
+    } catch (err) {
+        console.error(err);
+        return res.end('err');
+    }
+
+    res.render('pages/chart',
+        {
+            chartApi: chartApi.data,
+            weekly_data: weekly_data.data,
+            vendinv_data: vendinv_data.data,
+            prodcount_data: prodcount_data.data
+        });
+
+});*/
+
 app.get("/home", async (req, res, next) => {
 
     let chartApi;
@@ -635,11 +662,10 @@ app.get("/home", async (req, res, next) => {
     let prodcount_data;
 
     try {
-        chartApi = await axios.get("http://127.0.0.1:5000/monthlyordercount")
-        weekly_data = await axios.get('http://127.0.0.1:5000/weeklyfulfillmentreport')
-        vendinv_data = await axios.get('http://127.0.0.1:5000/vendorinventoryreport')
-        prodcount_data = await axios.get('http://127.0.0.1:5000/productcounter')
-
+        chartApi = await axios.get("http://127.0.0.1:5000/monthlyordercount");
+        weekly_data = await axios.get('http://127.0.0.1:5000/weeklyfulfillmentreport');
+        vendinv_data = await axios.get('http://127.0.0.1:5000/vendorinventoryreport');
+        prodcount_data = await axios.get('http://127.0.0.1:5000/productcounter');
     } catch (err) {
         console.error(err);
         return res.end('err');
