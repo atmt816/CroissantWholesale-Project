@@ -53,16 +53,16 @@
                 </div>
                 <div class="col-md-6">
                   <label for="startdate" class="form-label">Start Date</label>
-                  <input class="form-control" placeholder="2021-03-02" name="start_date" id="ex1" type="text">
+                  <input class="form-control" placeholder="2021-03-02" name="start_date"  type="text">
                 </div>
                 <hr class="hr" />
                 <div class="col-md-6">
                   <label for="email" class="form-label">Email</label>
-                  <input class="form-control" placeholder="example@email.com" name="email" id="ex1" type="text">
+                  <input class="form-control" type="email" placeholder="example@email.com" name="email" id="ex1" type="text">
                 </div>
                 <div class="col-md-6">
                   <label for="phone" class="form-label">Phone</label>
-                  <input class="form-control" placeholder="0000000000" name="phone" id="ex1" type="text">
+                  <input class="form-control"  placeholder="0000000000" name="phone" id="ex1" type="text">
                 </div>
                 <div class="col-12">
                   <label for="inputAddress" class="form-label">Address</label>
@@ -83,7 +83,7 @@
                 </div>
                 <div class="col-md-2">
                   <label for="inputZip" class="form-label">Zip</label>
-                  <input type="text" class="form-control" name="zipcode" id="zipcode" placeholder="00000">
+                  <input type="number" class="form-control" name="zipcode" id="zipcode" placeholder="00000">
                 </div>
                 <div class="col-md-6">
                   <label for="Role" class="form-label">Role</label>                  
@@ -133,10 +133,12 @@
                 <a style="text-decoration:none" href="/empinfo/<%= employee_data.emp_id%>"><%= employee_data.last_name%>,&nbsp<%= employee_data.first_name%></a>
               </td>
               <td>
-                <%= employee_data.start_date%>
+                <%= moment(employee_data.start_date).format('MMMM Do YYYY') %>
               </td>
               <td>
-                <%= employee_data.end_date%>
+                <%if (employee_data.end_date) { %>
+                  <%= moment(employee_data.end_date).format('MMMM Do YYYY') %> 
+                  <% } else { %><% } %>
               </td>
               <td>
                 <%= employee_data.emp_status%>

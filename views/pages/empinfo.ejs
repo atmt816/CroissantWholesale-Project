@@ -56,13 +56,17 @@
           <div class="col-sm">
             Start Date
             <p class="pt-1">
-              <%= employee_data[0].start_date %>
+              <%if (employee_data[0].start_date) { %>
+                <%= moment(employee_data[0].start_date).format('MMMM Do YYYY') %> 
+                <% } else { %><% } %>
             </p>
           </div>
           <div class="col-sm">
             End Date
             <p class="pt-1">
-              <%= employee_data[0].end_name %>
+              <%if (employee_data[0].end_date) { %>
+                <%= moment(employee_data[0].end_date).format('MMMM Do YYYY') %> 
+                <% } else { %><% } %>
             </p>
           </div>
         </div>
@@ -165,7 +169,9 @@
                   <div class="col-md-6"> 
                     <label for="inputCity" class="form-label">Start Date</label>
                     <!-- https://stackoverflow.com/questions/12794860/how-to-use-node-modules-like-momentjs-in-ejs-views -->
-                    <input type="text" class="form-control" name="start_date" id="start_date" value="<%= moment(employee_data[0].start_date).format('YYYY-MM-DD') %>">
+                    <input type="text" class="form-control" name="start_date" id="start_date" value="<%if (employee_data[0].start_date) { %>
+                                                                                                    <%= moment(employee_data[0].start_date).format('YYYY-MM-DD') %> 
+                                                                                                    <% } else { %><% } %>">
                   </div>
                   <div class="col-md-6">
                     <label for="inputCity" class="form-label">End Date</label>

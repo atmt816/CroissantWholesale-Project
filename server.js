@@ -471,7 +471,8 @@ app.post('/vehicles/add', function (req, res) {
 
                     res.render('pages/vehicles',
                         {
-                            vehicles_data: vehicles_data
+                            vehicles_data: vehicles_data,
+                            success: 'The vehicle has been added.'
                          
                         });
                 });
@@ -514,7 +515,8 @@ app.post('/vehicles/update', function (req, res) {
 
                     res.render('pages/vehicles',
                         {
-                            vehicles_data: vehicles_data
+                            vehicles_data: vehicles_data,
+                            success: 'The vehicle has been updated.'
 
                         });
                 });
@@ -534,7 +536,8 @@ app.get('/maintenance', function (req, res) {
                 {
                     logs_data: logs_data[0],
                     garage: logs_data[1],
-                    vehicles: logs_data[2]
+                    vehicles: logs_data[2],
+                
 
                 });
         });
@@ -560,7 +563,8 @@ app.post('/maintenance/addlog', function (req, res) {
                 {
                     logs_data: logs_data[0],
                     garage: logs_data[1],
-                    vehicles: logs_data[2]
+                    vehicles: logs_data[2],
+                    success: 'The maintenance log has been added.'
                 });
                 });
         
@@ -601,7 +605,8 @@ app.post('/maintenance/delete', function (req, res) {
                         {
                             logs_data: logs_data[0],
                             garage: logs_data[1],
-                            vehicles: logs_data[2]
+                            vehicles: logs_data[2],
+                            success: 'The maintenance log has been deleted.'
                         });
                         
                 });
@@ -630,7 +635,8 @@ app.post('/maintenance/update', function (req, res) {
                         {
                             logs_data: logs_data[0],
                             garage: logs_data[1],
-                            vehicles: logs_data[2]
+                            vehicles: logs_data[2],
+                            success: 'The maintenance log has been updated.'
                         });
                 });
         }
@@ -687,7 +693,6 @@ app.post('/garage/add', function (req, res) {
             status: req.body.status,
             garage_hrs: req.body.garage_hrs
 
-
         }
     )
         .then((response) => {
@@ -699,7 +704,8 @@ app.post('/garage/add', function (req, res) {
                     res.render('pages/garage',
                         {
                             garage_data: garage_data[0],
-                            states: garage_data[1]
+                            states: garage_data[1],
+                            success: 'The auto shop has been added.'
 
                         });
                 });
@@ -733,7 +739,9 @@ app.post('/garage/update', function (req, res) {
                     res.render('pages/garage',
                         {
                             garage_data: garage_data[0],
-                            states: garage_data[1]
+                            states: garage_data[1],
+                            success: 'The auto shop has been updated.'
+
 
                         });
                 });
@@ -799,8 +807,8 @@ app.post('/invoices/update', function (req, res) {
 
                     res.render('pages/invoices',
                         {
-                            invoice_data: invoice_data
-
+                            invoice_data: invoice_data,
+                            success: 'The invoice has been updated.'
                         });
                 });
         }
@@ -819,6 +827,7 @@ app.get('/products', function (req, res) {
             res.render('pages/products',
                 {
                     products_data: products_data
+                    
 
                 });
         });
@@ -841,7 +850,8 @@ app.post('/add_product', function (req, res) {
 
                     res.render('pages/products',
                         {
-                            products_data: products_data
+                            products_data: products_data,
+                            success: 'The product has been added.'
 
                         });
                 });
@@ -886,7 +896,8 @@ app.post('/products/update', function (req, res) {
 
                     res.render('pages/products',
                         {
-                            products_data: products_data
+                            products_data: products_data,
+                            success: 'The product has been updated.'
 
                         });
                 });
