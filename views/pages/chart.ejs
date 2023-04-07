@@ -10,6 +10,7 @@
     .top-buffer {
         margin-top: 60px;
     }
+    
 </style>
 
 <body class="container">
@@ -23,15 +24,59 @@
                 Welcome home!
             </h2>
         </div>
-        <div style="float: left; width: 45%; margin:10px;">
-            <h2>Monthly Orders</h2>
+        <div style="float: left; width: 45%;">
+          <div style="height:350px; margin-bottom:20px;">
+            <!--chart that counts orders by month of current year-->
+            <h3>Monthly Order Tracker</h3>
             <canvas id="myChart"></canvas>
           </div>
-
-        <div style="float: right; width:45%">
-
+          <div>
+            <!--table that shows upcoming orders 8 days out-->
             <table class="table table-hover">
-                <h2>Upcoming Orders</h2>
+              <h3>Recent Inventory</h3>
+              <thead>
+                <tr>
+                  <th scope="col">Vendor</th>
+                  <th scope="col">Item</th>
+                  <th scope="col">Quantity</th>
+                  <th scope="col">Date Bought</th>
+                </tr>
+              </thead>
+              <tbody>
+                  <% vendinv_data.forEach(function(vendinv_data) { %>
+                      <tr>
+                        <td>
+                            <%= vendinv_data.vendor_name%>
+                          </a>
+                        </td>
+                        <td>
+                          <a>
+                            <%= vendinv_data.item_name%>
+                          </a>
+                        </td>
+                        <td>
+                          <a>
+                            <%= vendinv_data.item_amount%>
+                          </a>
+                        </td>
+                        <td>
+                          <a>
+                            <%= vendinv_data.date_bought%>
+                          </a>
+                        </td>
+          
+                      </tr>
+                      <% }); %>
+              </tbody>
+            </table>
+          </div>
+          </div>
+
+        <div style="float: right; width:45%;">
+          <div style="height:350px;margin-bottom:20px;">
+            <!-- table that shows 5 mostt recent inventory bought-->
+            <table class="table table-hover">
+                <h3>Upcoming Orders</h3>
                 <thead>
                   <tr>
                     <th scope="col">Order ID</th>
@@ -67,8 +112,14 @@
                         <% }); %>
                 </tbody>
               </table>
-
+            </div>
+            <div>
+              <!-- chart that counts total products delivered by products-->
+              <h3>Delivered Product Counter</h3>
+            <canvas id="myChart2"></canvas>
+            </div>
         </div>
+        
           
           <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
           
@@ -82,20 +133,31 @@
             for(var i = 0; i < Data.length; i++){
                 count.push(Data[i].count);
             }
+            
+            var Data2 = JSON.parse(`<%- JSON.stringify(prodcount_data) %>`);
+            var prodName = []
+            for(var i = 0; i < Data2.length; i++){
+                prodName.push(Data2[i].product_name);
+            }
+            var prodCount=[]
+            for(var i = 0; i < Data2.length; i++){
+                prodCount.push(Data2[i].total_quantity);
+            }
 
-           function dataChart(){
+           function lineChart(){
 
             let ctx = document.getElementById('myChart');
           
             let chart = new Chart(ctx, {
-              type: 'bar',
+              type: 'line',
               data: {
                 labels: month,
                 datasets: [{
                   label: '# of Orders',
                   data: count,
                   borderWidth: 1,
-                  borderColor: '#fefcf1',
+                  backgroundColor: '#fefcf1',
+                  borderColor: 'black',
                 }]
               },
               options: {
@@ -107,9 +169,35 @@
               }
             });
         }
-        dataChart();
+        function barChart(){
 
-            
+          let ctx = document.getElementById('myChart2');
+
+          let chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: prodName,
+              datasets: [{
+                label: '# of Orders',
+                data: prodCount,
+                borderWidth: 1,
+                backgroundColor: '#fefcf1',
+                borderColor: 'black',
+              }]
+            },
+            options: {
+              scales: {
+                y: {
+                  beginAtZero: true
+                }
+              }
+            }
+            });
+          }
+        lineChart();
+        barChart();
+
+        
             
           </script>
         

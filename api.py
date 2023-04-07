@@ -565,7 +565,7 @@ def update_vendor():
 def get_vendor_inv_sheet():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "SELECT v.Vendor_ID, ii.Inventory_id, v.Vendor_Name, ii.Item_Name, ii.Item_Amount, ii.Unit_Cost ii.Total_Inv_Cost, ii.Last_Updated FROM Vendors AS v JOIN Inventory AS ii ON v.Vendor_ID = ii.Vendor_ID GROUP BY v.Vendor_ID;"
+    sql = "SELECT v.vendor_id, ii.inventory_id, v.vendor_name, ii.item_name, ii.item_amount, ii.unit_cost, ii.total_inv_cost, ii.date_bought FROM vendors AS v JOIN inventory AS ii ON v.vendor_id = ii.vendor_id order by ii.date_bought desc limit 5;"
     vendor_inv_sheet = execute_read_query(conn, sql)
     return vendor_inv_sheet
 
@@ -948,6 +948,7 @@ def get_monthly_ful_report():
     monthly_ful_report = execute_read_query(conn, sql)
     return monthly_ful_report
 
+#counts the orders by month of the current year
 @app.route('/monthlyordercount', methods=['GET'])
 def get_monthly_countt():
     conn = create_connection(
@@ -955,6 +956,15 @@ def get_monthly_countt():
     sql = "SELECT DATE_FORMAT(date_produced, '%M') AS date_produced,COUNT(order_id) AS count FROM orders where Year(date_produced) = year(current_date()) GROUP BY MONTH(date_produced);"
     order_count = execute_read_query(conn, sql)
     return order_count
+
+#counts all products that have been delivered
+@app.route('/productcounter', methods=['GET'])
+def get_count_product():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "select i.product_id,p.product_name,sum(i.quantity) as total_quantity from line_items as i join products as p on i.product_id = p.product_id join orders as o on i.order_id =o.order_id where o.status='Delivered' group by i.product_id;"
+    prod_count = execute_read_query(conn, sql)
+    return prod_count
 
 # Best Selling Items Report
 # This report generates a count for each specific line item's frequency across all orders.
@@ -1004,6 +1014,7 @@ def get_lifetime_best_sell_report():
 # Orders-Invoice Report- View payment status of all orders with their corresponding invoice.
 
 
+
 @app.route('/paymentstatus', methods=['GET'])
 def get_payment_status_report():
     conn = create_connection(
@@ -1019,7 +1030,7 @@ def get_payment_status_report():
 def get_delivery_sheet():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "SELECT c.Customer_ID, c.Business_Name, c.First_Name, c.Last_Name, c.Customer_Account_Number, cc.Phone, cc.Street, cc.City, cc.Zipcode, o.Order_id, o.Delivery_date FROM Customers as c JOIN Customer_Contact AS cc ON c.Customer_ct_id = cc.Customer_ct_id JOIN Orders AS o ON cc.Order_Id = o. Orders_Id WHERE o.Delivery_Date = curdate();  "
+    sql = "SELECT c.Customer_ID, c.Business_Name, c.First_Name, c.Last_Name, c.Customer_Account_Number, cc.Phone, cc.Street, cc.City, cc.Zipcode, o.Order_id, o.Delivery_date FROM Customers as c JOIN Customer_Contact AS cc ON c.Customer_ct_id = cc.Customer_ct_id JOIN Orders AS o ON cc.Order_Id = o. Orders_Id WHERE o.Delivery_Date = curdate();  "
     delivery_sheet = execute_read_query(conn, sql)
     return delivery_sheet
 
