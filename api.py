@@ -879,7 +879,7 @@ def get_invoice_info(invoice_id):
     sql = """SELECT li.product_id, li.quantity, li.price_per_unit, li.total, p.product_name
             FROM invoices i
             JOIN line_items AS li
-            ON i.order_id = i.order_id
+            ON i.order_id = li.order_id
             JOIN products p
             ON li.product_id = p.product_id
         WHERE i.invoice_id = '%s';""" % (invoice_id)
