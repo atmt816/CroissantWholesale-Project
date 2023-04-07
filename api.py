@@ -592,17 +592,18 @@ def add_garage():
     garage_data = request.get_json()
     # The JSON object is then separated into variables so that they may be used in a sql query
     garage_name = garage_data['garage_name']
+    garage_hrs = garage_data['garage_hrs']
     phone = garage_data['phone']
     street = garage_data['street']
     city = garage_data['city']
-    state = garage_data['state_code_id']
+    state_code_id = garage_data['state_code_id']
     zipcode = garage_data['zipcode']
     status = garage_data['status']
 
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "INSERT INTO garage(garage_name, phone, street, city, state, zipcode, status) VALUES ('%s', %s, '%s', '%s', '%s', %s,'%s')" % (
-        garage_name, phone, street, city, state, zipcode, status)
+    sql = "INSERT INTO garage(garage_name, phone, street, city, state_code_id, zipcode, status, garage_hrs) VALUES ('%s', %s, '%s', '%s', '%s', %s, '%s', '%s')" % (
+        garage_name, phone, street, city, state_code_id, zipcode, status, garage_hrs)
 
     execute_query(conn, sql)
     return 'Garage was added Successfully'
