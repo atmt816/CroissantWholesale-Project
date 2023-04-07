@@ -490,7 +490,7 @@ app.get('/ordersinfo/:id', function (req, res) {
         var order_data = response.data
         var obj = order_data[4]
         var sumtotal = parseInt(obj[0]["sum(total)"]);
-       
+
 
         res.render('pages/ordersinfo',
             {
@@ -523,7 +523,7 @@ app.post('/orders/update', function (req, res) {
                 .then((response, states) => {
                     // console.log(response.data)
                     var order_data = response.data
-                    
+
                     res.render('pages/orders',
                         {
                             order_data: order_data[0],
@@ -542,13 +542,90 @@ app.get('/inventory', function (req, res) {
     axios.get('http://127.0.0.1:5000/inventory')
         .then((response) => {
             var inventory_data = response.data
-
+            console.log(inventory_data)
             res.render('pages/inventory',
                 {
                     inventory_data: inventory_data[0],
+                    vendors: inventory_data[1]
                 });
         });
 });
+
+app.post('/inventory/add', function (req, res) {
+    axios.post('http://127.0.0.1:5000/inventory/add',
+        {
+            vendor_id: req.body.vendor_id,
+            item_name: req.body.item_name,
+            item_amount: req.body.item_amount,
+            unit_cost: req.body.unit_cost,
+            total_inv_cost: req.body.total_inv_cost,
+            date_bought: req.body.date_bought
+
+        }
+    )
+        .then((response) => {
+            axios.get('http://127.0.0.1:5000/inventory')
+                .then((response, states) => {
+                    // console.log(response.data)
+                    var inventory_data = response.data
+
+                    res.render('pages/inventory',
+                        {
+                            inventory_data: inventory_data[0],
+                            vendors: inventory_data[1]
+
+                        });
+                });
+        });
+});
+
+app.get('/inveninfo/:id', function (req, res) {
+    const inventory_id = req.params.id;
+
+    axios.get('http://127.0.0.1:5000/inveninfo/' + inventory_id
+    ).then((response, states) => {
+        var inventory_data = response.data
+
+        res.render('pages/inveninfo',
+            {
+                inventory_data: inventory_data[0],
+                vendors: inventory_data[1]
+            });
+    });
+
+});
+
+app.post('/inventory/update', function (req, res) {
+    axios.put('http://127.0.0.1:5000/update_inventory',
+        {
+            inventory_id: req.body.inventory_id,
+            vendor_id: req.body.inventory_id,
+            item_name: req.body.item_name,
+            item_amount: req.body.item_amount,
+            unit_cost: req.body.unit_cost,
+            // total_inv_cost: req.body.total_inv_cost,
+            date_bought: req.body.date_bought
+
+        }
+    )
+        .then((response) => {
+            axios.get('http://127.0.0.1:5000/inventory')
+                .then((response, states) => {
+                    // console.log(response.data)
+                    var inventory_data = response.data
+
+                    res.render('pages/inventory',
+                        {
+                            inventory_data: inventory_data[0],
+                            vendors: inventory_data[1]
+
+                        });
+                });
+        }
+
+        );
+});
+
 
 app.get("/home", async (req, res, next) => {
 
@@ -560,20 +637,21 @@ app.get("/home", async (req, res, next) => {
     try {
         chartApi = await axios.get("http://127.0.0.1:5000/monthlyordercount")
         weekly_data = await axios.get('http://127.0.0.1:5000/weeklyfulfillmentreport')
-        vendinv_data =await axios.get('http://127.0.0.1:5000/vendorinventoryreport')
+        vendinv_data = await axios.get('http://127.0.0.1:5000/vendorinventoryreport')
         prodcount_data = await axios.get('http://127.0.0.1:5000/productcounter')
-        
-    } catch(err) {
+
+    } catch (err) {
         console.error(err);
         return res.end('err');
     }
 
     res.render('pages/chart',
-    {chartApi: chartApi.data,
-    weekly_data:weekly_data.data,
-    vendinv_data:vendinv_data.data,
-    prodcount_data:prodcount_data.data
-});
+        {
+            chartApi: chartApi.data,
+            weekly_data: weekly_data.data,
+            vendinv_data: vendinv_data.data,
+            prodcount_data: prodcount_data.data
+        });
 
 });
 
