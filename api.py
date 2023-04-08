@@ -886,7 +886,14 @@ def get_invoice_info(invoice_id):
     
     order_info = execute_read_query(conn, sql)
 
-    return jsonify(invoices, customer_info, order_info)
+    sql = """SELECT o.delivery_date
+            FROM orders o
+            JOIN invoices AS i
+            ON o.order_id = i.order_id
+        WHERE i.invoice_id = '%s';""" % (invoice_id)
+    delivery_date = execute_read_query(conn, sql)
+
+    return jsonify(invoices, customer_info, order_info, delivery_date)
 
 # PUT method for invoices
 @app.route('/update_invoices', methods=['PUT'])

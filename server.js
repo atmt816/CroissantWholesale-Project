@@ -782,7 +782,8 @@ app.get('/invoices/:id', function (req, res) {
             {
                 invoice_data: invoice_data[0],
                 customer_info: invoice_data[1],
-                order_info: invoice_data[2]
+                order_info: invoice_data[2],
+                delivery_date: invoice_data[3]
             });
     });
 

@@ -77,6 +77,13 @@
           <div class="row">
             <div class="col-sm">
               <br>
+                Delivery Date
+              <p class="pt-1">
+                <%= delivery_date.delivery_date%>
+              </p>
+            </div>
+            <div class="col-sm">
+              <br>
                 Phone Number
               <p class="pt-1">
                 <%= customer_info[0].phone%>
@@ -112,10 +119,10 @@
                   <%= order_info.quantity %>
                 </td>
                 <td>
-                  <%= order_info.price_per_unit %>
+                  $<%= order_info.price_per_unit %>
                 </td>
                 <td>
-                  <%= order_info.total %>
+                  $<%= order_info.total %>
                 </td> 
               </tr>
               <% }); %>
