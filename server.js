@@ -16,10 +16,24 @@ app.locals.moment = moment;
 // set the view engine to ejs
 
 
+// set the view engine to ejs
+
+app.set('view engine', 'ejs');
+/*app.get('/home', function (req, res) {
+
+    res.render('pages/home');
+});*/
+
 app.get('/login', function (req, res) {
 
     res.render('pages/login');
 });
+
+app.get('/logged_out', function (req, res) {
+
+    res.render('pages/logged_out');
+});
+
 
 
 app.get("/", async (req, res, next) => {
