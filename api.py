@@ -626,7 +626,7 @@ def add_inventory():
     item_name = inventory_data['item_name']
     item_amount = int(inventory_data['item_amount'])
     unit_cost = int(inventory_data['unit_cost'])
-    # total = unit_cost * item_amount
+    total = unit_cost * item_amount
     total_inv_cost = inventory_data['total_inv_cost']
     date_bought = inventory_data['date_bought']
     fmt_date_bought = str(datetime.strptime(date_bought, '%m-%d-%Y').date())
@@ -945,11 +945,30 @@ def update_order():
     return 'Order was updated Successfully'
 
 
+@app.route('/orders/<order_id>', methods=['DELETE'])
+def delete_order(order_id):
+    order_data = request.get_json()
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    order_id = order_data['order_id']
+    # sql = "SELECT * FROM orders;"
+    sql = "DELETE FROM line_items WHERE order_id= %s" % (order_id)
+    execute_query(conn, sql)
+
+    line_items = execute_read_query(conn, sql)
+
+    sql = "DELETE FROM orders WHERE order_id= %s" % (order_id)
+    orders = execute_read_query(conn, sql)
+
+    return jsonify(line_items, orders)
+
 # Fulfillment Report
 # Fulfillment check per line item. Report generates all orders within a timeframe that are scheduled for delivery.
 # User can then ensure all items have been made to fulfill these orders, or plan accordingly if more ingredients must be ordered.
 
 # Daily
+
 
 @app.route('/dailyfulfillmentreport', methods=['GET'])
 def get_daily_ful_report():

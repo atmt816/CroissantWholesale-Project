@@ -537,6 +537,22 @@ app.post('/orders/update', function (req, res) {
         );
 });
 
+app.post('/ordersinfo/:id', function (req, res) {
+    const order_id = req.params.id;
+
+
+    axios.delete('http://127.0.0.1:5000/orders/' + order_id
+    ).then((response, states) => {
+        res.render('pages/orders',
+            {
+                order_data: order_data[0],
+                customers: order_data[1],
+                products: order_data[2],
+                line_items: order_data[3]
+            });
+    });
+
+});
 
 app.get('/inventory', function (req, res) {
     axios.get('http://127.0.0.1:5000/inventory')
