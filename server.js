@@ -649,6 +649,31 @@ app.post('/inventory/update', function (req, res) {
         );
 });
 
+app.post('/inventory/delete', function (req, res) {
+    axios.delete('http://127.0.0.1:5000/delete_inventory',
+        {
+            inventory_id: req.body.inventory_id
+
+        }
+    )
+        .then((response) => {
+            axios.get('http://127.0.0.1:5000/inventory')
+                .then((response, states) => {
+                    // console.log(response.data)
+                    var inventory_data = response.data
+
+                    res.render('pages/inventory',
+                        {
+                            inventory_data: inventory_data[0],
+                            vendors: inventory_data[1]
+
+                        });
+                });
+        }
+
+        );
+});
+
 
 /*app.get("/home", async (req, res, next) => {
 

@@ -971,23 +971,23 @@ def update_order():
 @app.route('/orders_delete', methods=['DELETE'])
 def delete_order():
     order_data = request.get_json()
+    order_id = order_data['order_id']
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-
-    order_id = order_data['order_id']
+    cursor = conn.cursor()
     # sql = "SELECT * FROM orders;"
-    sql = "DELETE FROM line_items WHERE order_id= %s" % (order_id)
-    execute_query(conn, sql)
+    sql = "DELETE FROM line_items WHERE order_id= %s"
+    val = (order_id)
 
-    line_items = execute_query(conn, sql)
+    sql = "DELETE FROM invoices WHERE order_id= %s"
+    val = (order_id)
 
-    sql = "DELETE FROM invoices WHERE order_id= %s" % (order_id)
-    invoices = execute_query(conn, sql)
-
-    sql = "DELETE FROM orders WHERE order_id= %s" % (order_id)
-    orders = execute_query(conn, sql)
-
-    return jsonify(line_items, invoices, orders) 
+    sql = "DELETE FROM orders WHERE order_id= %s"
+    val = (order_id)
+    
+    cursor.execute(sql, val)
+    conn.commit
+    return 'Order was deleted successfully'
 
 # Fulfillment Report
 # Fulfillment check per line item. Report generates all orders within a timeframe that are scheduled for delivery.
