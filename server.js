@@ -24,6 +24,11 @@ app.set('view engine', 'ejs');
     res.render('pages/home');
 });*/
 
+app.get('/', function (req, res) {
+
+    res.render('pages/login');
+});
+
 app.get('/login', function (req, res) {
 
     res.render('pages/login');
@@ -36,7 +41,7 @@ app.get('/logged_out', function (req, res) {
 
 
 
-app.get("/", async (req, res, next) => {
+app.get("/home", async (req, res, next) => {
 
     let chartApi;
     let weekly_data;
