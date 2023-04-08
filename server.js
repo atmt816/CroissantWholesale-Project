@@ -1093,5 +1093,128 @@ app.get('/bestsellers', function (req, res) {
         });
 });
 
+
+//ORDERS page
+
+app.get('/orders', function (req, res) {
+    axios.get('http://127.0.0.1:5000/orders')
+        .then((response) => {
+            var order_data = response.data
+
+            res.render('pages/orders',
+                {
+                    order_data: order_data[0],
+                    customers: order_data[1],
+                    products: order_data[2],
+                    line_items: order_data[3]
+                });
+        });
+});
+
+
+app.post('/orders/add', function (req, res) {
+    axios.post('http://127.0.0.1:5000/addorder',
+        {
+            customer_id: req.body.customer_id,
+            status: req.body.status,
+            line_items: req.body.line_items
+
+        }
+    )
+        .then((response) => {
+            axios.get('http://127.0.0.1:5000/orders')
+                .then((response, states) => {
+                    // console.log(response.data)
+                    var order_data = response.data
+
+                    res.render('pages/orders',
+                        {
+                            order_data: order_data[0],
+                            customers: order_data[1],
+                            products: order_data[2],
+                            line_items: order_data[3]
+                        });
+                });
+        });
+});
+
+app.get('/ordersinfo/:id', function (req, res) {
+    const order_id = req.params.id;
+
+
+    axios.get('http://127.0.0.1:5000/orders/' + order_id
+    ).then((response, states) => {
+        var order_data = response.data
+        var obj = order_data[4]
+        var sumtotal = parseInt(obj[0]["sum(total)"]);
+
+
+        res.render('pages/ordersinfo',
+            {
+                order_data: order_data[0],
+                customer_data: order_data[1],
+                product_data: order_data[2],
+                customers_data: order_data[3],
+                total: order_data[4],
+                sumtotal: sumtotal
+
+            });
+    });
+
+});
+
+app.post('/orders/update', function (req, res) {
+    axios.put('http://127.0.0.1:5000/update_order',
+        {
+            order_id: req.body.order_id,
+            customer_id: req.body.customer_id,
+            status: req.body.status,
+            delivery_date: req.body.delivery_date,
+            line_items: req.body.line_items
+
+        }
+    )
+        .then((response) => {
+            axios.get('http://127.0.0.1:5000/orders')
+                .then((response, states) => {
+                    // console.log(response.data)
+                    var order_data = response.data
+
+                    res.render('pages/orders',
+                        {
+                            order_data: order_data[0],
+                            customers: order_data[1],
+                            products: order_data[2],
+                            line_items: order_data[3]
+                        });
+                });
+        }
+
+        );
+});
+
+app.post('/orders/delete', function (req, res) {
+    axios.delete('http://127.0.0.1:5000/orders_delete',
+        {
+            order_id: req.body.order_id
+        }
+    ).then((response, states) => {
+        axios.get('http://127.0.0.1:5000/orders')
+            .then((response, states) => {
+                // console.log(response.data)
+                var order_data = response.data
+                res.render('pages/orders',
+                    {
+                        order_data: order_data[0],
+                        customers: order_data[1],
+                        products: order_data[2],
+                        line_items: order_data[3]
+                    });
+            });
+    }
+    );
+});
+
+
 app.listen(3000);
 console.log('3000 is the magic port');

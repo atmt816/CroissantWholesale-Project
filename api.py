@@ -991,6 +991,196 @@ def update_product():
     conn.commit()
     return 'Product was updated successfully'
 
+
+#*********** ORDERS PAGE ****************************
+
+@app.route('/orders', methods=['GET'])
+def get_orders():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    # sql = "SELECT * FROM orders;"
+    sql = """
+    SELECT o.date_produced, o.delivery_date, o.status, c.business_name, o.customer_id, o.order_id from customers as c join orders as o on c.customer_id =o.customer_id;
+    """
+    orders = execute_read_query(conn, sql)
+
+    sql = """
+         SELECT * FROM customers;
+        """
+    customers = execute_read_query(conn, sql)
+
+    # sql= """
+    #     SELECT c.business_name, o.customer_id from customers as c join orders as o on c.customer_id =o.customer_id;
+    #     """
+    # customer_name = execute_read_query(conn, sql)
+
+    sql = """
+         SELECT * FROM products;
+        """
+    products = execute_read_query(conn, sql)
+
+    sql = """
+         SELECT * FROM line_items;
+        """
+    line_items = execute_read_query(conn, sql)
+
+    return jsonify(orders, customers, products, line_items)
+
+
+@app.route('/addorder', methods=['POST'])
+def add_order():
+    # The user input is gathered in JSON format and stored into an empty variable
+    order_data = request.get_json()
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    sql = """
+         SELECT CURDATE();
+        """
+    date_produced = execute_read_query(conn, sql)
+
+    customer_id = order_data['customer_id']
+    status = order_data['status']
+    line_items = order_data['line_items']
+    current_date = date_produced[0]['CURDATE()']
+
+    sql = "INSERT INTO orders(date_produced, status, customer_id) VALUES ('%s', '%s', %s)" % (
+        current_date, status, customer_id)
+    execute_query(conn, sql)
+
+    # gets the order id from the above execution
+    sql = 'SELECT * FROM orders WHERE order_id= LAST_INSERT_ID()'
+    order_id = execute_read_query(conn, sql)
+    order_id = order_id[0]['order_id']
+
+    # Set up future invoice with corresponding ids
+    sql = "INSERT INTO invoices(customer_id, order_id) VALUES (%s, %s)" % (
+        customer_id, order_id)
+    execute_query(conn, sql)
+
+    sql = "INSERT INTO line_items (order_id, product_id, quantity, price_per_unit, total) VALUES"
+
+    list_length = len(line_items)-1
+    index = 0
+    for item in line_items:
+        product_id = item['product_id']
+        quantity = item['quantity']
+        price_per_unit = item['price_per_unit']
+        total = item['total']
+        sql += " (%s, %s, %s, %s, %s)" % (order_id,
+                                          product_id, quantity, price_per_unit, total)
+        if index < list_length:
+            sql += ", "
+            index = index + 1
+
+    execute_query(conn, sql)
+
+    return 'Order was added Successfully'
+
+
+@app.route('/orders/<order_id>', methods=['GET'])
+def order_info(order_id):
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    # order information
+    sql = """
+        SELECT o.order_id, o.date_produced, o.delivery_date, o.status, o.customer_id, l.product_id, p.product_name, l.quantity, l.price_per_unit, l.total
+        FROM orders o 
+        JOIN line_items l ON o.order_id = l.order_id
+        JOIN products p ON l.product_id = p.product_id
+        WHERE o.order_id ='%s';
+        """ % (order_id)
+    order = execute_read_query(conn, sql)
+
+    customer_id = order[0]['customer_id']
+
+    sql = """
+        select c.customer_id, c.business_name, cc.phone, cc.email, cc.street, cc.city, cc.state_code_id, cc.zipcode
+        FROM customers c JOIN customer_contact cc 
+        ON c.customer_id = cc.customer_id 
+        WHERE c.customer_id ='%s';
+        """ % (customer_id)
+    customer = execute_read_query(conn, sql)
+
+    sql = """
+        SELECT * FROM products;
+        """
+    products = execute_read_query(conn, sql)
+
+    sql = """SELECT * FROM customers;"""
+    customers_data = execute_read_query(conn, sql)
+
+    sql = """SELECT sum(total) FROM line_items WHERE order_id ='%s';""" % (
+        order_id)
+    total = execute_read_query(conn, sql)
+
+    return jsonify(order, customer, products, customers_data, total)
+
+
+@app.route('/update_order', methods=['PUT'])
+def update_order():
+    # The user input is gathered in JSON format and stored into an empty variable
+    order_data = request.get_json()
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    order_id = order_data['order_id']
+    customer_id = order_data['customer_id']
+    status = order_data['status']
+    delivery_date = order_data['delivery_date']
+    line_items = order_data['line_items']
+
+    sql = "UPDATE orders SET customer_id= %s, delivery_date= '%s', status= '%s' WHERE order_id= %s" % (
+        customer_id, delivery_date, status, order_id)
+    execute_query(conn, sql)
+
+    sql = "DELETE FROM line_items WHERE order_id= %s" % (order_id)
+    execute_query(conn, sql)
+
+    sql = "INSERT INTO line_items (order_id, product_id, quantity, price_per_unit, total) VALUES"
+
+    list_length = len(line_items)-1
+    index = 0
+    for item in line_items:
+
+        product_id = item['product_id']
+        quantity = item['quantity']
+        price_per_unit = item['price_per_unit']
+        total = item['total']
+        sql += " (%s, %s, %s, %s, %s)" % (order_id,
+                                          product_id, quantity, price_per_unit, total)
+        if index < list_length:
+            sql += ", "
+            index = index + 1
+
+    execute_query(conn, sql)
+
+    return 'Order was updated Successfully'
+
+
+@app.route('/orders_delete', methods=['DELETE'])
+def delete_order():
+    order_data = request.get_json()
+    order_id = order_data['order_id']
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    cursor = conn.cursor()
+    # sql = "SELECT * FROM orders;"
+    sql = "DELETE FROM line_items WHERE order_id= %s"
+    val = (order_id)
+
+    sql = "DELETE FROM invoices WHERE order_id= %s"
+    val = (order_id)
+
+    sql = "DELETE FROM orders WHERE order_id= %s"
+    val = (order_id)
+    
+    cursor.execute(sql, val)
+    conn.commit
+    return 'Order was deleted successfully'
+
 # Best Selling Items Report
 # This report generates a count for each specific line item's frequency across all orders.
 
