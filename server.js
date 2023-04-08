@@ -1057,7 +1057,7 @@ app.post('/orders/update', function (req, res) {
 });
 
 app.post('/orders/delete', function (req, res) {
-    axios.delete('http://127.0.0.1:5000/orders_delete',
+    axios.put('http://127.0.0.1:5000/orders_delete',
         {
             order_id: req.body.order_id
         }

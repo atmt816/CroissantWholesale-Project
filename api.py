@@ -787,7 +787,6 @@ def delete_maintenance_info():
     log_id = maintenance_data['log_id']
     sql = "DELETE FROM maintenance_logs WHERE log_id = %s" % (log_id)
     execute_query(conn,sql)
-    print(log_id)
     return 'Maintenance log was successfully deleted'
 
 @app.route('/addmaintenancelog', methods=['POST'])
@@ -1160,7 +1159,8 @@ def update_order():
     return 'Order was updated Successfully'
 
 
-@app.route('/orders_delete', methods=['DELETE'])
+
+@app.route('/orders_delete', methods=['PUT'])
 def delete_order():
     order_data = request.get_json()
     order_id = order_data['order_id']
@@ -1168,17 +1168,17 @@ def delete_order():
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     cursor = conn.cursor()
     # sql = "SELECT * FROM orders;"
-    sql = "DELETE FROM line_items WHERE order_id= %s"
-    val = (order_id)
+    sql = "DELETE FROM line_items WHERE order_id = %s" % (order_id)
+    cursor.execute(sql)
 
-    sql = "DELETE FROM invoices WHERE order_id= %s"
-    val = (order_id)
+    sql = "DELETE FROM invoices WHERE order_id= %s" % (order_id)
+    cursor.execute(sql)
 
-    sql = "DELETE FROM orders WHERE order_id= %s"
-    val = (order_id)
+    sql = "DELETE FROM orders WHERE order_id= %s" % (order_id)
+    cursor.execute(sql)
     
-    cursor.execute(sql, val)
-    conn.commit
+    print(order_id)
+    conn.commit()
     return 'Order was deleted successfully'
 
 # Best Selling Items Report
@@ -1200,35 +1200,35 @@ def get_daily_best_sell_report():
 # Weekly Best Sellers - Determine most popular items amongst all orders scheduled for delivery within a week from the current date.
 
 
-# @app.route('/weeklybestsellers', methods=['GET'])
-# def get_weekly_best_sell_report():
-#     conn = create_connection(
-#         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-#     sql = "SELECT P.Product_ID, P.Product_Name, LI.Item_ID, LI.Price_Per_Unit, O.Order_ID, LI.Quantity, COUNT(O.Order_ID) AS Order_Frequency FROM orders AS O INNER JOIN line_items AS LI ON LI.Order_ID = O.Order_ID INNER JOIN products as P ON P.Product_ID = LI.Product_ID WHERE O.Delivery_Date BETWEEN curdate() AND curdate()+8 GROUP BY P.Product_ID, P.Product_Name, LI.Item_ID, LI.Price_Per_Unit"
-#     weekly_best_sell_report = execute_read_query(conn, sql)
-#     return jsonify(weekly_best_sell_report)
+@app.route('/weeklybestsellers', methods=['GET'])
+def get_weekly_best_sell_report():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT P.Product_ID, P.Product_Name, LI.Item_ID, LI.Price_Per_Unit, O.Order_ID, LI.Quantity, COUNT(O.Order_ID) AS Order_Frequency FROM orders AS O INNER JOIN line_items AS LI ON LI.Order_ID = O.Order_ID INNER JOIN products as P ON P.Product_ID = LI.Product_ID WHERE O.Delivery_Date BETWEEN curdate() AND curdate()+8 GROUP BY P.Product_ID, P.Product_Name, LI.Item_ID, LI.Price_Per_Unit"
+    weekly_best_sell_report = execute_read_query(conn, sql)
+    return jsonify(weekly_best_sell_report)
 
-# # Monthly Best Sellers - Determine most popular items amongst all orders scheduled for delivery within a month from the current date.
-
-
-# @app.route('/monthlybestsellers', methods=['GET'])
-# def get_monthly_best_sell_report():
-#     conn = create_connection(
-#         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-#     sql = "SELECT P.Product_ID, P.Product_Name, LI.Item_ID, LI.Price_Per_Unit, O.Order_ID, LI.Quantity, COUNT(O.Order_ID) AS Order_Frequency FROM orders AS O INNER JOIN line_items AS LI ON LI.Order_ID = O.Order_ID INNER JOIN products as P ON P.Product_ID = LI.Product_ID WHERE O.Delivery_Date BETWEEN curdate() AND curdate()+30 GROUP BY P.Product_ID, P.Product_Name, LI.Item_ID, LI.Price_Per_Unit"
-#     monthly_best_sell_report = execute_read_query(conn, sql)
-#     return jsonify(monthly_best_sell_report)
-
-# # Lifetime Best Sellers - Determine most popular items amongst all historical orders.
+# Monthly Best Sellers - Determine most popular items amongst all orders scheduled for delivery within a month from the current date.
 
 
-# @app.route('/lifetimebestsellers', methods=['GET'])
-# def get_lifetime_best_sell_report():
-#     conn = create_connection(
-#         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-#     sql = "SELECT P.Product_ID, P.Product_Name, COUNT(LI.product_id) AS Order_Frequency FROM orders AS O INNER JOIN line_items AS LI ON LI.Order_ID = O.Order_ID INNER JOIN products as P ON P.Product_ID = LI.Product_ID GROUP BY LI.product_id;"
-#     lifetime_best_sell_report = execute_read_query(conn, sql)
-#     return jsonify(lifetime_best_sell_report)
+@app.route('/monthlybestsellers', methods=['GET'])
+def get_monthly_best_sell_report():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT P.Product_ID, P.Product_Name, LI.Item_ID, LI.Price_Per_Unit, O.Order_ID, LI.Quantity, COUNT(O.Order_ID) AS Order_Frequency FROM orders AS O INNER JOIN line_items AS LI ON LI.Order_ID = O.Order_ID INNER JOIN products as P ON P.Product_ID = LI.Product_ID WHERE O.Delivery_Date BETWEEN curdate() AND curdate()+30 GROUP BY P.Product_ID, P.Product_Name, LI.Item_ID, LI.Price_Per_Unit"
+    monthly_best_sell_report = execute_read_query(conn, sql)
+    return jsonify(monthly_best_sell_report)
+
+# Lifetime Best Sellers - Determine most popular items amongst all historical orders.
+
+
+@app.route('/lifetimebestsellers', methods=['GET'])
+def get_lifetime_best_sell_report():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT P.Product_ID, P.Product_Name, COUNT(LI.product_id) AS Order_Frequency FROM orders AS O INNER JOIN line_items AS LI ON LI.Order_ID = O.Order_ID INNER JOIN products as P ON P.Product_ID = LI.Product_ID GROUP BY LI.product_id;"
+    lifetime_best_sell_report = execute_read_query(conn, sql)
+    return jsonify(lifetime_best_sell_report)
 
 
 @app.route('/vendorinventoryreport', methods=['GET'])
