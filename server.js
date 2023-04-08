@@ -58,7 +58,7 @@ app.get("/home", async (req, res, next) => {
         return res.end('err');
     }
 
-    res.render('pages/home',
+    res.render('pages/chart',
         {
             chartApi: chartApi.data,
             weekly_data: weekly_data.data,
