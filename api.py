@@ -586,7 +586,7 @@ def get_inventory():
     # sql = "SELECT * FROM inventory"
 
     sql = """
-        SELECT i.inventory_id, v.vendor_id, v.vendor_name, i.item_name, i.item_amount, i.unit_cost, i.total_inv_cost, i.date_bought
+        SELECT i.inventory_id, v.vendor_name, i.item_name, i.item_amount, i.unit_cost, i.total_inv_cost, i.date_bought
         FROM inventory AS i JOIN vendors AS v ON i.vendor_id = v.vendor_id;
         """
     inventory = execute_read_query(conn, sql)
@@ -603,8 +603,8 @@ def get_inv_info(inventory_id):
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = """
-        SELECT i.inventory_id, v.vendor_id, v.vendor_name, i.item_name, i.item_amount, i.unit_cost, i.total_inv_cost, i.date_bought
-        FROM inventory AS i JOIN vendors AS v ON i.vendor_id = v.vendor_id where inventory_id = %s;
+        SELECT i.inventory_id, v.vendor_name, i.item_name, i.item_amount, i.unit_cost, i.total_inv_cost, i.date_bought
+        FROM inventory AS i JOIN vendors AS v ON i.vendor_id = v.vendor_id where i.inventory_id = %s;
         """ % (inventory_id)
 
     inventory = execute_read_query(conn, sql)
@@ -626,15 +626,15 @@ def add_inventory():
     item_name = inventory_data['item_name']
     item_amount = int(inventory_data['item_amount'])
     unit_cost = int(inventory_data['unit_cost'])
-    total = unit_cost * item_amount
-    total_inv_cost = inventory_data['total_inv_cost']
+    # total = unit_cost * item_amount
+    # total_inv_cost = inventory_data['total_inv_cost']
     date_bought = inventory_data['date_bought']
-    fmt_date_bought = str(datetime.strptime(date_bought, '%m-%d-%Y').date())
+    # fmt_date_bought = str(datetime.strptime(date_bought, '%m-%d-%Y').date())
 
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = "INSERT INTO inventory(vendor_id, item_name, item_amount, unit_cost, total_inv_cost, date_bought) VALUES (%s, '%s', %s, %s, %s, %s)" % (
-        vendor_id, item_name, item_amount, unit_cost, unit_cost*item_amount, fmt_date_bought)
+        vendor_id, item_name, item_amount, unit_cost, unit_cost*item_amount, date_bought)
 
     execute_query(conn, sql)
     return 'Inventory was added Successfully'
@@ -657,7 +657,7 @@ def update_inventory():
     date_bought = inventory_data['date_bought']
 
     # date format as yyyy-mm-dd(2022-03-04) or mm-dd-yyyy(03-04-2022)
-    fmt_date_bought = str(datetime.strptime(date_bought, '%m-%d-%Y').date())
+    # fmt_date_bought = str(datetime.strptime(date_bought, '%m-%d-%Y').date())
 
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
@@ -665,7 +665,7 @@ def update_inventory():
     cursor = conn.cursor()
     sql = "UPDATE inventory SET vendor_id = %s, item_name = %s, item_amount = %s, unit_cost = %s, total_inv_cost = %s, date_bought = %s WHERE inventory_id = %s"
     val = (vendor_id, item_name, item_amount, unit_cost,
-           item_amount*unit_cost, fmt_date_bought, inventory_id)
+           item_amount*unit_cost, date_bought, inventory_id)
 
     cursor.execute(sql, val)
     conn.commit()
@@ -952,7 +952,7 @@ def update_order():
     return 'Order was updated Successfully'
 
 
-@app.route('/orders/<order_id>', methods=['DELETE'])
+@app.route('/orders/delete', methods=['DELETE'])
 def delete_order(order_id):
     order_data = request.get_json()
     conn = create_connection(
