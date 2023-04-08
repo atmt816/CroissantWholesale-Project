@@ -6,10 +6,12 @@ const bodyParser = require('body-parser');
 const axios = require('axios');
 const { response } = require('express');
 const req = require('express/lib/request');
-const { type } = require('express/lib/response');
+//const { type } = require('express/lib/response');
 var selectedID = "";
 app.use(bodyParser.urlencoded());
 app.set('view engine', 'ejs');
+var moment = require('moment');
+app.locals.moment = moment;
 
 // set the view engine to ejs
 
@@ -527,7 +529,7 @@ app.post('/orders/update', function (req, res) {
                     res.render('pages/orders',
                         {
                             order_data: order_data[0],
-                            customers : order_data[1],
+                            customers: order_data[1],
                             products: order_data[2],
                             line_items: order_data[3]
                         });
@@ -541,7 +543,7 @@ app.post('/ordersinfo/:id', function (req, res) {
     const order_id = req.params.id;
 
 
-    axios.delete('http://127.0.0.1:5000/orders/' + order_id
+    axios.delete('http://127.0.0.1:5000/orders/delete/' + order_id
     ).then((response, states) => {
         res.render('pages/orders',
             {
