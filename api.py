@@ -527,16 +527,6 @@ def update_vendor():
     return 'Customer was updated successfully'
 
 
-# inventory get method working now
-# no data in inventory for now
-# adjust sql as needed - Misael
-@app.route('/inventory', methods=['GET'])
-def get_inventory():
-    conn = create_connection(
-        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "SELECT * FROM inventory"
-    inventory = execute_read_query(conn, sql)
-    return inventory
 
 
 
@@ -713,7 +703,113 @@ def get_vehicles_info(vehicle_id):
 
     return jsonify(vehicles, maintenance_info)
 
+#INVENTORY PAGE
 
+
+@app.route('/inventory', methods=['GET'])
+def get_inventory():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    # sql = "SELECT * FROM inventory"
+
+    sql = """
+        SELECT i.inventory_id, v.vendor_name, i.item_name, i.item_amount, i.unit_cost, i.total_inv_cost, i.date_bought
+        FROM inventory AS i JOIN vendors AS v ON i.vendor_id = v.vendor_id;
+        """
+    inventory = execute_read_query(conn, sql)
+
+    sql = """
+        SELECT * FROM vendors;
+    """
+    vendors = execute_read_query(conn, sql)
+    return jsonify(inventory, vendors)
+
+
+@app.route('/inveninfo/<inventory_id>', methods=['GET'])
+def get_inv_info(inventory_id):
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = """
+        SELECT i.inventory_id, v.vendor_name, i.item_name, i.item_amount, i.unit_cost, i.total_inv_cost, i.date_bought
+        FROM inventory AS i JOIN vendors AS v ON i.vendor_id = v.vendor_id where i.inventory_id = %s;
+        """ % (inventory_id)
+
+    inventory = execute_read_query(conn, sql)
+
+    sql = """
+        SELECT * FROM vendors;
+    """
+    vendors = execute_read_query(conn, sql)
+
+    return jsonify(inventory, vendors)
+
+
+@app.route('/inventory/add', methods=['POST'])
+def add_inventory():
+    # The user input is gathered in JSON format and stored into an empty variable
+    inventory_data = request.get_json()
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    vendor_id = inventory_data['vendor_id']
+    item_name = inventory_data['item_name']
+    item_amount = int(inventory_data['item_amount'])
+    unit_cost = Decimal(inventory_data['unit_cost'])
+    # total = unit_cost * item_amount
+    # total_inv_cost = inventory_data['total_inv_cost']
+    date_bought = inventory_data['date_bought']
+    # fmt_date_bought = str(datetime.strptime(date_bought, '%m-%d-%Y').date())
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "INSERT INTO inventory(vendor_id, item_name, item_amount, unit_cost, total_inv_cost, date_bought) VALUES (%s, '%s', %s, %s, %s, '%s')" % (
+        vendor_id, item_name, item_amount, unit_cost, unit_cost*item_amount, date_bought)
+
+    execute_query(conn, sql)
+    return 'Inventory was added Successfully'
+
+# PUT method for inventory
+
+
+@app.route('/update_inventory', methods=['PUT'])
+def update_inventory():
+    # The user input is gathered in JSON format and stored into an empty variable
+    inventory_data = request.get_json()
+    # we will be using inventory_id to reference the entry to update
+    inventory_id = inventory_data['inventory_id']
+    # The JSON object is then separated into variables so that they may be used in a sql query
+    vendor_id = inventory_data['vendor_id']
+    item_name = inventory_data['item_name']
+    item_amount = int(inventory_data['item_amount'])
+    unit_cost = Decimal(inventory_data['unit_cost'])
+    # total_inv_cost = inventory_data['total_inv_cost']
+    date_bought = inventory_data['date_bought']
+
+    # date format as yyyy-mm-dd(2022-03-04) or mm-dd-yyyy(03-04-2022)
+    # fmt_date_bought = str(datetime.strptime(date_bought, '%m-%d-%Y').date())
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+
+    sql = "UPDATE inventory SET vendor_id = %s, item_name = '%s', item_amount = %s, unit_cost = %s, total_inv_cost = %s, date_bought = '%s' WHERE inventory_id = %s" % (vendor_id, item_name, item_amount, unit_cost, item_amount*unit_cost, date_bought, inventory_id)
+
+    execute_query(conn, sql)
+    # conn.commit()
+    return 'Inventory was updated successfully'
+
+
+@app.route('/delete_inventory', methods=['DELETE'])
+def delete_inventory():
+    request_data = request.get_json()
+    inventory_id = request_data['inventory_id']
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    cursor = conn.cursor()
+    sql = "Delete from inventory WHERE inventory_id = %s"
+    val = (inventory_id)
+
+    cursor.execute(sql, val)
+    conn.commit
+    return 'Item was deleted successfully'
 # Maintenance_Logs Table CRUD
 
 

@@ -1,0 +1,133 @@
+<head>
+    <%- include('../partials/head'); %>
+</head>
+
+<style>
+    .top-buffer {
+        margin-top: 60px;
+    }
+</style>
+
+<body class="container">
+    <header>
+        <%- include('../partials/header'); %>
+    </header>
+
+    <main class="container pt-5">
+        <div class="p-5 mb-4 bg-white rounded-3 top-buffer">
+            <h2 class="text-center pb-2">
+                Inventory
+            </h2>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Create New Inventory
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="exampleModalLabel">Create New Inventory</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="/inventory/add" method="post" class="row g-3">
+
+                                <div class="col-md-6">
+                                    <label for="Vendor" class="form-label">Vendor</label>
+                                    <select class="form-select" name="vendor_id" id="vendor_id">
+                                        <% vendors.forEach(function(vendors) { %>
+                                            <option value=<%=vendors.vendor_id %>><%=vendors.vendor_name %>
+                                            </option>
+                                            <% }); %>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="item_name" class="form-label">Item Name</label>
+                                    <input type="text" class="form-control" name="item_name" id="item_name"
+                                        placeholder="Ex. Flour">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="item_amount" class="form-label">Item Amount</label>
+                                    <input type="text" class="form-control" name="item_amount" id="item_amount"
+                                        placeholder="Ex. 50">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="unit_cost" class="form-label">Unit Cost</label>
+                                    <input type="text" class="form-control" name="unit_cost" id="unit_cost"
+                                        placeholder="Ex. 100.00">
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="date_bought" class="form-label">Date Bought</label>
+                                    <input class="form-control" placeholder="2021-03-02" name="date_bought" type="text">
+                                </div>
+
+
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Create New Item</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Item Id</th>
+
+                        <th scope="col">Vendor Name</th>
+                        <th scope="col">Item Name</th>
+                        <th scope="col">Item Amount</th>
+                        <th scope="col">Unit Cost</th>
+                        <th scope="col">Total Inventory Cost ($)</th>
+                        <th scope="col">Date Bought</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <% inventory_data.forEach(function(inventory_data) { %>
+                        <tr>
+                            <td>
+                                <%= inventory_data.inventory_id%>
+                            </td>
+
+                            <td>
+                                <%= inventory_data.vendor_name%>
+                            </td>
+                            <td>
+                                <%= inventory_data.item_name%>
+                            </td>
+                            <td>
+                                <%= inventory_data.item_amount%>
+                            </td>
+                            <td>
+                                <%= inventory_data.unit_cost%>
+                            </td>
+                            <td>
+                                <%= inventory_data.total_inv_cost%>
+                            </td>
+                            <td>
+                                <%if (inventory_data.date_bought) { %>
+                                    <%= moment(inventory_data.date_bought).format('MMMM Do YYYY') %> 
+                                    <% } else { %><% } %>
+                                
+                            </td>
+                            <td>
+                                <a style="text-decoration:none" href="/inveninfo/<%= inventory_data.inventory_id%>"> Edit</a>
+                            </td>
+
+                        </tr>
+                        <% }); %>
+
+                </tbody>
+            </table>
+
+        </div>
+
+    </main>
+</body>
