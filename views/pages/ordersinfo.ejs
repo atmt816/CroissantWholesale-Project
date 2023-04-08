@@ -148,7 +148,7 @@
                       <label for="customer" class="form-label">Customer</label>
                       <select class="form-select" name="customer_id" id="customer_id">                       
                         <% customers_data.forEach(function(customers_data) { %>
-                          <option value=<%= customers_data.customer_id %> <% if (order_data[0].customer_id == customers_data.customer_id) { %>selected<% } %>>
+                          <option selected value=<%= customers_data.customer_id %>>
                             <%= customers_data.business_name %>      
                           </option>
                         <% }); %>
@@ -161,7 +161,7 @@
                     <div class="col-md-6 mb-1">
                       <label for="status">Order Status</label>
                       <select name="status" id="status" class="form-select">
-                        <option value=<%=order_data[0].status%>><%=order_data[0].status%>
+                        <option selected value=<%=order_data[0].status%>><%=order_data[0].status%>
                         </option>
                         <option>In-Progress</option>
                         <option>Delivered</option>
