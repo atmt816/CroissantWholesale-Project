@@ -968,7 +968,7 @@ def update_order():
     return 'Order was updated Successfully'
 
 
-@app.route('/orders/delete', methods=['DELETE'])
+@app.route('/orders_delete', methods=['DELETE'])
 def delete_order():
     order_data = request.get_json()
     conn = create_connection(
@@ -979,12 +979,15 @@ def delete_order():
     sql = "DELETE FROM line_items WHERE order_id= %s" % (order_id)
     execute_query(conn, sql)
 
-    line_items = execute_read_query(conn, sql)
+    line_items = execute_query(conn, sql)
+
+    sql = "DELETE FROM invoices WHERE order_id= %s" % (order_id)
+    invoices = execute_query(conn, sql)
 
     sql = "DELETE FROM orders WHERE order_id= %s" % (order_id)
-    orders = execute_read_query(conn, sql)
+    orders = execute_query(conn, sql)
 
-    return jsonify(line_items, orders)
+    return jsonify(line_items, invoices, orders) 
 
 # Fulfillment Report
 # Fulfillment check per line item. Report generates all orders within a timeframe that are scheduled for delivery.
