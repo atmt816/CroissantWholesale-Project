@@ -1,0 +1,64 @@
+<head>
+    <%- include('../partials/head'); %>
+  </head>
+  
+  
+  <style>
+    .top-buffer {
+      margin-top: 60px;
+    }
+  </style>
+  
+  <body class="container">
+    <header>
+      <%- include('../partials/header'); %>
+    </header>
+  
+    <main class="container pt-5">
+      <div class="p-5 mb-4 bg-white rounded-3 top-buffer">
+        <h2 class="text-center pb-2">
+          Best Selling Items
+        </h2>
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Product ID</th>
+              <th scope="col">Product Name</th>
+              <th scope="col">Order Frequency</th>
+  
+  
+            </tr>
+          </thead>
+          <tbody>
+            <% best_sell_data.forEach(function(best_sell_data) { %>
+              <tr>
+                <td>
+                  <a>
+                    <%= best_sell_data.Product_ID%>
+                  </a>
+                </td>
+                <td>
+                  <a>
+                    <%= best_sell_data.Product_Name%>
+                  </a>
+                </td>
+                <td>
+                  <a>
+                    <%= best_sell_data.Order_Frequency%>
+                  </a>
+                </td>
+                  
+    
+                </tr>
+                <% }); %>
+    
+            </tbody>
+          </table>
+  
+    
+        </div>
+        <footer>
+          <%- include('../partials/footer'); %>
+      </footer>
+      </main>
+    </body>
