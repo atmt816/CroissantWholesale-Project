@@ -35,7 +35,7 @@
                             <form action="/inventory/add" method="post" class="row g-3">
 
                                 <div class="col-md-6">
-                                    <label for="vendor_id" class="form-label">Vendor</label>
+                                    <label for="Vendor" class="form-label">Vendor</label>
                                     <select class="form-select" name="vendor_id" id="vendor_id">
                                         <% vendors.forEach(function(vendors) { %>
                                             <option value=<%=vendors.vendor_id %>><%=vendors.vendor_name %>
@@ -61,8 +61,7 @@
 
                                 <div class="col-md-6">
                                     <label for="date_bought" class="form-label">Date Bought</label>
-                                    <input type="text" class="form-control" name="date_bought" id="date_bought"
-                                        placeholder="Ex. yyyy-mm-dd">
+                                    <input class="form-control" placeholder="2021-03-02" name="date_bought" type="text">
                                 </div>
 
 
@@ -80,12 +79,12 @@
                 <thead>
                     <tr>
                         <th scope="col">Item Id</th>
-                        <th scope="col">Vendor Id</th>
+
                         <th scope="col">Vendor Name</th>
                         <th scope="col">Item Name</th>
                         <th scope="col">Item Amount</th>
                         <th scope="col">Unit Cost</th>
-                        <th scope="col">Total Inventory Cost</th>
+                        <th scope="col">Total Inventory Cost ($)</th>
                         <th scope="col">Date Bought</th>
 
                     </tr>
@@ -96,9 +95,7 @@
                             <td>
                                 <%= inventory_data.inventory_id%>
                             </td>
-                            <td>
-                                <%= inventory_data.vendor_id%>
-                            </td>
+
                             <td>
                                 <%= inventory_data.vendor_name%>
                             </td>
@@ -115,7 +112,7 @@
                                 <%= inventory_data.total_inv_cost%>
                             </td>
                             <td>
-                                <%= inventory_data.date_bought%>
+                                <%= moment(inventory_data.date_bought).format('MMMM Do YYYY')%>
                             </td>
                             <td>
                                 <a style="text-decoration:none" href="/inveninfo/<%= inventory_data.inventory_id%>""> Edit</a>
