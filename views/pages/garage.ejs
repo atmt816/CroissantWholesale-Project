@@ -25,7 +25,12 @@
             <%= success %>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
           </div>
-        <% } %>
+        <% } else if (typeof error !== 'undefined') { %>
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <%= error %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div> 
+          <% } %>
 
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
           Create New Auto Shop

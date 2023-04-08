@@ -478,6 +478,122 @@ app.post('/vendors/update', function (req, res) {
         );
 });
 
+//INVENTORY PAGE
+
+
+app.get('/inventory', function (req, res) {
+    axios.get('http://127.0.0.1:5000/inventory')
+        .then((response) => {
+            var inventory_data = response.data
+            console.log(inventory_data)
+            res.render('pages/inventory',
+                {
+                    inventory_data: inventory_data[0],
+                    vendors: inventory_data[1]
+                });
+        });
+});
+
+app.post('/inventory/add', function (req, res) {
+    axios.post('http://127.0.0.1:5000/inventory/add',
+        {
+            vendor_id: req.body.vendor_id,
+            item_name: req.body.item_name,
+            item_amount: req.body.item_amount,
+            unit_cost: req.body.unit_cost,
+            total_inv_cost: req.body.total_inv_cost,
+            date_bought: req.body.date_bought
+
+        }
+    )
+        .then((response) => {
+            axios.get('http://127.0.0.1:5000/inventory')
+                .then((response, states) => {
+                    // console.log(response.data)
+                    var inventory_data = response.data
+
+                    res.render('pages/inventory',
+                        {
+                            inventory_data: inventory_data[0],
+                            vendors: inventory_data[1]
+
+                        });
+                });
+        });
+});
+
+app.get('/inveninfo/:id', function (req, res) {
+    const inventory_id = req.params.id;
+
+    axios.get('http://127.0.0.1:5000/inveninfo/' + inventory_id
+    ).then((response, states) => {
+        var inventory_data = response.data
+
+        res.render('pages/inveninfo',
+            {
+                inventory_data: inventory_data[0],
+                vendors: inventory_data[1]
+            });
+    });
+
+});
+
+app.post('/inventory/update', function (req, res) {
+    axios.put('http://127.0.0.1:5000/update_inventory',
+        {
+            inventory_id: req.body.inventory_id,
+            vendor_id: req.body.vendor_id,
+            item_name: req.body.item_name,
+            item_amount: req.body.item_amount,
+            unit_cost: req.body.unit_cost,
+            // total_inv_cost: req.body.total_inv_cost,
+            date_bought: req.body.date_bought
+
+        }
+    )
+        .then((response) => {
+            axios.get('http://127.0.0.1:5000/inventory')
+                .then((response, states) => {
+                    // console.log(response.data)
+                    var inventory_data = response.data
+
+                    res.render('pages/inventory',
+                        {
+                            inventory_data: inventory_data[0],
+                            vendors: inventory_data[1]
+
+                        });
+                });
+        }
+
+        );
+});
+
+app.post('/inventory/delete', function (req, res) {
+    axios.delete('http://127.0.0.1:5000/delete_inventory',
+        {
+            inventory_id: req.body.inventory_id
+
+        }
+    )
+        .then((response) => {
+            axios.get('http://127.0.0.1:5000/inventory')
+                .then((response, states) => {
+                    // console.log(response.data)
+                    var inventory_data = response.data
+
+                    res.render('pages/inventory',
+                        {
+                            inventory_data: inventory_data[0],
+                            vendors: inventory_data[1]
+
+                        });
+                });
+        }
+
+        );
+});
+
 
 //Vehicles PAGE
 
@@ -751,10 +867,12 @@ app.post('/garage/add', function (req, res) {
                             success: 'The auto shop has been added.'
 
                         });
+                    }).catch((error) => {
+                        res.render('pages/vendors', {
+                            error: error.response.data.error
+                        });
                 });
-        }
-
-        );
+        });
 });
 
 app.post('/garage/update', function (req, res) {
@@ -1008,7 +1126,7 @@ app.get('/ordersinfo/:id', function (req, res) {
     ).then((response, states) => {
         var order_data = response.data
         var obj = order_data[4]
-        var sumtotal = parseInt(obj[0]["sum(total)"]);
+        var sumtotal = parseFloat(obj[0]["sum(total)"]).toFixed(2);
 
 
         res.render('pages/ordersinfo',

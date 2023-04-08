@@ -578,25 +578,29 @@ def get_garage_info(garage_id):
 
 @app.route('/addgarage', methods=['POST'])
 def add_garage():
-    # The user input is gathered in JSON format and stored into an empty variable
-    garage_data = request.get_json()
-    # The JSON object is then separated into variables so that they may be used in a sql query
-    garage_name = garage_data['garage_name']
-    garage_hrs = garage_data['garage_hrs']
-    phone = garage_data['phone']
-    street = garage_data['street']
-    city = garage_data['city']
-    state_code_id = garage_data['state_code_id']
-    zipcode = garage_data['zipcode']
-    status = garage_data['status']
+    try:
+        # The user input is gathered in JSON format and stored into an empty variable
+        garage_data = request.get_json()
+        # The JSON object is then separated into variables so that they may be used in a sql query
+        garage_name = garage_data['garage_name']
+        garage_hrs = garage_data['garage_hrs']
+        phone = garage_data['phone']
+        street = garage_data['street']
+        city = garage_data['city']
+        state_code_id = garage_data['state_code_id']
+        zipcode = garage_data['zipcode']
+        status = garage_data['status']
 
-    conn = create_connection(
-        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "INSERT INTO garage(garage_name, phone, street, city, state_code_id, zipcode, status, garage_hrs) VALUES ('%s', %s, '%s', '%s', '%s', %s, '%s', '%s')" % (
-        garage_name, phone, street, city, state_code_id, zipcode, status, garage_hrs)
+        conn = create_connection(
+            'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+        sql = "INSERT INTO garage(garage_name, phone, street, city, state_code_id, zipcode, status, garage_hrs) VALUES ('%s', %s, '%s', '%s', '%s', %s, '%s', '%s')" % (
+            garage_name, phone, street, city, state_code_id, zipcode, status, garage_hrs)
 
-    execute_query(conn, sql)
-    return 'Garage was added Successfully'
+        execute_query(conn, sql)
+        return 'Garage was added Successfully'
+    except Exception as e: 
+        error_msg = str(e)
+        return {'error': error_msg}, 400
 
 
 # PUT method for garage
