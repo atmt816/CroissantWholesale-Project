@@ -622,7 +622,7 @@ app.post('/inventory/update', function (req, res) {
     axios.put('http://127.0.0.1:5000/update_inventory',
         {
             inventory_id: req.body.inventory_id,
-            vendor_id: req.body.inventory_id,
+            vendor_id: req.body.vendor_id,
             item_name: req.body.item_name,
             item_amount: req.body.item_amount,
             unit_cost: req.body.unit_cost,
