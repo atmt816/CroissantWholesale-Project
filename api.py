@@ -672,6 +672,22 @@ def update_inventory():
     return 'Inventory was updated successfully'
 
 
+@app.route('/delete_inventory', methods=['DELETE'])
+def delete_inventory():
+    request_data = request.get_json()
+    inventory_id = request_data['inventory_id']
+
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    cursor = conn.cursor()
+    sql = "Delete from inventory WHERE inventory_id = %s"
+    val = (inventory_id)
+
+    cursor.execute(sql, val)
+    conn.commit
+    return 'Item was deleted successfully'
+
+
 ############################# PRODUCTS ###################################
 
 # Products Table CRUD
@@ -953,7 +969,7 @@ def update_order():
 
 
 @app.route('/orders/delete', methods=['DELETE'])
-def delete_order(order_id):
+def delete_order():
     order_data = request.get_json()
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
