@@ -1228,5 +1228,35 @@ def delete_order():
 #     return jsonify(lifetime_best_sell_report)
 
 
+@app.route('/vendorinventoryreport', methods=['GET'])
+def get_vendor_inv_sheet():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT v.vendor_id, ii.inventory_id, v.vendor_name, ii.item_name, ii.item_amount, ii.unit_cost, ii.total_inv_cost, ii.date_bought FROM vendors AS v JOIN inventory AS ii ON v.vendor_id = ii.vendor_id order by ii.date_bought desc limit 5;"
+    vendor_inv_sheet = execute_read_query(conn, sql)
+    return jsonify(vendor_inv_sheet)
 
+@app.route('/monthlyordercount', methods=['GET'])
+def get_monthly_countt():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT DATE_FORMAT(date_produced, '%M') AS date_produced,COUNT(order_id) AS count FROM orders where Year(date_produced) = year(current_date()) GROUP BY MONTH(date_produced);"
+    order_count = execute_read_query(conn, sql)
+    return jsonify(order_count)
+
+@app.route('/productcounter', methods=['GET'])
+def get_count_product():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "select i.product_id,p.product_name,sum(i.quantity) as total_quantity from line_items as i join products as p on i.product_id = p.product_id join orders as o on i.order_id =o.order_id where o.status='Delivered' group by i.product_id;"
+    prod_count = execute_read_query(conn, sql)
+    return jsonify(prod_count)
+
+@app.route('/weeklyfulfillmentreport', methods=['GET'])
+def get_weekly_ful_report():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT O.Order_ID, O.Date_Produced, O.Delivery_Date, P.Product_ID, Product_Name, LI.Quantity FROM products AS P INNER JOIN line_items AS LI ON P.Product_ID = LI.Product_ID INNER JOIN orders as O ON O.Order_ID = LI.Order_ID WHERE O.Delivery_Date BETWEEN curdate() AND curdate()+8 GROUP BY O.Order_ID, O.Date_Produced, O.Delivery_Date"
+    weekly_ful_report = execute_read_query(conn, sql)
+    return jsonify(weekly_ful_report)
 app.run()
