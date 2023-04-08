@@ -19,10 +19,13 @@
                 Edit Inventory
             </h2>
             <form action="/inventory/update" method="post">
-
+                <input class="form-control" name="inventory_id" type="hidden" id="inventory_id"
+                    value=<%=inventory_data[0].inventory_id%>>
                 <div class="col-md-6">
-                    <label for="vendor_id" class="form-label">Vendor</label>
+                    <label for="inputVendor" class="form-label">Vendor</label>
                     <select class="form-select" name="vendor_id" id="vendor_id">
+                        <option value=<%=inventory_data[0].vendor_id%>><%=inventory_data[0].vendor_name%>
+                        </option>
                         <% vendors.forEach(function(vendors) { %>
                             <option value=<%=vendors.vendor_id %>><%=vendors.vendor_name %>
                             </option>
@@ -53,8 +56,9 @@
                 <div class="col-md-6 mb-3">
 
                     <label for="date_bought" class="form-label">Date Bought</label>
-                    <input type="text" class="form-control" name="date_bought" id="date_bought"
-                        value="<%= inventory_data[0].date_bought %>">
+                    <input type="text" class="form-control" name="date_bought" id="date_bought" value="<%if (inventory_data[0].date_bought) { %>
+                        <%= moment(inventory_data[0].date_bought).format('YYYY-MM-DD') %> 
+                        <% } else { %><% } %>">
 
                 </div>
                 <button type="submit" class="btn btn-primary">Update</button>
