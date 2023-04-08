@@ -15,6 +15,7 @@ from flask import render_template
 # from sql import execute_read_query
 # from sql import execute_query
 from datetime import datetime
+from decimal import Decimal
 
 
 def create_connection(host_name, user_name, user_password, db_name):
@@ -625,7 +626,7 @@ def add_inventory():
     vendor_id = inventory_data['vendor_id']
     item_name = inventory_data['item_name']
     item_amount = int(inventory_data['item_amount'])
-    unit_cost = int(inventory_data['unit_cost'])
+    unit_cost = Decimal(inventory_data['unit_cost'])
     # total = unit_cost * item_amount
     # total_inv_cost = inventory_data['total_inv_cost']
     date_bought = inventory_data['date_bought']
@@ -652,7 +653,7 @@ def update_inventory():
     vendor_id = inventory_data['vendor_id']
     item_name = inventory_data['item_name']
     item_amount = int(inventory_data['item_amount'])
-    unit_cost = int(inventory_data['unit_cost'])
+    unit_cost = Decimal(inventory_data['unit_cost'])
     # total_inv_cost = inventory_data['total_inv_cost']
     date_bought = inventory_data['date_bought']
 
@@ -662,13 +663,10 @@ def update_inventory():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
 
-    cursor = conn.cursor()
-    sql = "UPDATE inventory SET vendor_id = %s, item_name = %s, item_amount = %s, unit_cost = %s, total_inv_cost = %s, date_bought = %s WHERE inventory_id = %s"
-    val = (vendor_id, item_name, item_amount, unit_cost,
-           item_amount*unit_cost, date_bought, inventory_id)
+    sql = "UPDATE inventory SET vendor_id = %s, item_name = '%s', item_amount = %s, unit_cost = %s, total_inv_cost = %s, date_bought = '%s' WHERE inventory_id = %s" % (vendor_id, item_name, item_amount, unit_cost, item_amount*unit_cost, date_bought, inventory_id)
 
-    cursor.execute(sql, val)
-    conn.commit()
+    execute_query(conn, sql)
+    # conn.commit()
     return 'Inventory was updated successfully'
 
 

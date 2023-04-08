@@ -24,10 +24,10 @@
                 <div class="col-md-6">
                     <label for="inputVendor" class="form-label">Vendor</label>
                     <select class="form-select" name="vendor_id" id="vendor_id">
-                        <option value=<%=inventory_data[0].vendor_id%>><%=inventory_data[0].vendor_name%>
+                        <option selected value=<%=inventory_data[0].vendor_id%>><%=inventory_data[0].vendor_name%>
                         </option>
                         <% vendors.forEach(function(vendors) { %>
-                            <option selected value=<%=vendors.vendor_id %>><%=vendors.vendor_name %>
+                            <option value=<%=vendors.vendor_id %>><%=vendors.vendor_name %>
                             </option>
                             <% }); %>
                     </select>
