@@ -791,13 +791,20 @@ def get_orders():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     # sql = "SELECT * FROM orders;"
-    sql = "SELECT * FROM orders;"
+    sql = """
+    SELECT o.date_produced, o.delivery_date, o.status, c.business_name, o.customer_id, o.order_id from customers as c join orders as o on c.customer_id =o.customer_id;
+    """
     orders = execute_read_query(conn, sql)
 
     sql = """
          SELECT * FROM customers;
         """
     customers = execute_read_query(conn, sql)
+
+    # sql= """
+    #     SELECT c.business_name, o.customer_id from customers as c join orders as o on c.customer_id =o.customer_id;
+    #     """
+    # customer_name = execute_read_query(conn, sql)
 
     sql = """
          SELECT * FROM products;

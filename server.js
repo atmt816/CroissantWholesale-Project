@@ -527,7 +527,7 @@ app.post('/orders/update', function (req, res) {
                     res.render('pages/orders',
                         {
                             order_data: order_data[0],
-                            customers: order_data[1],
+                            customers : order_data[1],
                             products: order_data[2],
                             line_items: order_data[3]
                         });

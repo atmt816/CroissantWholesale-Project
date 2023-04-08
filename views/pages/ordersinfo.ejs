@@ -39,7 +39,7 @@
           <div class="col-sm">
             Business Name
             <p class="pt-1">
-              <%= customers_data[0].business_name %>
+              <%= customer_data[0].business_name %>
             </p>
           </div>
           
@@ -75,19 +75,19 @@
           <div class="col-sm">
             Phone Number
             <p class="pt-1">
-              <%= customers_data[0].phone %>
+              <%= customer_data[0].phone %>
             </p>
           </div>
           <div class="col-sm">
             Email
             <p class="pt-1">
-              <%= customers_data[0].email %>
+              <%= customer_data[0].email %>
             </p>
           </div>
           <div class="col-sm pb-4">
             Address
             <p class="pt-1">
-              <%= customers_data[0].street %> <%= customers_data[0].city %>,  <%= customers_data[0].state_code_id %>,  <%= customers_data[0].zipcode %>
+              <%= customer_data[0].street %> <%= customer_data[0].city %>,  <%= customer_data[0].state_code_id %>,  <%= customer_data[0].zipcode %>
             </p>
           </div>
           <hr class="hr hr-blurry" />
@@ -147,17 +147,18 @@
                       value=<%=order_data[0].order_id%>>
                       <label for="customer" class="form-label">Customer</label>
                       <select class="form-select" name="customer_id" id="customer_id">
+                        <option value="">Select a customer</option>
                         <option value=<%=order_data.customer_id%>><%=customers_data[0].business_name%>
                         </option>
                         <% customers_data.forEach(function(customers_data) { %>
                           <option value=<%=customers_data.customer_id %>><%=customers_data.business_name %>
                           </option>
-                          <% }); %>
+                        <% }); %>
                       </select>
                     </div>
                     <div class="col-md-6 mb-1">
                       <label for="status">Delivery Date</label>
-                      <input type="text" class="form-control" id="delivery_date" name="delivery_date">
+                      <input type="text" class="form-control" id="delivery_date" name="delivery_date" value= "<%= order_data[0].delivery_date %>">
                     </div>
                     <div class="col-md-6 mb-1">
                       <label for="status">Order Status</label>
