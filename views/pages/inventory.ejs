@@ -112,10 +112,13 @@
                                 <%= inventory_data.total_inv_cost%>
                             </td>
                             <td>
-                                <%= inventory_data.date_bought%>
+                                <%if (inventory_data.date_bought) { %>
+                                    <%= moment(inventory_data.date_bought).format('MMMM Do YYYY') %> 
+                                    <% } else { %><% } %>
+                                
                             </td>
                             <td>
-                                <a style="text-decoration:none" href="/inveninfo/<%= inventory_data.inventory_id%>""> Edit</a>
+                                <a style="text-decoration:none" href="/inveninfo/<%= inventory_data.inventory_id%>"> Edit</a>
                             </td>
 
                         </tr>
