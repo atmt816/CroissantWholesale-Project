@@ -539,21 +539,26 @@ app.post('/orders/update', function (req, res) {
         );
 });
 
-app.post('/ordersinfo/:id', function (req, res) {
-    const order_id = req.params.id;
-
-
-    axios.delete('http://127.0.0.1:5000/orders/delete/' + order_id
+app.post('/orders/delete', function (req, res) {
+    axios.delete('http://127.0.0.1:5000/orders_delete',
+        {
+            order_id: req.body.order_id
+        }
     ).then((response, states) => {
-        res.render('pages/orders',
-            {
-                order_data: order_data[0],
-                customers: order_data[1],
-                products: order_data[2],
-                line_items: order_data[3]
+        axios.get('http://127.0.0.1:5000/orders')
+            .then((response, states) => {
+                // console.log(response.data)
+                var order_data = response.data
+                res.render('pages/orders',
+                    {
+                        order_data: order_data[0],
+                        customers: order_data[1],
+                        products: order_data[2],
+                        line_items: order_data[3]
+                    });
             });
-    });
-
+    }
+    );
 });
 
 app.get('/inventory', function (req, res) {
