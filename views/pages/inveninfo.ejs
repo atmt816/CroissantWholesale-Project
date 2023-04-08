@@ -27,7 +27,7 @@
                         <option value=<%=inventory_data[0].vendor_id%>><%=inventory_data[0].vendor_name%>
                         </option>
                         <% vendors.forEach(function(vendors) { %>
-                            <option value=<%=vendors.vendor_id %>><%=vendors.vendor_name %>
+                            <option selected value=<%=vendors.vendor_id %>><%=vendors.vendor_name %>
                             </option>
                             <% }); %>
                     </select>
@@ -56,9 +56,7 @@
                 <div class="col-md-6 mb-3">
 
                     <label for="date_bought" class="form-label">Date Bought</label>
-                    <input type="text" class="form-control" name="date_bought" id="date_bought" value="<%if (inventory_data[0].date_bought) { %>
-                        <%= moment(inventory_data[0].date_bought).format('YYYY-MM-DD') %> 
-                        <% } else { %><% } %>">
+                    <input type="text" class="form-control" name="date_bought" id="date_bought" value="<%= inventory_data[0].date_bought %>">
 
                 </div>
                 <button type="submit" class="btn btn-primary">Update</button>

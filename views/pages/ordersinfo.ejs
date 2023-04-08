@@ -146,7 +146,8 @@
                       <input class="form-control" name="order_id"  id="order_id"
                       value=<%=order_data[0].order_id%>>
                       <label for="customer" class="form-label">Customer</label>
-                      <select class="form-select" name="customer_id" id="customer_id">                       
+                      <select class="form-select" name="customer_id" id="customer_id"> 
+                                              
                         <% customers_data.forEach(function(customers_data) { %>
                           <option selected value=<%= customers_data.customer_id %>>
                             <%= customers_data.business_name %>      
