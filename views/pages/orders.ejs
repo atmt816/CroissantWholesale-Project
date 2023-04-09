@@ -21,14 +21,6 @@
       <h2 class="text-center pb-2">
         Orders
       </h2>
-      
-       <% if (typeof success !== 'undefined') { %>
-          <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <%= success %>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          </div>
-        <% } %>
-
       <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
         Create New Order
       </button>
@@ -44,7 +36,7 @@
             <div class="modal-body">
               <form action="/orders/add" method="post" class="row g-3">
                 
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <label for="selectcustomer" class="form-label">Select Customer</label>
                 <select class="form-select" name="customer_id" id="customer_id">
 
@@ -53,19 +45,15 @@
                     </option>
                     <% }); %>
                 </select>
-          
               </div>
-
               <div class="col-md-6">
-              <label for="inputstatus" class="form-label">Order Status</label>
+                <label for="inputstatus" class="form-label">Order Status</label>
                 <select name="status" id="status" class="form-select">
                   <option selected>In-Progress</option>
                   <option>Delivered</option>
                   <option>Cancelled</option>
                 </select>
-              </div>
-
-              <div class="col-md-6">
+                
                 <div id="line_items">
                   <h2>Line Items</h2>
               
@@ -83,7 +71,6 @@
                       <input type="text" class="form-control"  name="line_items[0][price_per_unit]"> 
                     <label for="price_per_unit">Total:</label>
                       <input type="text" class="form-control"  name="line_items[0][total]">
-                      <br>
                   </div>
                 </div>
               
@@ -176,8 +163,7 @@
         <input type="text" class="form-control"  name="line_items[${lineItemCount}][price_per_unit]">
   
         <label for="price_per_unit">Total:</label>
-        <input type="text" class="form-control"  name="line_items[${lineItemCount}][total]">
-        <br>`;
+        <input type="text" class="form-control"  name="line_items[${lineItemCount}][total]">`;
       //append item to a list
       lineItemsContainer.appendChild(lineItemDiv);
       //line item count increment 
