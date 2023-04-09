@@ -824,7 +824,7 @@ def get_maintenance():
         FROM maintenance_logs AS logs 
         INNER JOIN vehicles AS v ON logs.vehicle_id = v.vehicle_id 
         INNER JOIN garage AS g ON logs.garage_id = g.garage_id 
-        ORDER BY date DESC;
+        ORDER BY logs.status DESC;
         """
     maintenance = execute_read_query(conn, sql)
 
