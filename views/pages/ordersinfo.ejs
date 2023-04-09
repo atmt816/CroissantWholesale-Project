@@ -171,7 +171,7 @@
                       </div>
                       <div class="col-md-6 mb-1">
                         <label for="status">Delivery Date</label>
-                        <input type="text" class="form-control" id="delivery_date" name="delivery_date" value= "<%= order_data[0].delivery_date %>">
+                        <input type="text" class="form-control" id="delivery_date" name="delivery_date" value= "<%if (order_data[0].delivery_date) { %><%= moment(order_data[0].delivery_date).format('YYYY-MM-DD') %> <% } else { %><% } %>">
                       </div>
                       <div class="col-md-6 mb-1">
                         <label for="status">Order Status</label>
