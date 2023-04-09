@@ -1363,4 +1363,16 @@ def get_weekly_ful_report():
     sql = "SELECT O.Order_ID, O.Date_Produced, O.Delivery_Date, P.Product_ID, Product_Name, LI.Quantity FROM products AS P INNER JOIN line_items AS LI ON P.Product_ID = LI.Product_ID INNER JOIN orders as O ON O.Order_ID = LI.Order_ID WHERE O.Delivery_Date BETWEEN curdate() AND curdate()+8 GROUP BY O.Order_ID, O.Date_Produced, O.Delivery_Date"
     weekly_ful_report = execute_read_query(conn, sql)
     return jsonify(weekly_ful_report)
+
+# Delivery Sheet Report - Generate a customer contact list for all deliveries scheduled on the current date.
+
+
+@app.route('/deliverysheet', methods=['GET'])
+def get_delivery_sheet():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
+    sql = "SELECT c.customer_id, c.business_name, c.business_hrs, cc.phone, cc.street, cc.city, cc.state_code_id, cc.zipcode, o.order_id, o.delivery_date FROM customers c JOIN customer_contact cc ON c.customer_id = cc.customer_id JOIN orders o ON o.customer_id = cc.customer_id WHERE o.delivery_date = curdate();"
+    delivery_sheet = execute_read_query(conn, sql)
+    return jsonify(delivery_sheet)
+
 app.run()

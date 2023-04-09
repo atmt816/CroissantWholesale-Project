@@ -22,7 +22,8 @@
       <table class="table table-hover">
         <thead>
           <tr>
-            <th scope="col">ID</th>
+            <th scope="col">Invoice ID</th>
+            <th scope="col">Order ID</th>
             <th scope="col">Customer</th>
             <th scope="col">Date Generated</th>
             <th scope="col">Total</th>
@@ -35,6 +36,9 @@
             <tr>
               <td>
                 <%= invoice_data.invoice_id%>
+              </td>
+              <td>
+                <%= invoice_data.order_id%>
               </td>
               <td>
                 <%= invoice_data.business_name%>

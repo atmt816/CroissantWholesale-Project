@@ -68,7 +68,20 @@ app.get("/home", async (req, res, next) => {
 
 });
 
+app.get('/deliverysheet', function (req, res) {
+    axios.get('http://127.0.0.1:5000/deliverysheet')
+        .then((response) => {
 
+            var delivery_data = response.data
+
+            res.render('pages/deliverysheet',
+                {
+                    delivery_data: delivery_data
+                    
+
+                });
+        });
+});
 
 // EMPLOYEE PAGE 
 

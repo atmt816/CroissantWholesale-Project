@@ -1,0 +1,96 @@
+<head>
+    <%- include('../partials/head'); %>
+  </head>
+  
+  
+  <style>
+    .top-buffer {
+      margin-top: 60px;
+    }
+  </style>
+  
+  <body class="container">
+    <header>
+      <%- include('../partials/header'); %>
+    </header>
+  
+    <main class="container pt-5">
+      <div class="p-5 mb-4 bg-white rounded-3 top-buffer">
+        <h2 class="text-center pb-2">
+          Today's Delivery Contact Information
+        </h2>
+        <td>
+            <a class="btn btn-secondary" href="/home" role="button">Home</a>
+        </td>
+        <table class="table table-hover">
+          <thead>
+            <tr>
+    
+              <th scope="col">Order ID</th>
+              <th scope="col">Business Name</th>
+              <th scope="col">Hours of Operation</th>
+              <th scope="col">Phone</th>
+              <th scope="col">Street</th>
+              <th scope="col">City</th>
+              <th scope="col">State</th>
+              <th scope="col">Zip Code</th>
+  
+            </tr>
+          </thead>
+          <tbody>
+            <% delivery_data.forEach(function(delivery_data) { %>
+              <tr>
+                <td>
+                  <a>
+                    <%= delivery_data.order_id%>
+                  </a>
+                </td>
+                <td>
+                    <a>
+                      <%= delivery_data.business_name%>
+                    </a>
+                </td>
+                <td>
+                  <a>
+                    <%= delivery_data.business_hrs%>
+                  </a>
+                </td>
+                <td>
+                    <a>
+                      <%= delivery_data.phone%>
+                    </a>
+                  </td>
+                <td>
+                  <a>
+                    <%= delivery_data.street%>
+                  </a>
+                </td>
+                <td>
+                    <a>
+                      <%= delivery_data.city%>
+                    </a>
+                  </td>
+                <td>
+                  <a>
+                    <%= delivery_data.state_code_id%>
+                  </a>
+                </td> 
+                <td>
+                    <a>
+                      <%= delivery_data.zipcode%>
+                    </a>
+                </td> 
+    
+                </tr>
+                <% }); %>
+    
+            </tbody>
+          </table>
+  
+    
+        </div>
+        <footer>
+          <%- include('../partials/footer'); %>
+      </footer>
+      </main>
+    </body>
