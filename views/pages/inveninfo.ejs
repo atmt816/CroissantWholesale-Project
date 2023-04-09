@@ -76,7 +76,8 @@
                     </div>
                     <div class="modal-body">
                       <form action="/inventory/delete" method="post" class="row g-3">
-                        <input class="form-control" type="text" name="inventory_id" id="inventory_id"  value="<%=inventory_data[0].inventory_id %>"> 
+                        <input class="form-control" name="inventory_id" type="hidden" id="inventory_id"
+                        value=<%=inventory_data[0].inventory_id%>> 
                         <h3 class="text-center">Are you sure you want to delete?</h3>
                         
                     </div>

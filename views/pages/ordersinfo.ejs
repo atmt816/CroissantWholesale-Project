@@ -184,10 +184,11 @@
                         </select>
                       </div>
                       <hr>
+
                       <h4>Line Items</h4>
   
                       <% let lineItemCount = 0; %>
-                        
+                      <div class="line_item">  
                       <% order_data.forEach(function(order_data) { %>
                         <div class="col-md-6">
                           <label for="product" class="form-label">Product</label>
@@ -256,4 +257,45 @@
   
   
     </main>
+
+    <script>
+      //gets the element object by id(add_line_item), to be used as an event listener so that you can add new line items
+      const addNewLineButton = document.getElementById('add_line_item');
+      //gets the line item id element 
+      const lineItemsContainer = document.getElementById('line_items');
+      
+      //this is the start of counter after the first one that is originally on the modal
+      let lineItemCount = 0;
+      //event on click listener to add a new line item
+      addNewLineButton.addEventListener('click', () => {
+        //Add a div for the line items
+        const lineItemDiv = document.createElement('div');
+        //classList returns a live collection of css
+        //add(line_item) is a method that inserts new element with a specified value 
+        lineItemDiv.classList.add('line_item');
+        //innerhtml to provide the input and style code for the line items (product, quantity, price/unit, total)
+        lineItemDiv.innerHTML = `
+          <label for="product_id">Product:</label>
+          <select class="form-control" id="product_id" name="line_items[${lineItemCount}][product_id]">
+            <% products.forEach(function(products) { %>
+              <option value=<%=products.product_id %>><%=products.product_name %>
+              </option>
+              <% }); %>
+          </select>
+    
+          <label for="quantity">Quantity:</label>
+          <input type="text" class="form-control"  name="line_items[${lineItemCount}][quantity]">
+    
+          <label for="price_per_unit">Price Per Unit:</label>
+          <input type="text" class="form-control"  name="line_items[${lineItemCount}][price_per_unit]">
+    
+          <label for="price_per_unit">Total:</label>
+          <input type="text" class="form-control"  name="line_items[${lineItemCount}][total]">
+          <br>`;
+        //append item to a list
+        lineItemsContainer.appendChild(lineItemDiv);
+        //line item count increment 
+        lineItemCount++;
+      });
+        </script>
   </body>
