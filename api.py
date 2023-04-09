@@ -80,7 +80,8 @@ def employee_info():
         SELECT e.emp_id, e.first_name, e.last_name, e.start_date, e.end_date, e.emp_status, r.role_name
         FROM employees AS e
         JOIN roles AS r
-        ON e.role_id = r.role_id;
+        ON e.role_id = r.role_id
+        ORDER BY e.emp_status ASC;
         """
     employees = execute_read_query(conn, sql)
 
@@ -218,7 +219,7 @@ def update_employee():
 def get_roles():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "SELECT * FROM roles"
+    sql = "SELECT role_id, role_name, role_description, role_status FROM roles ORDER BY role_status ASC"
     roles = execute_read_query(conn, sql)
     return jsonify(roles)
 
@@ -295,7 +296,7 @@ def update_role():
 def get_customers():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "SELECT * FROM customers"
+    sql = "SELECT customer_id, business_name, business_hrs, last_name, first_name, cust_acc_num, customer_status FROM customers ORDER BY customer_status ASC"
     customers = execute_read_query(conn, sql)
 
     sql = """
@@ -422,6 +423,7 @@ def vendors():
         SELECT v.vendor_id, v.vendor_name, v.vendor_hrs, v.vendor_account_number, v.vendor_status, vc.phone, vc.email, vc.street, vc.city, vc.zipcode, s.state_code_id 
         FROM vendors v JOIN vendor_contacts vc ON v.vendor_id = vc.vendor_id
         JOIN states s ON vc.state_code_id = s.state_code_id
+        ORDER BY v.vendor_status ASC;
         """
     vendors = execute_read_query(conn, sql)
 
@@ -543,7 +545,7 @@ def update_vendor():
 def get_garage():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "SELECT * FROM garage"
+    sql = "SELECT garage_id, garage_name, phone, street, city, state_code_id, zipcode, status, garage_hrs FROM garage ORDER BY status ASC;"
     garage = execute_read_query(conn, sql)
 
     sql = """
@@ -632,7 +634,7 @@ def update_garage():
 def get_vehicles():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "SELECT * FROM vehicles"
+    sql = "SELECT vehicle_id, license_plate, make, model, vin, status FROM vehicles ORDER BY status ASC "
     vehicles = execute_read_query(conn, sql)
     return jsonify(vehicles)
 
@@ -822,7 +824,7 @@ def get_maintenance():
         FROM maintenance_logs AS logs 
         INNER JOIN vehicles AS v ON logs.vehicle_id = v.vehicle_id 
         INNER JOIN garage AS g ON logs.garage_id = g.garage_id 
-        ORDER BY date DESC;
+        ORDER BY logs.status DESC;
         """
     maintenance = execute_read_query(conn, sql)
 
@@ -890,7 +892,7 @@ def add_maintenance_log():
     garage_id = log_data['garage_id']
     vehicle_id = log_data['vehicle_id']
     date = log_data['date']
-    status = log_data['status']
+    status = "In-Progress"
     note = log_data['note']
 
     conn = create_connection(
@@ -939,7 +941,7 @@ def get_garagemain_log(garage_id):
 def get_invoices():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "SELECT i.invoice_id, i.customer_id, i.invoice_date, i.invoice_total, i.payment_status, i.date_paid, i.order_id, c.business_name FROM invoices as i INNER JOIN customers as c on i.customer_id = c.customer_id;"
+    sql = "SELECT i.invoice_id, i.customer_id, i.invoice_date, i.invoice_total, i.payment_status, i.date_paid, i.order_id, c.business_name FROM invoices as i INNER JOIN customers as c on i.customer_id = c.customer_id ORDER BY i.payment_status DESC;"
     invoices = execute_read_query(conn, sql)
 
     return jsonify(invoices)
@@ -1029,7 +1031,7 @@ def update_invoices():
 def get_products():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "SELECT * FROM products"
+    sql = "SELECT product_id, product_name, product_status FROM products ORDER BY product_status ASC"
     products = execute_read_query(conn, sql)
     return jsonify(products)
 
@@ -1092,7 +1094,7 @@ def get_orders():
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     # sql = "SELECT * FROM orders;"
     sql = """
-    SELECT o.date_produced, o.delivery_date, o.status, c.business_name, o.customer_id, o.order_id from customers as c join orders as o on c.customer_id =o.customer_id;
+    SELECT o.date_produced, o.delivery_date, o.status, c.business_name, o.customer_id, o.order_id from customers as c join orders as o on c.customer_id =o.customer_id ORDER BY o.status DESC;
     """
     orders = execute_read_query(conn, sql)
 

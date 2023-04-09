@@ -108,8 +108,12 @@
                       </div>
                       <hr class="hr" />
                       <div class="col-md-6">
-                        <label for="status" class="form-label">Maintenance Status</label>
-                        <input type="text" class="form-control" id="status" name="status" value= "<%= logs_data[0].status %>">
+                        <label for="status">Maintenance Status</label>
+                        <select name="status" id="status" class="form-select">
+                          <option selected>In-Progress</option>
+                          <option>Delivered</option>
+                          <option>Cancelled</option>
+                        </select>
                       </div>
                       <div class="col-md-6">
                         <label for="note" class="form-label">Additional Notes</label>
