@@ -541,7 +541,7 @@ app.get('/inveninfo/:id', function (req, res) {
     axios.get('http://127.0.0.1:5000/inveninfo/' + inventory_id
     ).then((response, states) => {
         var inventory_data = response.data
-        console.log(inventory_data[0]);
+        console.log(inventory_data[0].inventory_id)
         res.render('pages/inveninfo',
             {
                 inventory_data: inventory_data[0],
@@ -550,6 +550,8 @@ app.get('/inveninfo/:id', function (req, res) {
     });
 
 });
+
+
 
 app.post('/inventory/update', function (req, res) {
     axios.put('http://127.0.0.1:5000/update_inventory',
@@ -594,7 +596,7 @@ app.post('/inventory/delete', function (req, res) {
                 .then((response, states) => {
                     // console.log(response.data)
                     var inventory_data = response.data
-
+                    
                     res.render('pages/inventory',
                         {
                             inventory_data: inventory_data[0],
