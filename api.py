@@ -1283,7 +1283,7 @@ def delete_order():
     return 'Order was deleted successfully'
 
 # Best Selling Items Report
-# This report generates a count for each specific line item's frequency across all orders.
+# This report generates a count for each specific product's frequency across all orders.
 
 # Daily Best Sellers - Determine most popular items amongst all orders scheduled for delivery on current date.
 @app.route('/dailybestsellers', methods=['GET'])
