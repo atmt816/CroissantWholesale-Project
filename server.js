@@ -1070,6 +1070,65 @@ app.post('/products/update', function (req, res) {
         );
 });
 
+app.get('/bestsellers', function (req, res) {
+    axios.get('http://127.0.0.1:5000/lifetimebestsellers')
+        .then((response) => {
+
+            var best_sell_data = response.data
+
+            res.render('pages/bestsellers',
+                {
+                    best_sell_data: best_sell_data
+                    
+
+                });
+        });
+});
+
+app.get('/dailybestsellers', function (req, res) {
+    axios.get('http://127.0.0.1:5000/dailybestsellers')
+        .then((response) => {
+
+            var best_sell_data = response.data
+
+            res.render('pages/bestsellers',
+                {
+                    best_sell_data: best_sell_data
+                    
+
+                });
+        });
+});
+
+app.get('/weeklybestsellers', function (req, res) {
+    axios.get('http://127.0.0.1:5000/weeklybestsellers')
+        .then((response) => {
+
+            var best_sell_data = response.data
+
+            res.render('pages/bestsellers',
+                {
+                    best_sell_data: best_sell_data
+                    
+
+                });
+        });
+});
+
+app.get('/monthlybestsellers', function (req, res) {
+    axios.get('http://127.0.0.1:5000/monthlybestsellers')
+        .then((response) => {
+
+            var best_sell_data = response.data
+
+            res.render('pages/bestsellers',
+                {
+                    best_sell_data: best_sell_data
+                    
+
+                });
+        });
+});
 
 
 
@@ -1196,20 +1255,7 @@ app.post('/orders/delete', function (req, res) {
     );
 });
 
-app.get('/bestsellers', function (req, res) {
-    axios.get('http://127.0.0.1:5000/lifetimebestsellers')
-        .then((response) => {
 
-            var best_sell_data = response.data
-
-            res.render('pages/bestsellers',
-                {
-                    best_sell_data: best_sell_data
-                    
-
-                });
-        });
-});
 
 
 //ORDERS page
