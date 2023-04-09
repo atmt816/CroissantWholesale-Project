@@ -14,6 +14,10 @@ from flask import request, make_response
 # from sql import execute_read_query
 # from sql import execute_query
 from datetime import datetime
+import decimal
+from decimal import Decimal
+
+
 
 
 def create_connection(host_name, user_name, user_password, db_name):
@@ -76,8 +80,7 @@ def employee_info():
         SELECT e.emp_id, e.first_name, e.last_name, e.start_date, e.end_date, e.emp_status, r.role_name
         FROM employees AS e
         JOIN roles AS r
-        ON e.role_id = r.role_id
-        ORDER BY e.emp_status ASC;
+        ON e.role_id = r.role_id;
         """
     employees = execute_read_query(conn, sql)
 
@@ -215,7 +218,7 @@ def update_employee():
 def get_roles():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "SELECT role_id, role_name, role_description, role_status FROM roles ORDER BY role_status ASC"
+    sql = "SELECT * FROM roles"
     roles = execute_read_query(conn, sql)
     return jsonify(roles)
 
@@ -292,7 +295,7 @@ def update_role():
 def get_customers():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "SELECT customer_id, business_name, business_hrs, last_name, first_name, cust_acc_num, customer_status FROM customers ORDER BY customer_status ASC"
+    sql = "SELECT * FROM customers"
     customers = execute_read_query(conn, sql)
 
     sql = """
@@ -419,7 +422,6 @@ def vendors():
         SELECT v.vendor_id, v.vendor_name, v.vendor_hrs, v.vendor_account_number, v.vendor_status, vc.phone, vc.email, vc.street, vc.city, vc.zipcode, s.state_code_id 
         FROM vendors v JOIN vendor_contacts vc ON v.vendor_id = vc.vendor_id
         JOIN states s ON vc.state_code_id = s.state_code_id
-        ORDER BY v.vendor_status ASC;
         """
     vendors = execute_read_query(conn, sql)
 
@@ -550,7 +552,7 @@ def update_vendor():
 def get_garage():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "SELECT garage_id, garage_name, phone, street, city, state_code_id, zipcode, status, garage_hrs FROM garage ORDER BY status ASC;"
+    sql = "SELECT * FROM garage"
     garage = execute_read_query(conn, sql)
 
     sql = """
@@ -639,7 +641,7 @@ def update_garage():
 def get_vehicles():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "SELECT vehicle_id, license_plate, make, model, vin, status FROM vehicles ORDER BY status ASC "
+    sql = "SELECT * FROM vehicles"
     vehicles = execute_read_query(conn, sql)
     return jsonify(vehicles)
 
@@ -736,7 +738,7 @@ def get_inv_info(inventory_id):
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     sql = """
-        SELECT i.inventory_id, v.vendor_name, i.item_name, i.item_amount, i.unit_cost, i.total_inv_cost, i.date_bought
+        SELECT i.inventory_id, i.vendor_id, v.vendor_id, v.vendor_name, i.item_name, i.item_amount, i.unit_cost, i.total_inv_cost, i.date_bought
         FROM inventory AS i JOIN vendors AS v ON i.vendor_id = v.vendor_id where i.inventory_id = %s;
         """ % (inventory_id)
 
@@ -948,7 +950,7 @@ def get_garagemain_log(garage_id):
 def get_invoices():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "SELECT i.invoice_id, i.customer_id, i.invoice_date, i.invoice_total, i.payment_status, i.date_paid, i.order_id, c.business_name FROM invoices as i INNER JOIN customers as c on i.customer_id = c.customer_id ORDER BY i.payment_status DESC;"
+    sql = "SELECT i.invoice_id, i.customer_id, i.invoice_date, i.invoice_total, i.payment_status, i.date_paid, i.order_id, c.business_name FROM invoices as i INNER JOIN customers as c on i.customer_id = c.customer_id;"
     invoices = execute_read_query(conn, sql)
 
     return jsonify(invoices)
@@ -1038,7 +1040,7 @@ def update_invoices():
 def get_products():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "SELECT product_id, product_name, product_status FROM products ORDER BY product_status ASC"
+    sql = "SELECT * FROM products"
     products = execute_read_query(conn, sql)
     return jsonify(products)
 
@@ -1101,7 +1103,7 @@ def get_orders():
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     # sql = "SELECT * FROM orders;"
     sql = """
-    SELECT o.date_produced, o.delivery_date, o.status, c.business_name, o.customer_id, o.order_id from customers as c join orders as o on c.customer_id =o.customer_id ORDER BY o.status DESC;
+    SELECT o.date_produced, o.delivery_date, o.status, c.business_name, o.customer_id, o.order_id from customers as c join orders as o on c.customer_id =o.customer_id;
     """
     orders = execute_read_query(conn, sql)
 
@@ -1156,9 +1158,8 @@ def add_order():
     order_id = order_id[0]['order_id']
 
     # Set up future invoice with corresponding ids
-    payment_status = "Pending"
-    sql = "INSERT INTO invoices(customer_id, order_id, invoice_date, payment_status) VALUES (%s, %s, %s, '%s')" % (
-        customer_id, order_id, current_date, payment_status)
+    sql = "INSERT INTO invoices(customer_id, order_id) VALUES (%s, %s)" % (
+        customer_id, order_id)
     execute_query(conn, sql)
 
     sql = "INSERT INTO line_items (order_id, product_id, quantity, price_per_unit, total) VALUES"
@@ -1285,14 +1286,14 @@ def delete_order():
     return 'Order was deleted successfully'
 
 # Best Selling Items Report
-# This report generates a count for each specific product's frequency across all orders.
+# This report generates a count for each specific line item's frequency across all orders.
 
 # Daily Best Sellers - Determine most popular items amongst all orders scheduled for delivery on current date.
 @app.route('/dailybestsellers', methods=['GET'])
 def get_daily_best_sell_report():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "SELECT P.Product_ID, P.Product_Name, COUNT(LI.product_id) AS Order_Frequency FROM orders AS O INNER JOIN line_items AS LI ON LI.Order_ID = O.Order_ID INNER JOIN products as P ON P.Product_ID = LI.Product_ID WHERE O.Delivery_Date = curdate() GROUP BY LI.product_id;"
+    sql = "SELECT P.Product_ID, P.Product_Name, LI.Item_ID, LI.Price_Per_Unit, O.Order_ID, LI.Quantity, COUNT(O.Order_ID) AS Order_Frequency FROM orders AS O INNER JOIN line_items AS LI ON LI.Order_ID = O.Order_ID INNER JOIN products as P ON P.Product_ID = LI.Product_ID WHERE O.Delivery_Date = curdate() GROUP BY P.Product_ID, P.Product_Name, LI.Item_ID, LI.Price_Per_Unit"
     daily_best_sell_report = execute_read_query(conn, sql)
     return jsonify(daily_best_sell_report)
 
@@ -1307,7 +1308,7 @@ def get_daily_best_sell_report():
 def get_weekly_best_sell_report():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "SELECT P.Product_ID, P.Product_Name, COUNT(LI.product_id) AS Order_Frequency FROM orders AS O INNER JOIN line_items AS LI ON LI.Order_ID = O.Order_ID INNER JOIN products as P ON P.Product_ID = LI.Product_ID WHERE O.Delivery_Date BETWEEN curdate() AND curdate()+8 GROUP BY LI.product_id;"
+    sql = "SELECT P.Product_ID, P.Product_Name, LI.Item_ID, LI.Price_Per_Unit, O.Order_ID, LI.Quantity, COUNT(O.Order_ID) AS Order_Frequency FROM orders AS O INNER JOIN line_items AS LI ON LI.Order_ID = O.Order_ID INNER JOIN products as P ON P.Product_ID = LI.Product_ID WHERE O.Delivery_Date BETWEEN curdate() AND curdate()+8 GROUP BY P.Product_ID, P.Product_Name, LI.Item_ID, LI.Price_Per_Unit"
     weekly_best_sell_report = execute_read_query(conn, sql)
     return jsonify(weekly_best_sell_report)
 
@@ -1318,7 +1319,7 @@ def get_weekly_best_sell_report():
 def get_monthly_best_sell_report():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "SELECT P.Product_ID, P.Product_Name, COUNT(LI.product_id) AS Order_Frequency FROM orders AS O INNER JOIN line_items AS LI ON LI.Order_ID = O.Order_ID INNER JOIN products as P ON P.Product_ID = LI.Product_ID WHERE O.Delivery_Date BETWEEN curdate() AND curdate()+30 GROUP BY LI.product_id;"
+    sql = "SELECT P.Product_ID, P.Product_Name, LI.Item_ID, LI.Price_Per_Unit, O.Order_ID, LI.Quantity, COUNT(O.Order_ID) AS Order_Frequency FROM orders AS O INNER JOIN line_items AS LI ON LI.Order_ID = O.Order_ID INNER JOIN products as P ON P.Product_ID = LI.Product_ID WHERE O.Delivery_Date BETWEEN curdate() AND curdate()+30 GROUP BY P.Product_ID, P.Product_Name, LI.Item_ID, LI.Price_Per_Unit"
     monthly_best_sell_report = execute_read_query(conn, sql)
     return jsonify(monthly_best_sell_report)
 
@@ -1362,19 +1363,7 @@ def get_count_product():
 def get_weekly_ful_report():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "SELECT O.Order_ID, O.Date_Produced, O.Delivery_Date, P.Product_ID, Product_Name, LI.Quantity FROM products AS P INNER JOIN line_items AS LI ON P.Product_ID = LI.Product_ID INNER JOIN orders as O ON O.Order_ID = LI.Order_ID WHERE O.Delivery_Date BETWEEN curdate() AND curdate()+8 AND status='In-Progress' GROUP BY O.Order_ID, O.Date_Produced, O.Delivery_Date"
+    sql = "SELECT O.Order_ID, O.Date_Produced, O.Delivery_Date, P.Product_ID, Product_Name, LI.Quantity FROM products AS P INNER JOIN line_items AS LI ON P.Product_ID = LI.Product_ID INNER JOIN orders as O ON O.Order_ID = LI.Order_ID WHERE O.Delivery_Date BETWEEN curdate() AND curdate()+8 GROUP BY O.Order_ID, O.Date_Produced, O.Delivery_Date"
     weekly_ful_report = execute_read_query(conn, sql)
     return jsonify(weekly_ful_report)
-
-# Delivery Sheet Report - Generate a customer contact list for all deliveries scheduled on the current date.
-
-
-@app.route('/deliverysheet', methods=['GET'])
-def get_delivery_sheet():
-    conn = create_connection(
-        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "SELECT c.customer_id, c.business_name, c.business_hrs, cc.phone, cc.street, cc.city, cc.state_code_id, cc.zipcode, o.order_id, o.delivery_date FROM customers c JOIN customer_contact cc ON c.customer_id = cc.customer_id JOIN orders o ON o.customer_id = cc.customer_id WHERE o.delivery_date = curdate();"
-    delivery_sheet = execute_read_query(conn, sql)
-    return jsonify(delivery_sheet)
-
 app.run()

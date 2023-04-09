@@ -498,7 +498,7 @@ app.get('/inventory', function (req, res) {
     axios.get('http://127.0.0.1:5000/inventory')
         .then((response) => {
             var inventory_data = response.data
-            console.log(inventory_data)
+            
             res.render('pages/inventory',
                 {
                     inventory_data: inventory_data[0],
@@ -541,7 +541,7 @@ app.get('/inveninfo/:id', function (req, res) {
     axios.get('http://127.0.0.1:5000/inveninfo/' + inventory_id
     ).then((response, states) => {
         var inventory_data = response.data
-
+        console.log(inventory_data[0]);
         res.render('pages/inveninfo',
             {
                 inventory_data: inventory_data[0],
