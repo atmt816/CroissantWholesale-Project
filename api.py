@@ -537,15 +537,6 @@ def update_vendor():
 
 
 
-# # maintenance get method working now
-# # adjust sql as needed - Misael
-# @app.route('/maintenance', methods=['GET'])
-# def get_maintenance():
-#     conn = create_connection(
-#         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-#     sql = "SELECT * FROM maintenance_logs"
-#     maintenance = execute_read_query(conn, sql)
-#     return maintenance
 
 
 #GARAGE PAGE
@@ -808,22 +799,20 @@ def update_inventory():
 
 @app.route('/delete_inventory', methods=['DELETE'])
 def delete_inventory():
+    conn = create_connection(
+        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
     request_data = request.get_json()
     inventory_id = request_data['inventory_id']
 
-    conn = create_connection(
-        'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    cursor = conn.cursor()
-    sql = "Delete from inventory WHERE inventory_id = %s"
-    val = (inventory_id)
-
-    cursor.execute(sql, val)
-    conn.commit
+    sql = "Delete from inventory WHERE inventory_id = %s" % (inventory_id)
+    execute_query(conn,sql)
+    
     return 'Item was deleted successfully'
 # Maintenance_Logs Table CRUD
 
 
-# maintenance get method working now
+
+# maintenance page 
 # adjust sql as needed - Misael
 @app.route('/maintenance', methods=['GET'])
 def get_maintenance():
