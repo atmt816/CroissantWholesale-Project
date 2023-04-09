@@ -21,6 +21,12 @@
       <h2 class="text-center pb-2">
         Orders
       </h2>
+      <% if (typeof success !== 'undefined') { %>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <%= success %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      <% } %>
       <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
         Create New Order
       </button>
@@ -132,7 +138,8 @@
 
   </main>
   <script>
-    //gets the element object by id(add_line_item), to be used as an event listener so that you can add new line items
+    //gets the element object by id(add_line_item), links the button in the above modal to add new line item
+    //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
     const addNewLineButton = document.getElementById('add_line_item');
     //gets the line item id element 
     const lineItemsContainer = document.getElementById('line_items');
