@@ -797,7 +797,7 @@ def update_inventory():
     return 'Inventory was updated successfully'
 
 
-@app.route('/delete_inventory', methods=['DELETE'])
+@app.route('/delete_inventory', methods=['PUT'])
 def delete_inventory():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')

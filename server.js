@@ -147,7 +147,7 @@ app.post('/employees/add', function (req, res) {
                             employee_data: employee_data[0],
                             states: employee_data[1],
                             roles: employee_data[2],
-                            success: 'The new employee has been added.'
+                            success: 'The employee has been added.'
                         });
                 });
         });
@@ -228,7 +228,7 @@ app.post('/roles/add', function (req, res) {
                     res.render('pages/roles',
                         {
                             roles_data: roles_data,
-                            sucess: "The new role has been added."
+                            sucess: "The role has been added."
                         });
                 });
         });
@@ -346,7 +346,7 @@ app.post('/customers/add', function (req, res) {
                         {
                             customer_data: customer_data[0],
                             states: customer_data[1],
-                            success: 'The new customer has been added.'
+                            success: 'The customer has been added.'
                         });
                 });
         });
@@ -449,7 +449,7 @@ app.post('/vendors/add', function (req, res) {
                             vendor_data: vendor_data[0],
                             states: vendor_data[1],
                             roles: vendor_data[2],
-                            success: 'The new vendor has been added.'
+                            success: 'The vendor has been added.'
                         });
                 });
         });
@@ -528,7 +528,8 @@ app.post('/inventory/add', function (req, res) {
                     res.render('pages/inventory',
                         {
                             inventory_data: inventory_data[0],
-                            vendors: inventory_data[1]
+                            vendors: inventory_data[1],
+                            success: 'The inventory has been added.'
 
                         });
                 });
@@ -575,7 +576,8 @@ app.post('/inventory/update', function (req, res) {
                     res.render('pages/inventory',
                         {
                             inventory_data: inventory_data[0],
-                            vendors: inventory_data[1]
+                            vendors: inventory_data[1],
+                            success: 'The inventory has been updated.'
 
                         });
                 });
@@ -585,7 +587,7 @@ app.post('/inventory/update', function (req, res) {
 });
 
 app.post('/inventory/delete', function (req, res) {
-    axios.delete('http://127.0.0.1:5000/delete_inventory',
+    axios.put('http://127.0.0.1:5000/delete_inventory',
         {
             inventory_id: req.body.inventory_id
 
@@ -600,7 +602,8 @@ app.post('/inventory/delete', function (req, res) {
                     res.render('pages/inventory',
                         {
                             inventory_data: inventory_data[0],
-                            vendors: inventory_data[1]
+                            vendors: inventory_data[1],
+                            success: 'The inventory has been deleted.'
 
                         });
                 });
@@ -1186,7 +1189,8 @@ app.post('/orders/add', function (req, res) {
                             order_data: order_data[0],
                             customers: order_data[1],
                             products: order_data[2],
-                            line_items: order_data[3]
+                            line_items: order_data[3],
+                            success: 'The order has been added.'
                         });
                 });
         });
@@ -1240,7 +1244,8 @@ app.post('/orders/update', function (req, res) {
                             order_data: order_data[0],
                             customers: order_data[1],
                             products: order_data[2],
-                            line_items: order_data[3]
+                            line_items: order_data[3],
+                            success: 'The order has been updated.'
                         });
                 });
         }
@@ -1263,7 +1268,8 @@ app.post('/orders/delete', function (req, res) {
                         order_data: order_data[0],
                         customers: order_data[1],
                         products: order_data[2],
-                        line_items: order_data[3]
+                        line_items: order_data[3],
+                        success: 'The order has been deleted.'
                     });
             });
     }
