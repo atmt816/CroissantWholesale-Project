@@ -892,7 +892,7 @@ def add_maintenance_log():
     garage_id = log_data['garage_id']
     vehicle_id = log_data['vehicle_id']
     date = log_data['date']
-    status = log_data['status']
+    status = "In-Progress"
     note = log_data['note']
 
     conn = create_connection(
