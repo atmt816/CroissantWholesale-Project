@@ -1154,7 +1154,7 @@ def add_order():
     order_id = order_id[0]['order_id']
 
     # Set up future invoice with corresponding ids
-    payment_status = "In Process"
+    payment_status = "Pending"
     sql = "INSERT INTO invoices(customer_id, order_id, invoice_date, payment_status) VALUES (%s, %s, %s, '%s')" % (
         customer_id, order_id, current_date, payment_status)
     execute_query(conn, sql)
