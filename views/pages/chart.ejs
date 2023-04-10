@@ -64,7 +64,10 @@
                         </td>
                         <td>
                           <a>
-                            <%= vendinv_data.date_bought%>
+                            <%if (vendinv_data.date_bought) { %>
+                              <%= moment(vendinv_data.date_bought).format('MMMM Do YYYY') %> 
+                              <% } else { %><% } %>
+                           
                           </a>
                         </td>
           
@@ -97,7 +100,9 @@
                           </td>
                           <td>
                             <a>
-                              <%= weekly_data.Delivery_Date%>
+                              <%if (weekly_data.Delivery_Date) { %>
+                                <%= moment(weekly_data.Delivery_Date).format('MMMM Do YYYY') %> 
+                                <% } else { %><% } %>
                             </a>
                           </td>
                           <td>
