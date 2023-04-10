@@ -42,7 +42,7 @@
             <div class="modal-body">
               <form action="/orders/add" method="post" class="row g-3">
                 
-              <div class="col-md-4">
+              <div class="col-md-6">
                 <label for="selectcustomer" class="form-label">Select Customer</label>
                 <select class="form-select" name="customer_id" id="customer_id">
 
@@ -52,6 +52,7 @@
                     <% }); %>
                 </select>
               </div>
+
               <div class="col-md-6">
                 <label for="inputstatus" class="form-label">Order Status</label>
                 <select name="status" id="status" class="form-select">
@@ -59,11 +60,12 @@
                   <option>Delivered</option>
                   <option>Cancelled</option>
                 </select>
-                
+              </div>
                 <div id="line_items">
                   <h2>Line Items</h2>
               
                   <div class="line_item">
+                    <div class="col-md-6">
                     <label for="product_id">Product:</label>
                     <select class="form-control" id="product_id" name="line_items[0][product_id]">
                       <% products.forEach(function(products) { %>
@@ -77,12 +79,15 @@
                       <input type="text" class="form-control"  name="line_items[0][price_per_unit]"> 
                     <label for="price_per_unit">Total:</label>
                       <input type="text" class="form-control"  name="line_items[0][total]">
+                      <br>
+                  
+                    </div>
                   </div>
                 </div>
-              
-                <button type="button" class="btn btn-primary" id="add_line_item">Add Line Item</button>
-
-              </div>
+                <div class="col-md-6">
+                  <button type="button" class="btn btn-primary" id="add_line_item">Add Line Item</button>
+                  <button type="button" class="btn btn-danger" id="delete_line_item">Delete Line Item</button>
+                </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="submit" class="btn btn-primary">Create New Order</button>
@@ -139,22 +144,25 @@
   </main>
   <script>
     //gets the element object by id(add_line_item), links the button in the above modal to add new line item
-    //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
-    const addNewLineButton = document.getElementById('add_line_item');
+    
+    // const addNewLineButton = document.getElementById('add_line_item');
     //gets the line item id element 
     const lineItemsContainer = document.getElementById('line_items');
     
     //this is the start of counter after the first one that is originally on the modal
     let lineItemCount = 1;
-    //event on click listener to add a new line item
-    addNewLineButton.addEventListener('click', () => {
+    //gets the element object by id(add_line_item), links the button in the above modal to add new line item and with event listener to add the new divs of line items
+    //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+    document.getElementById('add_line_item').addEventListener('click', () => {
       //Add a div for the line items
-      const lineItemDiv = document.createElement('div');
+      const div = document.createElement('div');
       //classList returns a live collection of css
       //add(line_item) is a method that inserts new element with a specified value 
-      lineItemDiv.classList.add('line_item');
+      //https://developer.mozilla.org/en-US/docs/Web/API/Element/classList
+      div.classList.add('line_item');
       //innerhtml to provide the input and style code for the line items (product, quantity, price/unit, total)
-      lineItemDiv.innerHTML = `
+      div.innerHTML = `
+      <div class="col-md-6">
         <label for="product_id">Product:</label>
         <select class="form-control" id="product_id" name="line_items[${lineItemCount}][product_id]">
           <% products.forEach(function(products) { %>
@@ -170,12 +178,27 @@
         <input type="text" class="form-control"  name="line_items[${lineItemCount}][price_per_unit]">
   
         <label for="price_per_unit">Total:</label>
-        <input type="text" class="form-control"  name="line_items[${lineItemCount}][total]">`;
+        <input type="text" class="form-control"  name="line_items[${lineItemCount}][total]">
+        <br>
+        </div>`;
       //append item to a list
-      lineItemsContainer.appendChild(lineItemDiv);
+      lineItemsContainer.appendChild(div);
       //line item count increment 
       lineItemCount++;
     });
+
+    
+    // remove the last list item
+    document.getElementById('delete_line_item').addEventListener('click', () => {
+      //selects line item div list
+      //https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll
+      const lineItems = document.querySelectorAll('.line_item');
+      //counts length of line items -1
+      const lastLine = lineItemCount = $('.line_item').length-1;
+      const lastLineItem = lineItems[lastLine]
+      lastLineItem.remove();
+      });
+  
       </script>
     
 </body>
