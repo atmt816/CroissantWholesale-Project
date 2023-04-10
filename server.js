@@ -955,11 +955,11 @@ app.get('/invoices/:id', function (req, res) {
 
     axios.get('http://127.0.0.1:5000/invoices/' + invoice_id).then((response) => {
         var invoice_data = response.data
-        console.log(invoice_data)
+        //console.log(invoice_data)
         var obj = invoice_data[4]
-        var sumtotal = parseFloat(obj[0]['sum(total']).toFixed(2);
+        var sumtotal = parseFloat(obj[0]['sum(total)']).toFixed(2);
         console.log(invoice_data[4])
-        //console.log(sumtotal)
+        console.log(sumtotal)
 
         res.render('pages/invoiceinfo',
             {
@@ -967,7 +967,6 @@ app.get('/invoices/:id', function (req, res) {
                 customer_info: invoice_data[1],
                 order_info: invoice_data[2],
                 delivery_date: invoice_data[3],
-
                 total: invoice_data[4],
                 sumtotal: sumtotal
             });
