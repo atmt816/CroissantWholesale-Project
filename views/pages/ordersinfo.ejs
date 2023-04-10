@@ -186,13 +186,14 @@
                       <hr>
 
                       <h4>Line Items</h4>
-  
-                      <% let lineItemCount = 0; %>
+                      <div id="line_items">
+                      
                       <div class="line_item">  
+                        <% let lineItemCount = 0; %>
                       <% order_data.forEach(function(order_data) { %>
                         <div class="col-md-6">
                           <label for="product" class="form-label">Product</label>
-                          <select class="form-select" name="line_items[<%= lineItemCount%>][product_id]" id="line_items[<%= lineItemCount %>][product_id]">
+                          <select class="form-select" name="line_items[<%= lineItemCount %>][product_id]" id="line_items[<%= lineItemCount %>][product_id]">
                             <option value=<%=order_data.product_id %>><%=order_data.product_name%>
                             </option>               
                             <% product_data.forEach(function(product_data) { %>
@@ -203,22 +204,29 @@
                         </div>
                         <div class="col-md-6">
                           <label for="quantity">Quantity:</label>
-                          <input type="text" class="form-control" id="line_items[<%= lineItemCount%>][quantity]" name="line_items[<%= lineItemCount%>][quantity]"
+                          <input type="text" class="form-control" id="line_items[<%= lineItemCount %>][quantity]" name="line_items[<%= lineItemCount %>][quantity]"
                             value="<%= order_data.quantity %>">
                         </div>
                         <div class="col-md-6">
                           <label for="price_per_unit">Price Per Unit:</label>
-                          <input type="text" class="form-control" id="line_items[<%= lineItemCount%>][price_per_unit]" name="line_items[<%= lineItemCount%>][price_per_unit]"
+                          <input type="text" class="form-control" id="line_items[<%= lineItemCount %>][price_per_unit]" name="line_items[<%= lineItemCount %>][price_per_unit]"
                             value="<%= order_data.price_per_unit %>">
                         </div>
                         <div class="col-md-6">
                           <label for="total">Total:</label>
-                          <input type="number" class="form-control" id="line_items[total]" name="line_items[<%= lineItemCount%>][total]" value="<%= order_data.total %>">
+                          <input type="number" class="form-control" id="line_items[total]" name="line_items[<%= lineItemCount %>][total]" value="<%= order_data.total %>">
                         </div>
                         <hr>
+                        <% lineItemCount++; %>
                         
                         <% }); %>
+                        
                       </div>
+                      
+                    </div>
+                    <div  class="col-md-6">
+                    <button type="button" class="btn btn-primary" id="add_line_item">Add Line Item</button>
+                  </div>
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -263,9 +271,11 @@
       const addNewLineButton = document.getElementById('add_line_item');
       //gets the line item id element 
       const lineItemsContainer = document.getElementById('line_items');
-      
-      //this is the start of counter after the first one that is originally on the modal
-      let lineItemCount = 0;
+
+      //https://stackoverflow.com/questions/72321647/getting-the-length-of-an-array-of-elements-when-the-number-can-change-adding-or
+      //gets length of line items to increment proper number
+      lineItemCount = $('.line_item').length;
+
       //event on click listener to add a new line item
       addNewLineButton.addEventListener('click', () => {
         //Add a div for the line items
@@ -277,8 +287,8 @@
         lineItemDiv.innerHTML = `
           <label for="product_id">Product:</label>
           <select class="form-control" id="product_id" name="line_items[${lineItemCount}][product_id]">
-            <% products.forEach(function(products) { %>
-              <option value=<%=products.product_id %>><%=products.product_name %>
+            <% product_data.forEach(function(product_data) { %>
+              <option value=<%=product_data.product_id %>><%=product_data.product_name %>
               </option>
               <% }); %>
           </select>
