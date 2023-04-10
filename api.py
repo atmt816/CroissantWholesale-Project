@@ -18,8 +18,6 @@ import decimal
 from decimal import Decimal
 
 
-
-
 def create_connection(host_name, user_name, user_password, db_name):
     connection = None
     try:
@@ -96,7 +94,6 @@ def employee_info():
     roles = execute_read_query(conn, sql)
 
     return jsonify(employees, states, roles)
-
 
 
 @app.route('/employees/<emp_id>', methods=['GET'])
@@ -206,8 +203,6 @@ def update_employee():
 
     conn.commit()
     return 'Employee was updated successfully'
-
-
 
 
 ############################# ROLES PAGE #######################################
@@ -533,13 +528,7 @@ def update_vendor():
     return 'Customer was updated successfully'
 
 
-
-
-
-
-
-
-#GARAGE PAGE
+# GARAGE PAGE
 
 @app.route('/garage', methods=['GET'])
 def get_garage():
@@ -553,10 +542,11 @@ def get_garage():
         """
     states = execute_read_query(conn, sql)
 
-
     return jsonify(garage, states)
 
-#Specifc garage id get for modal info
+# Specifc garage id get for modal info
+
+
 @app.route('/garage/<garage_id>', methods=['GET'])
 def get_garage_info(garage_id):
     conn = create_connection(
@@ -568,7 +558,6 @@ def get_garage_info(garage_id):
         SELECT * FROM states;
         """
     states = execute_read_query(conn, sql)
-
 
     return jsonify(garage, states)
 
@@ -595,7 +584,7 @@ def add_garage():
 
         execute_query(conn, sql)
         return 'Garage was added Successfully'
-    except Exception as e: 
+    except Exception as e:
         error_msg = str(e)
         return {'error': error_msg}, 400
 
@@ -612,7 +601,7 @@ def update_garage():
     phone = garage_data['phone']
     street = garage_data['street']
     city = garage_data['city']
-    state= garage_data['state_code_id']
+    state = garage_data['state_code_id']
     zipcode = garage_data['zipcode']
     status = garage_data['status']
 
@@ -621,7 +610,7 @@ def update_garage():
 
     cursor = conn.cursor()
     sql = "UPDATE garage SET garage_name = %s, phone = %s, street = %s, city = %s, state_code_id = %s, zipcode = %s, status = %s WHERE garage_id = %s"
-    val = (garage_name, phone, street, city, state, zipcode ,status , garage_id)
+    val = (garage_name, phone, street, city, state, zipcode, status, garage_id)
 
     cursor.execute(sql, val)
     conn.commit()
@@ -637,6 +626,7 @@ def get_vehicles():
     sql = "SELECT vehicle_id, license_plate, make, model, vin, status FROM vehicles ORDER BY status ASC "
     vehicles = execute_read_query(conn, sql)
     return jsonify(vehicles)
+
 
 @app.route('/addvehicle', methods=['POST'])
 def add_vehicle():
@@ -658,6 +648,8 @@ def add_vehicle():
     return 'Vehicle was added Successfully'
 
 # PUT method for vehicles
+
+
 @app.route('/update_vehicle', methods=['PUT'])
 def update_vehicle():
     # The user input is gathered in JSON format and stored into an empty variable
@@ -682,7 +674,9 @@ def update_vehicle():
     conn.commit()
     return 'Vehicle was updated successfully'
 
-# Get specific vehicle info with maintenence log data for modal 
+# Get specific vehicle info with maintenence log data for modal
+
+
 @app.route('/vehicles/<vehicle_id>', methods=['GET'])
 def get_vehicles_info(vehicle_id):
     conn = create_connection(
@@ -704,7 +698,7 @@ def get_vehicles_info(vehicle_id):
 
     return jsonify(vehicles, maintenance_info)
 
-#INVENTORY PAGE
+# INVENTORY PAGE
 
 
 @app.route('/inventory', methods=['GET'])
@@ -790,7 +784,8 @@ def update_inventory():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
 
-    sql = "UPDATE inventory SET vendor_id = %s, item_name = '%s', item_amount = %s, unit_cost = %s, total_inv_cost = %s, date_bought = '%s' WHERE inventory_id = %s" % (vendor_id, item_name, item_amount, unit_cost, item_amount*unit_cost, date_bought, inventory_id)
+    sql = "UPDATE inventory SET vendor_id = %s, item_name = '%s', item_amount = %s, unit_cost = %s, total_inv_cost = %s, date_bought = '%s' WHERE inventory_id = %s" % (
+        vendor_id, item_name, item_amount, unit_cost, item_amount*unit_cost, date_bought, inventory_id)
 
     execute_query(conn, sql)
     # conn.commit()
@@ -805,14 +800,13 @@ def delete_inventory():
     inventory_id = request_data['inventory_id']
 
     sql = "Delete from inventory WHERE inventory_id = %s" % (inventory_id)
-    execute_query(conn,sql)
-    
+    execute_query(conn, sql)
+
     return 'Item was deleted successfully'
 # Maintenance_Logs Table CRUD
 
 
-
-# maintenance page 
+# maintenance page
 # adjust sql as needed - Misael
 @app.route('/maintenance', methods=['GET'])
 def get_maintenance():
@@ -840,16 +834,21 @@ def get_maintenance():
 
     return jsonify(maintenance, garage, vehicles)
 
-#Specific maintenance log details for selected row
+# Specific maintenance log details for selected row
+
+
 @app.route('/maintenance/<log_id>', methods=['GET'])
 def get_maintenance_info(log_id):
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "SELECT logs.log_id, v.license_plate , g.garage_name ,g.phone,g.street,g.city,g.state_code_id,g.zipcode, logs.date , logs.status , logs.note  FROM maintenance_logs AS logs INNER JOIN vehicles AS v ON logs.vehicle_id = v.vehicle_id INNER JOIN garage AS g ON logs.garage_id = g.garage_id WHERE logs.log_id = %s;" % (log_id)
+    sql = "SELECT logs.log_id, v.license_plate , g.garage_name ,g.phone,g.street,g.city,g.state_code_id,g.zipcode, logs.date , logs.status , logs.note  FROM maintenance_logs AS logs INNER JOIN vehicles AS v ON logs.vehicle_id = v.vehicle_id INNER JOIN garage AS g ON logs.garage_id = g.garage_id WHERE logs.log_id = %s;" % (
+        log_id)
     maintenance = execute_read_query(conn, sql)
     return jsonify(maintenance)
 
 # PUT method for maintenance_logs
+
+
 @app.route('/update_maintenance_log', methods=['PUT'])
 def update_maintenance_log():
     # The user input is gathered in JSON format and stored into an empty variable
@@ -861,7 +860,7 @@ def update_maintenance_log():
     note = maintenance_data['note']
 
     # date format as yyyy-mm-dd(2022-03-04) or mm-dd-yyyy(03-04-2022)
-    #fmt_date = str(datetime.strptime(date, '%m-%d-%Y').date())
+    # fmt_date = str(datetime.strptime(date, '%m-%d-%Y').date())
 
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
@@ -874,6 +873,7 @@ def update_maintenance_log():
     conn.commit()
     return 'Maintenance Log was updated successfully'
 
+
 @app.route('/deletemaintenance', methods=['PUT'])
 def delete_maintenance_info():
     conn = create_connection(
@@ -881,8 +881,9 @@ def delete_maintenance_info():
     maintenance_data = request.get_json()
     log_id = maintenance_data['log_id']
     sql = "DELETE FROM maintenance_logs WHERE log_id = %s" % (log_id)
-    execute_query(conn,sql)
+    execute_query(conn, sql)
     return 'Maintenance log was successfully deleted'
+
 
 @app.route('/addmaintenancelog', methods=['POST'])
 def add_maintenance_log():
@@ -936,7 +937,7 @@ def get_garagemain_log(garage_id):
 
 # Invoices Table CRUD
 
-#Return all invoices 
+# Return all invoices
 @app.route('/invoices', methods=['GET'])
 def get_invoices():
     conn = create_connection(
@@ -946,7 +947,9 @@ def get_invoices():
 
     return jsonify(invoices)
 
-#Retrieve specific invoice data
+# Retrieve specific invoice data
+
+
 @app.route('/invoices/<invoice_id>', methods=['GET'])
 def get_invoice_info(invoice_id):
     conn = create_connection(
@@ -955,7 +958,7 @@ def get_invoice_info(invoice_id):
         SELECT * FROM invoices
         WHERE invoice_id = %s;
         """ % (invoice_id)
-    
+
     invoices = execute_read_query(conn, sql)
 
     sql = """SELECT i.invoice_id, c.business_name, cc.phone, cc.email, cc.street, cc.city, cc.state_code_id, cc.zipcode
@@ -967,7 +970,7 @@ def get_invoice_info(invoice_id):
             JOIN states s
             ON s.state_code_id = cc.state_code_id
         WHERE i.invoice_id = '%s';""" % (invoice_id)
-    
+
     customer_info = execute_read_query(conn, sql)
 
     sql = """SELECT li.product_id, li.quantity, li.price_per_unit, li.total, p.product_name
@@ -977,7 +980,7 @@ def get_invoice_info(invoice_id):
             JOIN products p
             ON li.product_id = p.product_id
         WHERE i.invoice_id = '%s';""" % (invoice_id)
-    
+
     order_info = execute_read_query(conn, sql)
 
     sql = """SELECT o.delivery_date
@@ -985,11 +988,19 @@ def get_invoice_info(invoice_id):
             JOIN invoices AS i
             ON o.order_id = i.order_id
         WHERE i.invoice_id = '%s';""" % (invoice_id)
+
     delivery_date = execute_read_query(conn, sql)
 
-    return jsonify(invoices, customer_info, order_info, delivery_date)
+    sql = """SELECT sum(total) FROM line_items WHERE order_id = (SELECT order_id FROM invoices WHERE invoice_id = %s);""" % (
+        invoice_id)
+
+    total = execute_read_query(conn, sql)
+
+    return jsonify(invoices, customer_info, order_info, delivery_date, total)
 
 # PUT method for invoices
+
+
 @app.route('/update_invoices', methods=['PUT'])
 def update_invoices():
     # The user input is gathered in JSON format and stored into an empty variable
@@ -1035,6 +1046,7 @@ def get_products():
     products = execute_read_query(conn, sql)
     return jsonify(products)
 
+
 @app.route('/products/<product_id>', methods=['GET'])
 def get_product_info(product_id):
     conn = create_connection(
@@ -1064,11 +1076,12 @@ def add_product():
     execute_query(conn, sql)
     return 'Product was added Successfully'
 
+
 @app.route('/update_product', methods=['PUT'])
 def update_product():
     # The user input is gathered in JSON format and stored into an empty variable
     product_data = request.get_json()
-    
+
     product_id = product_data['product_id']
     # The JSON object is then separated into variables so that they may be used in a sql query
     product_name = product_data['product_name']
@@ -1086,7 +1099,7 @@ def update_product():
     return 'Product was updated successfully'
 
 
-#*********** ORDERS PAGE ****************************
+# *********** ORDERS PAGE ****************************
 
 @app.route('/orders', methods=['GET'])
 def get_orders():
@@ -1254,7 +1267,6 @@ def update_order():
     return 'Order was updated Successfully'
 
 
-
 @app.route('/orders_delete', methods=['PUT'])
 def delete_order():
     order_data = request.get_json()
@@ -1271,7 +1283,7 @@ def delete_order():
 
     sql = "DELETE FROM orders WHERE order_id= %s" % (order_id)
     cursor.execute(sql)
-    
+
     print(order_id)
     conn.commit()
     return 'Order was deleted successfully'
@@ -1280,6 +1292,8 @@ def delete_order():
 # This report generates a count for each specific line item's frequency across all orders.
 
 # Daily Best Sellers - Determine most popular items amongst all orders scheduled for delivery on current date.
+
+
 @app.route('/dailybestsellers', methods=['GET'])
 def get_daily_best_sell_report():
     conn = create_connection(
@@ -1291,7 +1305,7 @@ def get_daily_best_sell_report():
 
 # # Orders Table CRUD
 
-    
+
 # Weekly Best Sellers - Determine most popular items amongst all orders scheduled for delivery within a week from the current date.
 
 
@@ -1334,6 +1348,7 @@ def get_vendor_inv_sheet():
     vendor_inv_sheet = execute_read_query(conn, sql)
     return jsonify(vendor_inv_sheet)
 
+
 @app.route('/monthlyordercount', methods=['GET'])
 def get_monthly_countt():
     conn = create_connection(
@@ -1342,6 +1357,7 @@ def get_monthly_countt():
     order_count = execute_read_query(conn, sql)
     return jsonify(order_count)
 
+
 @app.route('/productcounter', methods=['GET'])
 def get_count_product():
     conn = create_connection(
@@ -1349,6 +1365,7 @@ def get_count_product():
     sql = "select i.product_id,p.product_name,sum(i.quantity) as total_quantity from line_items as i join products as p on i.product_id = p.product_id join orders as o on i.order_id =o.order_id where o.status='Delivered' group by i.product_id;"
     prod_count = execute_read_query(conn, sql)
     return jsonify(prod_count)
+
 
 @app.route('/weeklyfulfillmentreport', methods=['GET'])
 def get_weekly_ful_report():
@@ -1368,4 +1385,6 @@ def get_delivery_sheet():
     sql = "SELECT c.customer_id, c.business_name, c.business_hrs, cc.phone, cc.street, cc.city, cc.state_code_id, cc.zipcode, o.order_id, o.delivery_date FROM customers c JOIN customer_contact cc ON c.customer_id = cc.customer_id JOIN orders o ON o.customer_id = cc.customer_id WHERE o.delivery_date = curdate();"
     delivery_sheet = execute_read_query(conn, sql)
     return jsonify(delivery_sheet)
+
+
 app.run()
