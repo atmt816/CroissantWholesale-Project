@@ -966,11 +966,12 @@ app.get('/invoices/:id', function (req, res) {
                 invoice_data: invoice_data[0],
                 customer_info: invoice_data[1],
                 order_info: invoice_data[2],
-                delivery_date: invoice_data[3],
-
+                dates: invoice_data[3],
+                
                 total: invoice_data[4],
                 sumtotal: sumtotal
             });
+        console.log(invoice_data[3])
     });
 
 });

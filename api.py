@@ -942,8 +942,9 @@ def get_garagemain_log(garage_id):
 def get_invoices():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "SELECT i.invoice_id, i.customer_id, i.invoice_date, i.invoice_total, i.payment_status, i.date_paid, i.order_id, c.business_name FROM invoices as i INNER JOIN customers as c on i.customer_id = c.customer_id ORDER BY i.payment_status DESC;"
+    sql = "SELECT i.invoice_id, i.customer_id, i.invoice_date, i.invoice_total, i.payment_status, i.date_paid, i.order_id, c.business_name, o.date_produced FROM invoices as i INNER JOIN customers as c on i.customer_id = c.customer_id INNER JOIN orders as o on c.customer_id = o.customer_id ORDER BY i.payment_status DESC;"
     invoices = execute_read_query(conn, sql)
+
 
     return jsonify(invoices)
 
@@ -983,20 +984,20 @@ def get_invoice_info(invoice_id):
 
     order_info = execute_read_query(conn, sql)
 
-    sql = """SELECT o.delivery_date
+    sql = """SELECT o.delivery_date, o.date_produced
             FROM orders o
             JOIN invoices AS i
             ON o.order_id = i.order_id
         WHERE i.invoice_id = '%s';""" % (invoice_id)
 
-    delivery_date = execute_read_query(conn, sql)
+    dates = execute_read_query(conn, sql)
 
     sql = """SELECT sum(total) FROM line_items WHERE order_id = (SELECT order_id FROM invoices WHERE invoice_id = %s);""" % (
         invoice_id)
 
     total = execute_read_query(conn, sql)
 
-    return jsonify(invoices, customer_info, order_info, delivery_date, total)
+    return jsonify(invoices, customer_info, order_info, dates, total)
 
 # PUT method for invoices
 
