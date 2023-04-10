@@ -77,7 +77,7 @@ app.get('/deliverysheet', function (req, res) {
             res.render('pages/deliverysheet',
                 {
                     delivery_data: delivery_data
-                    
+
 
                 });
         });
@@ -184,7 +184,7 @@ app.post('/employees/update', function (req, res) {
                             employee_data: employee_data[0],
                             states: employee_data[1],
                             roles: employee_data[2]
-                            
+
                         });
                 });
         }
@@ -222,7 +222,7 @@ app.post('/roles/add', function (req, res) {
             axios.get('http://127.0.0.1:5000/roles')
                 .then((response, states) => {
                     // console.log(response.data)
-                    
+
                     var roles_data = response.data
 
                     res.render('pages/roles',
@@ -498,7 +498,7 @@ app.get('/inventory', function (req, res) {
     axios.get('http://127.0.0.1:5000/inventory')
         .then((response) => {
             var inventory_data = response.data
-            
+
             res.render('pages/inventory',
                 {
                     inventory_data: inventory_data[0],
@@ -598,7 +598,7 @@ app.post('/inventory/delete', function (req, res) {
                 .then((response, states) => {
                     // console.log(response.data)
                     var inventory_data = response.data
-                    
+
                     res.render('pages/inventory',
                         {
                             inventory_data: inventory_data[0],
@@ -633,10 +633,10 @@ app.post('/vehicles/add', function (req, res) {
     axios.post('http://127.0.0.1:5000/addvehicle',
         {
             license_plate: req.body.license_plate,
-            make : req.body.make,
-            model : req.body.model,
-            vin : req.body.vin,
-            status : req.body.status
+            make: req.body.make,
+            model: req.body.model,
+            vin: req.body.vin,
+            status: req.body.status
 
         }
     )
@@ -650,7 +650,7 @@ app.post('/vehicles/add', function (req, res) {
                         {
                             vehicles_data: vehicles_data,
                             success: 'The vehicle has been added.'
-                         
+
                         });
                 });
         });
@@ -680,7 +680,7 @@ app.post('/vehicles/update', function (req, res) {
             make: req.body.make,
             model: req.body.model,
             vin: req.body.vin,
-            status : req.body.status
+            status: req.body.status
 
         }
     )
@@ -714,7 +714,7 @@ app.get('/maintenance', function (req, res) {
                     logs_data: logs_data[0],
                     garage: logs_data[1],
                     vehicles: logs_data[2],
-                
+
 
                 });
         });
@@ -724,28 +724,28 @@ app.post('/maintenance/addlog', function (req, res) {
     axios.post('http://127.0.0.1:5000/addmaintenancelog',
         {
             garage_id: req.body.garage_id,
-            vehicle_id : req.body.vehicle_id,
-            date : req.body.date,
-            status : req.body.status,
-            note : req.body.note
+            vehicle_id: req.body.vehicle_id,
+            date: req.body.date,
+            status: req.body.status,
+            note: req.body.note
 
         }
     )
-    .then((response, states) => {
-        axios.get('http://127.0.0.1:5000/maintenance')
-        .then((response) => {
-        var logs_data = response.data
+        .then((response, states) => {
+            axios.get('http://127.0.0.1:5000/maintenance')
+                .then((response) => {
+                    var logs_data = response.data
 
-            res.render('pages/maintenance',
-                {
-                    logs_data: logs_data[0],
-                    garage: logs_data[1],
-                    vehicles: logs_data[2],
-                    success: 'The maintenance log has been added.'
+                    res.render('pages/maintenance',
+                        {
+                            logs_data: logs_data[0],
+                            garage: logs_data[1],
+                            vehicles: logs_data[2],
+                            success: 'The maintenance log has been added.'
+                        });
                 });
-                });
-        
-});
+
+        });
 });
 
 
@@ -768,7 +768,7 @@ app.get('/maintenanceinfo/:id', function (req, res) {
 app.post('/maintenance/delete', function (req, res) {
     axios.put('http://127.0.0.1:5000/deletemaintenance',
         {
-            log_id:req.body.log_id
+            log_id: req.body.log_id
 
         }
     )
@@ -785,7 +785,7 @@ app.post('/maintenance/delete', function (req, res) {
                             vehicles: logs_data[2],
                             success: 'The maintenance log has been deleted.'
                         });
-                        
+
                 });
         }
 
@@ -795,7 +795,7 @@ app.post('/maintenance/delete', function (req, res) {
 app.post('/maintenance/update', function (req, res) {
     axios.put('http://127.0.0.1:5000/update_maintenance_log',
         {
-            log_id:req.body.log_id,
+            log_id: req.body.log_id,
             date: req.body.date,
             status: req.body.status,
             note: req.body.note
@@ -833,7 +833,7 @@ app.get('/garage', function (req, res) {
                 {
                     garage_data: garage_data[0],
                     states: garage_data[1]
-                    
+
 
                 });
         });
@@ -885,10 +885,10 @@ app.post('/garage/add', function (req, res) {
                             success: 'The auto shop has been added.'
 
                         });
-                    }).catch((error) => {
-                        res.render('pages/vendors', {
-                            error: error.response.data.error
-                        });
+                }).catch((error) => {
+                    res.render('pages/vendors', {
+                        error: error.response.data.error
+                    });
                 });
         });
 });
@@ -953,16 +953,23 @@ app.get('/invoicesinfo', function (req, res) {
 app.get('/invoices/:id', function (req, res) {
     const invoice_id = req.params.id;
 
-    axios.get('http://127.0.0.1:5000/invoices/' + invoice_id
-    ).then((response) => {
+    axios.get('http://127.0.0.1:5000/invoices/' + invoice_id).then((response) => {
         var invoice_data = response.data
+        console.log(invoice_data)
+        var obj = invoice_data[4]
+        var sumtotal = parseFloat(obj[0]['sum(total']).toFixed(2);
+        console.log(invoice_data[4])
+        //console.log(sumtotal)
 
         res.render('pages/invoiceinfo',
             {
                 invoice_data: invoice_data[0],
                 customer_info: invoice_data[1],
                 order_info: invoice_data[2],
-                delivery_date: invoice_data[3]
+                delivery_date: invoice_data[3],
+
+                total: invoice_data[4],
+                sumtotal: sumtotal
             });
     });
 
@@ -1009,7 +1016,7 @@ app.get('/products', function (req, res) {
             res.render('pages/products',
                 {
                     products_data: products_data
-                    
+
 
                 });
         });
@@ -1097,7 +1104,7 @@ app.get('/bestsellers', function (req, res) {
             res.render('pages/bestsellers',
                 {
                     best_sell_data: best_sell_data
-                    
+
 
                 });
         });
@@ -1112,7 +1119,7 @@ app.get('/dailybestsellers', function (req, res) {
             res.render('pages/bestsellers',
                 {
                     best_sell_data: best_sell_data
-                    
+
 
                 });
         });
@@ -1127,7 +1134,7 @@ app.get('/weeklybestsellers', function (req, res) {
             res.render('pages/bestsellers',
                 {
                     best_sell_data: best_sell_data
-                    
+
 
                 });
         });
@@ -1142,7 +1149,7 @@ app.get('/monthlybestsellers', function (req, res) {
             res.render('pages/bestsellers',
                 {
                     best_sell_data: best_sell_data
-                    
+
 
                 });
         });
