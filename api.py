@@ -1345,7 +1345,7 @@ def get_vendor_inv_sheet():
 def get_monthly_countt():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "SELECT DATE_FORMAT(date_produced, '%M') AS date_produced,COUNT(order_id) AS count FROM orders where Year(date_produced) = year(current_date()) GROUP BY MONTH(date_produced);"
+    sql = "SELECT DATE_FORMAT(date_produced, '%M') AS date_produced,COUNT(order_id) AS count FROM orders where Year(date_produced) = year(current_date()) GROUP BY MONTH(date_produced) order by Month(date_produced) asc;"
     order_count = execute_read_query(conn, sql)
     return jsonify(order_count)
 
