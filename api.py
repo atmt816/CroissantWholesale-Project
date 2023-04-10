@@ -933,7 +933,7 @@ def get_garagemain_log(garage_id):
     return jsonify(garage_main_log)
 
 
-############################# INVOICES ######################################
+############################# INVOICES PAGE ######################################
 
 # Invoices Table CRUD
 
@@ -942,7 +942,9 @@ def get_garagemain_log(garage_id):
 def get_invoices():
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
-    sql = "SELECT i.invoice_id, i.customer_id, i.invoice_date, i.invoice_total, i.payment_status, i.date_paid, i.order_id, c.business_name, o.date_produced FROM invoices as i INNER JOIN customers as c on i.customer_id = c.customer_id INNER JOIN orders as o on c.customer_id = o.customer_id ORDER BY i.payment_status DESC;"
+    sql = """SELECT i.invoice_id, i.customer_id, i.invoice_date, i.invoice_total, i.payment_status, i.date_paid, i.order_id, c.business_name
+            FROM invoices as i INNER JOIN customers as c on i.customer_id = c.customer_id 
+            ORDER BY i.payment_status DESC;"""
     invoices = execute_read_query(conn, sql)
 
 
@@ -1008,30 +1010,18 @@ def update_invoices():
     invoice_data = request.get_json()
     # we will be using invoice_id to reference the entry to update
     invoice_id = invoice_data['invoice_id']
-    # The JSON object is then separated into variables so that they may be used in a sql query
-    customer_id = invoice_data['customer_id']
-    invoice_date = invoice_data['invoice_date']
-    invoice_total = invoice_data['invoice_total']
     payment_status = invoice_data['payment_status']
     date_paid = invoice_data['date_paid']
 
-    # date format as yyyy-mm-dd(2022-03-04) or mm-dd-yyyy(03-04-2022)
-    fmt_invoice_date = str(datetime.strptime(
-        invoice_date, '%m-%d-%Y').date())
-    # date format as yyyy-mm-dd(2022-03-04) or mm-dd-yyyy(03-04-2022)
-    fmt_date_paid = str(datetime.strptime(
-        date_paid, '%m-%d-%Y').date())
 
     conn = create_connection(
         'cis4375.cfab8c2lm5ph.us-east-1.rds.amazonaws.com', 'admin', 'cougarcode', 'cid4375')
 
-    cursor = conn.cursor()
-    sql = "UPDATE invoices SET vendor_id = %s, customer_id = %s, invoice_number = %s, invoice_date = %s, invoice_total = %s, payment_status = %s, date_paid = %s WHERE invoice_id = %s"
-    val = (customer_id, fmt_invoice_date,
-           invoice_total, payment_status, fmt_date_paid, invoice_id)
+  
+    sql = "UPDATE invoices SET payment_status = '%s', date_paid = '%s' WHERE invoice_id = %s" % (payment_status, date_paid, invoice_id)
 
-    cursor.execute(sql, val)
-    conn.commit()
+    execute_query(conn, sql)
+
     return 'Invoice was updated successfully'
 
 
@@ -1164,7 +1154,7 @@ def add_order():
 
     # Set up future invoice with corresponding ids
     payment_status = "Pending"
-    sql = "INSERT INTO invoices(customer_id, order_id, invoice_date, payment_status) VALUES (%s, %s, %s, '%s')" % (
+    sql = "INSERT INTO invoices(customer_id, order_id, invoice_date, payment_status) VALUES (%s, %s, '%s', '%s')" % (
         customer_id, order_id, current_date, payment_status)
     execute_query(conn, sql)
 

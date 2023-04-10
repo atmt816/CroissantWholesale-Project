@@ -35,31 +35,32 @@
           <% invoice_data.forEach(function(invoice_data) { %>
             <tr>
               <td>
-                <%= invoice_data.invoice_id%>
+                <a style="text-decoration:none" href="/invoices/<%= invoice_data.invoice_id%>"><%= invoice_data.invoice_id%>
               </td>
               <td>
-                <%= invoice_data.order_id%>
+                <a style="text-decoration:none" href="/invoices/<%= invoice_data.invoice_id%>"><%= invoice_data.order_id%></a>
               </td>
               <td>
                 <%= invoice_data.business_name%>
               </td>
               <td>
-                <%= invoice_data.date_produced%>
+                <%if (invoice_data.invoice_date) { %>
+                  <%= moment(invoice_data.date_produced).format('MMMM Do YYYY') %> 
+                  <% } else { %><% } %>
               </td>
               <td>
                 $<%= invoice_data.invoice_total%>
               </td>
               <td>
-                <%= invoice_data.payment_status%>
+                <%= invoice_data.payment_status %>
+                
               </td>
-              <td>
-                <%= invoice_data.date_paid%>
+              <td>                
+                <%if (invoice_data.date_paid) { %>
+                  <%= moment(invoice_data.date_paid).format('MMMM Do YYYY') %> 
+                  <% } else { %><% } %>
               </td>
-              <td>
-                <a style="text-decoration:none" href="/invoices/<%= invoice_data.invoice_id%>""> Edit</a>
-                </td>
-
-
+              
             </tr>
             <% }); %>
 

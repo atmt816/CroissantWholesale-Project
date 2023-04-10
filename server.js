@@ -958,9 +958,9 @@ app.get('/invoices/:id', function (req, res) {
         //console.log(invoice_data)
         var obj = invoice_data[4]
         var sumtotal = parseFloat(obj[0]['sum(total)']).toFixed(2);
-        console.log(invoice_data[4])
-        console.log(sumtotal)
-
+        // console.log(invoice_data[4])
+        // console.log(sumtotal)
+        
         res.render('pages/invoiceinfo',
             {
                 invoice_data: invoice_data[0],
@@ -971,7 +971,7 @@ app.get('/invoices/:id', function (req, res) {
                 total: invoice_data[4],
                 sumtotal: sumtotal
             });
-        console.log(invoice_data[3])
+            
     });
 
 });
@@ -981,9 +981,6 @@ app.post('/invoices/update', function (req, res) {
     axios.put('http://127.0.0.1:5000/update_invoices',
         {
             invoice_id: req.body.invoice_id,
-            customer_id: req.body.customer_id,
-            invoice_date: req.body.invoice_date,
-            invoice_total: req.body.invoice_total,
             payment_status: req.body.payment_status,
             date_paid: req.body.date_paid
 

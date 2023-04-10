@@ -22,7 +22,7 @@
       <form action="/garage/update" method="post">
 
         <div class="col-md-4">
-          <input class="form-control" name="garage_id" type="hidden" id="garage_id" >
+          <input class="form-control" name="garage_id" type="text" id="garage_id" value = <%= garage_data[0].garage_id %>>
           <label for="role name" class="form-label">Shop Name</label>
           <input type="text" class="form-control" name="garage_name" id="garage_name" value="<%= garage_data[0].garage_name %>" >
 

@@ -80,6 +80,7 @@
               Delivery Date
               <p class="pt-1">
                 <%= dates[0].delivery_date%>
+                
               </p>
             </div>
             <div class="col-sm">
@@ -131,24 +132,44 @@
     </div>
 
     </div>
-    <div class="col-md-6 mb-3">
-      <label for="payment_status" class="form-label">Payment Status</label>
-      <select id="payment_status" name="payment_status" class="form-select">
-        <option selected>Pending</option>
-        <option>Paid</option>
-      </select>
-    </div>
-    <div class="col-md-6 mb-3">
-      <label for="date_paid" class="form-label">Date Paid</label>
-      <input type="date" class="form-control" name="date_paid" id="date_paid" value=<%=invoice_data.date_paid %>>
-    </div>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+      Edit Invoice
+  </button>
 
-    <div class="col-md-6 mb-3">
-      <button type="submit" class="btn btn-primary">Update</button>
-      <a class="btn btn-secondary" href="/invoices" role="button">Cancel</a>
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel">Edit Invoice</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="/invoices/update" method="post" class="row g-3">
+                  <div class="col-md-6 mb-3">
+                    <input class="form-control" name="invoice_id" type="hidden" id="invoice_id" value=<%=invoice_data[0].invoice_id%>>
+                    <label for="payment_status" class="form-label">Payment Status</label>
+                    <select id="payment_status" name="payment_status" class="form-select">
+                      <option selected>Pending</option>
+                      <option>Paid</option>
+                      <option>Cancelled</option>
+                    </select>
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label for="date_paid" class="form-label">Date Paid</label>
+                    <input type="type" class="form-control" name="date_paid" id="date_paid" value=<%if (invoice_data[0].date_paid) { %>
+                                                                                                  <%= moment(invoice_data[0].date_paid).format('YYYY-MM-DD') %> 
+                                                                                                  <% } else { %><% } %>>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Create New Item</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-
-    </form>
 
 
     </div>
