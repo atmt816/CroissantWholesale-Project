@@ -132,6 +132,7 @@
               <td>
                 <a style="text-decoration:none" href="/empinfo/<%= employee_data.emp_id%>"><%= employee_data.last_name%>,&nbsp<%= employee_data.first_name%></a>
               </td>
+              <!-- https://momentjscom.readthedocs.io/en/latest/moment/04-displaying/01-format/ -->
               <td>
                 <%= moment(employee_data.start_date).format('MMMM Do YYYY') %>
               </td>

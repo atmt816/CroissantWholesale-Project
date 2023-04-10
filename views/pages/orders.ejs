@@ -120,14 +120,16 @@
               </td>
               <td>
                 <a style="text-decoration:none">
-                  <%= order_data.date_produced%>
+                  <%= moment(order_data.date_produced).format('MMMM Do YYYY') %>
                 </a>
               </td>
               <td>
                 <%= order_data.business_name%>
               </td>
               <td>
-                <%= order_data.delivery_date%>
+                <%if (order_data.delivery_date) { %>
+                  <%= moment(order_data.delivery_date).format('MMMM Do YYYY') %> 
+                  <% } else { %><% } %>
               </td>
               <td>
                 <%= order_data.status%>

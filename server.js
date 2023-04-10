@@ -1325,7 +1325,8 @@ app.post('/orders/add', function (req, res) {
                             order_data: order_data[0],
                             customers: order_data[1],
                             products: order_data[2],
-                            line_items: order_data[3]
+                            line_items: order_data[3],
+                            success: 'The order has been added.'
                         });
                 });
         });
@@ -1378,7 +1379,8 @@ app.post('/orders/update', function (req, res) {
                             order_data: order_data[0],
                             customers: order_data[1],
                             products: order_data[2],
-                            line_items: order_data[3]
+                            line_items: order_data[3],
+                            success: 'The order has been updated.'
                         });
                 });
         }
@@ -1401,7 +1403,8 @@ app.post('/orders/delete', function (req, res) {
                         order_data: order_data[0],
                         customers: order_data[1],
                         products: order_data[2],
-                        line_items: order_data[3]
+                        line_items: order_data[3],
+                        success: 'The order has been deleted.'
                     });
             });
     }

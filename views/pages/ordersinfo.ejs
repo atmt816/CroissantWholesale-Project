@@ -50,13 +50,17 @@
             <div class="col-sm">
               Date Produced
               <p class="pt-1">
-                <%= order_data[0].date_produced %>
+                <%if (order_data[0].date_produced) { %>
+                  <%= moment(order_data[0].date_produced).format('MMMM Do YYYY') %> 
+                  <% } else { %><% } %>
               </p>
             </div>
             <div class="col-sm">
               Delivery Date
               <p class="pt-1">
-                <%= order_data[0].delivery_date %>
+                <%if (order_data[0].delivery_date) { %>
+                  <%= moment(order_data[0].delivery_date).format('MMMM Do YYYY') %> 
+                  <% } else { %><% } %>
               </p>
             </div>
             <div class="col-sm">
@@ -157,7 +161,7 @@
                     <form action="/orders/update" method="post" class="row g-3">
                       <div class="col-md-6 mb-1">
                         <label for="customer" class="form-label">Order ID</label>
-                        <input class="form-control" name="order_id"  id="order_id"
+                        <input class="form-control" type="hidden" name="order_id"  id="order_id"
                         value=<%=order_data[0].order_id%>>
                         <label for="customer" class="form-label">Customer</label>
                         <select class="form-select" name="customer_id" id="customer_id"> 
@@ -192,7 +196,7 @@
                         <% let lineItemCount = 0; %>
                       <% order_data.forEach(function(order_data) { %>
                         <div class="col-md-6">
-                          <label for="product" class="form-label">Product</label>
+                          <label for="product" class="form-label">Product:</label>
                           <select class="form-select" name="line_items[<%= lineItemCount %>][product_id]" id="line_items[<%= lineItemCount %>][product_id]">
                             <option value=<%=order_data.product_id %>><%=order_data.product_name%>
                             </option>               
