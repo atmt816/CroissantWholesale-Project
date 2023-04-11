@@ -32,7 +32,6 @@
             <th scope="col">Order ID</th>
             <th scope="col">Customer</th>
             <th scope="col">Date Generated</th>
-            <th scope="col">Total</th>
             <th scope="col">Status</th>
             <th scope="col">Date Paid</th>
           </tr>
@@ -53,9 +52,6 @@
                 <%if (invoice_data.invoice_date) { %>
                   <%= moment(invoice_data.date_produced).format('MMMM Do YYYY') %> 
                   <% } else { %><% } %>
-              </td>
-              <td>
-                $<%= invoice_data.invoice_total%>
               </td>
               <td>
                 <%= invoice_data.payment_status %>
