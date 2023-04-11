@@ -153,12 +153,13 @@
     //gets the element object by id(add_line_item), links the button in the above modal to add new line item
     
     //gets line_items element so the child can be appended 
+    //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
     const lineItemsContainer = document.getElementById('line_items');
     
     //this is the start of counter after the first one that is originally on the modal
     let lineItemCount = 1;
     //gets the element object by id(add_line_item), links the button in the above modal to add new line item and with event listener to add the new divs of line items
-    //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+    // https://www.w3schools.com/js/js_htmldom_eventlistener.asp
     document.getElementById('add_line_item').addEventListener('click', () => {
       //Add a div for the line items
       const div = document.createElement('div');
