@@ -22,140 +22,142 @@
         Orders
       </h2>
       <!-- https://www.youtube.com/watch?v=lSa1EIJapLg -->
-      <% if (typeof success !== 'undefined') { %>
+      <% if (typeof success !=='undefined' ) { %>
         <div class="alert alert-success alert-dismissible fade show" role="alert">
           <%= success %>
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-      <% } %>
-      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-        Create New Order
-      </button>
+        <% } %>
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            Create New Order
+          </button>
 
-      <!-- Modal -->
-      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 class="modal-title" id="exampleModalLabel">Create New Order</h4>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <form action="/orders/add" method="post" class="row g-3">
-                
-              <div class="col-md-6">
-                <label for="selectcustomer" class="form-label">Select Customer</label>
-                <select class="form-select" name="customer_id" id="customer_id">
+          <!-- Modal -->
+          <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="exampleModalLabel">Create New Order</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <form action="/orders/add" method="post" class="row g-3">
 
-                  <% customers.forEach(function(customers) { %>
-                    <option value=<%=customers.customer_id %>><%=customers.business_name %>
-                    </option>
-                    <% }); %>
-                </select>
-              </div>
-
-              <div class="col-md-6">
-                <label for="inputstatus" class="form-label">Order Status</label>
-                <select name="status" id="status" class="form-select">
-                  <option selected>In-Progress</option>
-                  <option>Delivered</option>
-                  <option>Cancelled</option>
-                </select>
-              </div>
-                <div id="line_items">
-                  <h2>Line Items</h2>
-              
-                  <div class="line_item">
                     <div class="col-md-6">
-                    <label for="product_id">Product:</label>
-                    <select class="form-control" id="product_id" name="line_items[0][product_id]">
-                      <% products.forEach(function(products) { %>
-                        <option value=<%=products.product_id %>><%=products.product_name %>
-                        </option>
-                        <% }); %>
-                    </select>
-                    <label for="quantity">Quantity:</label>
-                      <input type="text" class="form-control"  name="line_items[0][quantity]">
-                    <label for="price_per_unit">Price Per Unit:</label>
-                      <input type="text" class="form-control"  name="line_items[0][price_per_unit]"> 
-                    <label for="price_per_unit">Total:</label>
-                      <input type="text" class="form-control"  name="line_items[0][total]">
-                      <br>
-                  
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <button type="button" class="btn btn-primary" id="add_line_item">Add Line Item</button>
-                  <button type="button" class="btn btn-danger" id="delete_line_item">Delete Line Item</button>
-                </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Create New Order</button>
+                      <label for="selectcustomer" class="form-label">Select Customer</label>
+                      <select class="form-select" name="customer_id" id="customer_id">
 
-                </form>
+                        <% customers.forEach(function(customers) { %>
+                          <option value=<%=customers.customer_id %>><%=customers.business_name %>
+                          </option>
+                          <% }); %>
+                      </select>
+                    </div>
+
+                    <div class="col-md-6">
+                      <label for="inputstatus" class="form-label">Order Status</label>
+                      <select name="status" id="status" class="form-select">
+                        <option selected>In-Progress</option>
+                        <option>Delivered</option>
+                        <option>Cancelled</option>
+                      </select>
+                    </div>
+                    <div id="line_items">
+                      <h2>Line Items</h2>
+
+                      <div class="line_item">
+                        <div class="col-md-6">
+                          <label for="product_id">Product:</label>
+                          <select class="form-control" id="product_id" name="line_items[0][product_id]">
+                            <% products.forEach(function(products) { %>
+                              <option value=<%=products.product_id %>><%=products.product_name %>
+                              </option>
+                              <% }); %>
+                          </select>
+                          <label for="quantity">Quantity:</label>
+                          <input type="text" class="form-control" name="line_items[0][quantity]">
+                          <label for="price_per_unit">Price Per Unit:</label>
+                          <input type="text" class="form-control" name="line_items[0][price_per_unit]">
+                          <label for="price_per_unit">Total:</label>
+                          <input type="text" class="form-control" name="line_items[0][total]">
+                          <br>
+
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <button type="button" class="btn btn-primary" id="add_line_item">Add Line Item</button>
+                      <button type="button" class="btn btn-danger" id="delete_line_item">Delete Line Item</button>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="submit" class="btn btn-primary">Create New Order</button>
+
+                  </form>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-      <table class="table table-hover">
-        <thead>
+    </div>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th scope="col">Order #</th>
+          <th scope="col">Order Date</th>
+          <th scope="col">Customer</th>
+          <th scope="col">Delivery Date</th>
+          <th scope="col">Status</th>
+
+
+        </tr>
+      </thead>
+      <tbody>
+        <% order_data.forEach(function(order_data) { %>
           <tr>
-            <th scope="col">Order #</th>
-            <th scope="col">Order Date</th>
-            <th scope="col">Customer</th>
-            <th scope="col">Delivery Date</th>
-            <th scope="col">Status</th>
-            
+            <td>
+              <a style="text-decoration:none" href="/ordersinfo/<%= order_data.order_id%>">
+                <%= order_data.order_id%>
+              </a>
+            </td>
+            <td>
+              <a style="text-decoration:none">
+                <% if (order_data.date_produced) { %>
+                  <% const date=moment(order_data.date_produced).add(1, 'day' ); %>
+                    <%= date.format('MMMM Do YYYY') %>
+                      <% } %>
+              </a>
+            </td>
+            <td>
+              <%= order_data.business_name%>
+            </td>
+            <td>
+              <% if (order_data.delivery_date) { %>
+                <% const date=moment(order_data.delivery_date).add(1, 'day' ); %>
+                  <%= date.format('MMMM Do YYYY') %>
+                    <% } else { %>
+                      <% } %>
+            </td>
+            <td>
+              <%= order_data.status%>
+            </td>
 
           </tr>
-        </thead>
-        <tbody>
-          <% order_data.forEach(function(order_data) { %>
-            <tr>
-              <td>
-                <a style="text-decoration:none" href="/ordersinfo/<%= order_data.order_id%>">
-                  <%= order_data.order_id%>
-                </a>
-              </td>
-              <td>
-                <a style="text-decoration:none">
-                  <% if (order_data.date_produced) { %>
-                    <% const date = moment(order_data.date_produced).add(1, 'day'); %>
-                    <%= date.format('MMMM Do YYYY') %> 
-                  <% } %>
-                </a>
-              </td>
-              <td>
-                <%= order_data.business_name%>
-              </td>
-              <td>
-                <% if (order_data.delivery_date) { %>
-                  <% const date = moment(order_data.delivery_date).add(1, 'day'); %>
-                  <%= date.format('MMMM Do YYYY') %> 
-                <% } else { %><% } %>
-              </td>
-              <td>
-                <%= order_data.status%>
-              </td>
-              
-            </tr>
-            <% }); %>
+          <% }); %>
 
-        </tbody>
-      </table>
+      </tbody>
+    </table>
 
     </div>
 
   </main>
   <script>
     //gets the element object by id(add_line_item), links the button in the above modal to add new line item
-    
+
     //gets line_items element so the child can be appended 
     //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
     const lineItemsContainer = document.getElementById('line_items');
-    
+
     //this is the start of counter after the first one that is originally on the modal
     let lineItemCount = 1;
     //gets the element object by id(add_line_item), links the button in the above modal to add new line item and with event listener to add the new divs of line items
@@ -194,18 +196,20 @@
       lineItemCount++;
     });
 
-    
+
     // remove the last list item
     document.getElementById('delete_line_item').addEventListener('click', () => {
       //selects line item div list
       //https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll
       const lineItems = document.querySelectorAll('.line_item');
       //counts length of line items -1
-      const lastLine = lineItemCount = $('.line_item').length-1;
+      const lastLine = lineItemCount = $('.line_item').length - 1;
       const lastLineItem = lineItems[lastLine]
       lastLineItem.remove();
-      });
-  
-      </script>
-    
+    });
+
+  </script>
+  <footer>
+    <%- include('../partials/footer'); %>
+  </footer>
 </body>
