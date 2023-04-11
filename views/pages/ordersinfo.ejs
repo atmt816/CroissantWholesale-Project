@@ -50,7 +50,7 @@
             <div class="col-sm">
               Date Produced
               <p class="pt-1">
-                  <!-- https://momentjs.com/guides/ -->
+                  <!--https://stackoverflow.com/questions/47914349/add-day-to-date-with-momentjs -->
                   <% if (order_data[0].date_produced) { %>
                     <% const date = moment(order_data[0].date_produced).add(1, 'day'); %>
                     <%= date.format('MMMM Do YYYY') %> 
@@ -60,7 +60,7 @@
             <div class="col-sm">
               Delivery Date
               <p class="pt-1">
-                <!-- https://momentjs.com/guides/ -->
+                <!--https://stackoverflow.com/questions/47914349/add-day-to-date-with-momentjs -->
                 <% if (order_data[0].delivery_date) { %>
                   <% const date = moment(order_data[0].delivery_date).add(1, 'day'); %>
                   <%= date.format('MMMM Do YYYY') %> 
