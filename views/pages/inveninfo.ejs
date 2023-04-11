@@ -56,7 +56,10 @@
                 <div class="col-md-6 mb-3">
 
                     <label for="date_bought" class="form-label">Date Bought</label>
-                    <input type="text" class="form-control" name="date_bought" id="date_bought" value="<%if (inventory_data[0].date_bought) { %><%= moment(inventory_data[0].date_bought).format('YYYY-MM-DD') %> <% } else { %><% } %>">
+                    <input type="text" class="form-control" name="date_bought" id="date_bought" value=<% if (inventory_data[0].date_bought) { %>
+                                                                                                        <% const date = moment(inventory_data[0].date_bought).add(1, 'day'); %>
+                                                                                                        <%= date.format('YYYY-MM-DD') %> 
+                                                                                                        <% } else { %><% } %>>
 
                 </div>
                 <button type="submit" class="btn btn-primary">Update</button>

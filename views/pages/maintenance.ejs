@@ -119,7 +119,10 @@
                   <%= logs_data.garage_name%>
                 </td>
                 <td>
-                  <%= moment(logs_data.date).format('MMMM Do YYYY') %>
+                  <%if (logs_data.date) { %>
+                    <% const date = moment(logs_data.date).add(1, 'day'); %>
+                    <%= date.format('MMMM Do YYYY') %>
+                    <% } else { %><% } %>
                 </td>
                 <td>
                   <%= logs_data.status%>

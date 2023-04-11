@@ -101,8 +101,10 @@
                           <td>
                             <a>
                               <%if (weekly_data.Delivery_Date) { %>
-                                <%= moment(weekly_data.Delivery_Date).format('MMMM Do YYYY') %> 
-                                <% } else { %><% } %>
+                                <% const date = moment(weekly_data.Delivery_Date).add(1, 'day'); %>
+                                <%= date.format('MMMM Do YYYY') %> 
+                                <% }  %>
+                               
                             </a>
                           </td>
                           <td>
@@ -186,7 +188,7 @@
             data: {
               labels: prodName,
               datasets: [{
-                label: '# of Orders',
+                label: '# of Products',
                 data: prodCount,
                 borderWidth: 1,
                 backgroundColor: '#fefcf1',

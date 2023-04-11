@@ -118,8 +118,9 @@
                                 $<%= inventory_data.total_inv_cost%>
                             </td>
                             <td>
-                                <%if (inventory_data.date_bought) { %>
-                                    <%= moment(inventory_data.date_bought).format('MMMM Do YYYY') %> 
+                                <% if (inventory_data.date_bought) { %>
+                                    <% const date = moment(inventory_data.date_bought).add(1, 'day'); %>
+                                    <%= date.format('MMMM Do YYYY') %> 
                                     <% } else { %><% } %>
                                 
                             </td>

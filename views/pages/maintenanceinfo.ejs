@@ -34,7 +34,10 @@
                 <div class="col-sm">
                   Date
                   <p class="pt-1">
-                    <%= moment(logs_data[0].date).format('MMMM Do YYYY') %>
+                    <%if (logs_data[0].date) { %>
+                      <% const date = moment(logs_data[0].date).add(1, 'day'); %>
+                      <%= date.format('MMMM Do YYYY') %>
+                      <% } else { %><% } %>
                   </p>
                 </div>
               </div>
@@ -104,14 +107,17 @@
                       <input class="form-control" name="log_id" id="log_id" type="hidden" value=<%=logs_data[0].log_id %>> 
                       <div class="col-md-6 pb-2">
                         <label for="date" class="form-label">Date</label>
-                        <input type="text" class="form-control" name="date" id="date" value= "<%= moment(logs_data[0].date).format('YYYY-MM-DD') %> ">
+                        <input type="text" class="form-control" name="date" id="date" value= <%if (logs_data[0].date) { %>
+                                                                                              <% const date = moment(logs_data[0].date).add(1, 'day'); %>
+                                                                                              <%= date.format('YYYY-MM-DD') %>
+                                                                                              <% } else { %><% } %>>
                       </div>
-                      <hr class="hr" />
-                      <div class="col-md-6">
-                        <label for="status">Maintenance Status</label>
+                      <hr class="hr">
+                      <div class="col-md-6 ">
+                        <label for="status" class="pb-2">Maintenance Status</label>
                         <select name="status" id="status" class="form-select">
                           <option selected>In-Progress</option>
-                          <option>Delivered</option>
+                          <option>Completed</option>
                           <option>Cancelled</option>
                         </select>
                       </div>

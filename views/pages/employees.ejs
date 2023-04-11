@@ -134,11 +134,15 @@
               </td>
               <!-- https://momentjscom.readthedocs.io/en/latest/moment/04-displaying/01-format/ -->
               <td>
-                <%= moment(employee_data.start_date).format('MMMM Do YYYY') %>
+                <%if (employee_data.start_date) { %>
+                  <% const date = moment(employee_data.start_date).add(1, 'day'); %>
+                  <%= date.format('MMMM Do YYYY') %> 
+                  <% }  %>
               </td>
               <td>
                 <%if (employee_data.end_date) { %>
-                  <%= moment(employee_data.end_date).format('MMMM Do YYYY') %> 
+                  <% const date = moment(employee_data.end_date).add(1, 'day'); %>
+                  <%= date.format('MMMM Do YYYY') %>
                   <% } else { %><% } %>
               </td>
               <td>
