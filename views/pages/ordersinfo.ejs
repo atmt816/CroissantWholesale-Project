@@ -50,17 +50,22 @@
             <div class="col-sm">
               Date Produced
               <p class="pt-1">
-                <%if (order_data[0].date_produced) { %>
-                  <%= moment(order_data[0].date_produced).format('MMMM Do YYYY') %> 
+                  <!-- https://momentjs.com/guides/ -->
+                  <% if (order_data[0].date_produced) { %>
+                    <% const date = moment(order_data[0].date_produced).add(1, 'day'); %>
+                    <%= date.format('MMMM Do YYYY') %> 
                   <% } else { %><% } %>
               </p>
             </div>
             <div class="col-sm">
               Delivery Date
               <p class="pt-1">
-                <%if (order_data[0].delivery_date) { %>
-                  <%= moment(order_data[0].delivery_date).format('MMMM Do YYYY') %> 
-                  <% } else { %><% } %>
+                <!-- https://momentjs.com/guides/ -->
+                <% if (order_data[0].delivery_date) { %>
+                  <% const date = moment(order_data[0].delivery_date).add(1, 'day'); %>
+                  <%= date.format('MMMM Do YYYY') %> 
+                <% } else { %><% } %>
+                
               </p>
             </div>
             <div class="col-sm">
@@ -175,7 +180,10 @@
                       </div>
                       <div class="col-md-6 mb-1">
                         <label for="status">Delivery Date</label>
-                        <input type="text" class="form-control" id="delivery_date" name="delivery_date" value= "<%if (order_data[0].delivery_date) { %><%= moment(order_data[0].delivery_date).format('YYYY-MM-DD') %> <% } else { %><% } %>">
+                        <input type="text" class="form-control" id="delivery_date" name="delivery_date" value= <% if (order_data[0].delivery_date) { %>
+                                                                                                                <% const date = moment(order_data[0].delivery_date).add(1, 'day'); %>
+                                                                                                                <%= date.format('YYYY-MM-DD') %> 
+                                                                                                                <% } else { %><% } %>>
                       </div>
                       <div class="col-md-6 mb-1">
                         <label for="status">Order Status</label>
